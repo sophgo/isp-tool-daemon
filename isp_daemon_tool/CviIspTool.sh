@@ -1,0 +1,107 @@
+#!/bin/sh
+
+DEFAULT_HOST="192.168.1.3"
+UART="/dev-"
+
+echo 16777216 > /proc/sys/net/core/wmem_max
+echo "4096 873800 16777216" > /proc/sys/net/ipv4/tcp_wmem
+echo "3073344 4097792 16777216" > /proc/sys/net/ipv4/tcp_mem
+
+CFG_JSON_FILE="./cfg.json"
+
+if [ -z "$CVI_RTSP_JSON" ]; then
+    export CVI_RTSP_JSON=$CFG_JSON_FILE
+fi
+
+getopts_get_optional_argument() {
+    eval next_token=\${$OPTIND}
+    if [[ -n $next_token && $next_token != -* ]]; then
+        OPTIND=$((OPTIND + 1))
+        OPTARG=$next_token
+    else
+        OPTARG=""
+    fi
+}
+
+sed -i 's/"replay-mode": true/"replay-mode": false/g' $CFG_JSON_FILE
+while getopts "hgmiru" OPTION; do
+    case $OPTION in
+        i)
+            getopts_get_optional_argument $@
+            if [ -z "$OPTARG" ]; then
+                HOST=${DEFAULT_HOST}
+            else
+                HOST=$OPTARG
+            fi
+            echo "set the IP address $HOST to network interface"
+            ;;
+        g)
+            GIGABIT="true"
+            echo "use gigabit ethernet"
+            ;;
+        r)
+            getopts_get_optional_argument $@
+            if [ -z "$CVI_REPLAY_MODE" ]; then
+                export CVI_REPLAY_MODE=1
+            fi
+            if [ -z "$OPTARG" ]; then
+                echo "start replay mode"
+            else
+                export REPLAY_FROM_BOARD_PATH=$OPTARG
+                if [ -d "$REPLAY_FROM_BOARD_PATH" ]; then
+                    echo "start replay offline mode"
+                else
+                    echo "Error: Directory $REPLAY_FROM_BOARD_PATH does not exist. start replay mode"
+                    REPLAY_FROM_BOARD_PATH=
+                fi
+            fi
+            sed -i 's/"replay-mode": false/"replay-mode": true/g' $CFG_JSON_FILE
+            ;;
+        u)
+            getopts_get_optional_argument $@
+            if [ -z "$OPTARG" ]; then
+                UART="/dev/ttyS0"
+            else
+                UART="/dev/ttyS$OPTARG"
+            fi
+            echo "startting app in uart mode additionally"
+            ;;
+        h)
+            echo "Usage:"
+            echo "   -i     set the IP address to network interface"
+            echo "   -g     use gigabit ethernet"
+            echo "   -h     help (this output)"
+            echo "   -u     use uart connectting to pqtool"
+            exit 0
+            ;;
+    esac
+done
+
+# disable vcodec debug message to minize latency
+echo 0x20001 > /sys/module/cv186x_vcodec/parameters/vcodec_mask
+# enable remap
+echo 1 > /sys/module/cvi_vc_driver/parameters/addrRemapEn
+echo 256 > /sys/module/cvi_vc_driver/parameters/ARExtraLine
+
+if [ "$HOST" ]; then
+    if [ "$GIGABIT" == "true" ]; then
+        # enable gigabit ethernet (=eth1)
+        ifconfig eth0 down
+        ifconfig eth1 up
+        ifconfig eth1 $HOST netmask 255.255.255.0
+        #udhcpc -b -i eth1 -R & # unmakr this line to use DHCP
+    else
+        ifconfig eth1 down
+        ifconfig eth0 up
+        ifconfig eth0 $HOST netmask 255.255.255.0
+        #udhcpc -b -i eth1 -R & # unmark this line to use DHCP
+    fi
+fi
+
+# for eaier debugging, add $PWD to LD_LIBRARY_PATH and PATH
+SCRIPT_SELF=$(cd "$(dirname "$0")"; pwd)
+export LD_LIBRARY_PATH=${SCRIPT_SELF}/lib:${SCRIPT_SELF}/lib/ai:${LD_LIBRARY_PATH}:/mnt/system/usr/lib:/mnt/system/usr/lib/3rd:/lib/3rd
+
+PATH=${SCRIPT_SELF}:/mnt/system/usr/bin:$PATH
+cd ${SCRIPT_SELF}
+isp_tool_daemon ${UART}

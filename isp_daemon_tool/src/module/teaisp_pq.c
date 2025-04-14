@@ -1,0 +1,375 @@
+
+#include <sys/prctl.h>
+
+#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_TAG "teaisp_pq"
+
+#include "daemon_base.h"
+#include "daemon_cfg.h"
+#include "daemon_module.h"
+#include "tdl_sdk_api.h"
+#include "cvi_vi.h"
+#include "cvi_isp.h"
+#include "cvi_awb.h"
+
+#define TEAISP_PQ_SCENE_MAX_TYPE (5)
+static const char *teaisppq_scene_str[TEAISP_PQ_SCENE_MAX_TYPE] = {
+	"SNOW", "FOG", "BACKLIGHT", "GRASS", "COMMON"
+};
+
+typedef struct {
+	tdl_sdk_api_t *api;
+	cvitdl_handle_t handle;
+	cvitdl_service_handle_t service_handle;
+} teaisp_pq_ctx_t;
+
+static int init(struct module_t *thiz)
+{
+	int ret = 0;
+
+	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+
+	daemon_pipe_cfg_t *pipe_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
+
+	load_tdl_sdk_lib();
+
+	teaisp_pq_ctx_t *ctx =
+		(teaisp_pq_ctx_t *)malloc(sizeof(teaisp_pq_ctx_t));
+
+	if (ctx == NULL) {
+		clog_e("malloc teaisp_pq_ctx_t failed\n");
+		return -1;
+	}
+	thiz->private_data = ctx;
+	ctx->api = get_tdl_sdk_api();
+
+	ret = ctx->api->create_handle(&ctx->handle);
+	if (ret != 0) {
+		clog_e("create_handle failed, ret: %d\n", ret);
+		return -1;
+	}
+
+	ret = ctx->api->service_create_handle(&ctx->service_handle,
+					      ctx->handle);
+	if (ret != 0) {
+		clog_e("create_service_handle failed, ret: %d\n", ret);
+		return -1;
+	}
+
+	ret = ctx->api->open_model(
+		ctx->handle, CVI_TDL_SUPPORTED_MODEL_ISP_IMAGE_CLASSIFICATION,
+		pipe_cfg->teaisp_pq_model_path);
+	if (ret != 0) {
+		clog_e("open_model failed, ret: %d, model: %s\n", ret,
+		       pipe_cfg->teaisp_pq_model_path);
+		return -1;
+	}
+
+	ret = ctx->api->set_skip_vpss_preprocess(
+		ctx->handle, CVI_TDL_SUPPORTED_MODEL_ISP_IMAGE_CLASSIFICATION,
+		true);
+	if (ret != 0) {
+		clog_e("set_skip_vpss_preprocess failed, ret: %d\n", ret);
+		return -1;
+	}
+
+	return 0;
+}
+
+static int deinit(struct module_t *thiz)
+{
+	teaisp_pq_ctx_t *ctx = (teaisp_pq_ctx_t *)thiz->private_data;
+
+	ctx->api->service_destroy_handle(ctx->service_handle);
+	ctx->api->destroy_handle(ctx->handle);
+	unload_tdl_sdk_lib();
+	free(thiz->private_data);
+	thiz->private_data = NULL;
+	return 0;
+}
+
+static int get_vi_raw(int pipe, VIDEO_FRAME_INFO_S frame[])
+{
+	int ret = 0;
+	VI_DUMP_ATTR_S attr;
+
+	attr.bEnable = 1;
+	attr.u32Depth = 0;
+	attr.enDumpType = VI_DUMP_TYPE_RAW;
+	ret = CVI_VI_SetPipeDumpAttr(pipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		clog_e("set vi dump attribute failed, ret: %d\n", ret);
+		return ret;
+	}
+
+	ret = CVI_VI_GetPipeFrame(pipe, frame, DAEMON_TIMEOUT_MS);
+	if (ret != CVI_SUCCESS) {
+		clog_e("get vi frame failed, ret: %d\n", ret);
+		return ret;
+	}
+
+	return 0;
+}
+
+static int put_vi_raw(int pipe, VIDEO_FRAME_INFO_S frame[])
+{
+	int ret = 0;
+
+	ret = CVI_VI_ReleasePipeFrame(pipe, frame);
+	if (ret != CVI_SUCCESS) {
+		clog_e("release vi frame failed, ret: %d\n", ret);
+		return ret;
+	}
+
+	return 0;
+}
+
+static int update_isp_meta(int pipe, cvtdl_isp_meta_t *isp_meta)
+{
+	int ret = 0;
+	ISP_WB_Q_INFO_S awb_info;
+	ISP_INNER_STATE_INFO_S inner_state_info;
+
+	ret = CVI_AWB_QueryInfo(pipe, &awb_info);
+	if (ret != 0) {
+		clog_e("query awb info failed, ret: %d\n", ret);
+		return ret;
+	}
+
+	ret = CVI_ISP_QueryInnerStateInfo(pipe, &inner_state_info);
+	if (ret != 0) {
+		clog_e("query inner state info failed, ret: %d\n", ret);
+		return ret;
+	}
+
+	isp_meta->awb[0] = awb_info.u16Rgain;
+	isp_meta->awb[1] = awb_info.u16Grgain;
+	isp_meta->awb[2] = awb_info.u16Bgain;
+
+	for (int i = 0; i < 9; i++) {
+		isp_meta->ccm[i] = inner_state_info.ccm[i];
+	}
+
+	isp_meta->blc = inner_state_info.blcOffsetR;
+	isp_meta->blc += inner_state_info.blcOffsetGr;
+	isp_meta->blc += inner_state_info.blcOffsetGb;
+	isp_meta->blc += inner_state_info.blcOffsetB;
+	isp_meta->blc /= 4;
+
+	return 0;
+}
+
+static int update_isp_scene(int pipe, cvtdl_class_meta_t *cls_meta)
+{
+	TEAISP_PQ_SCENE_INFO scene_info;
+
+	switch (cls_meta->cls[0]) {
+	case 0:
+		scene_info.scene = SCENE_SNOW;
+		break;
+	case 1:
+		scene_info.scene = SCENE_FOG;
+		break;
+	case 2:
+		scene_info.scene = SCENE_BACKLIGHT;
+		break;
+	case 3:
+		scene_info.scene = SCENE_GRASS;
+		break;
+	default:
+		scene_info.scene = SCENE_COMMON;
+		break;
+	}
+
+	float score = cls_meta->score[0];
+
+	scene_info.scene_score = score * 100;
+	CVI_TEAISP_PQ_SetSceneInfo(pipe, &scene_info);
+	return 0;
+}
+
+static void teaisppq_put_text(int pipe, teaisp_pq_ctx_t *ctx,
+			      VIDEO_FRAME_INFO_S *pstVideoFrame)
+{
+	char scene_text[128];
+	int pos_x, pos_y;
+	float c_r, c_g, c_b;
+
+	pos_x = 50;
+	pos_y = 100;
+	c_r = 255;
+	c_g = 0;
+	c_b = 255;
+
+	TEAISP_PQ_ATTR_S stTEAISPPQAttr;
+	TEAISP_PQ_SCENE_INFO scene_info;
+	int scene_id;
+
+	CVI_TEAISP_PQ_GetAttr(pipe, &stTEAISPPQAttr);
+	CVI_TEAISP_PQ_GetDetectSceneInfo(pipe, &scene_info);
+
+	if (stTEAISPPQAttr.TuningMode != 0) {
+		scene_info.scene_score = 100;
+		scene_id = (stTEAISPPQAttr.TuningMode - 1) % TEAISP_SCENE_NUM;
+		snprintf(scene_text, sizeof(scene_text),
+			 "Tuning SCENE: %s, score: 100",
+			 teaisppq_scene_str[scene_id]);
+	} else {
+		scene_id = scene_info.scene;
+		snprintf(scene_text, sizeof(scene_text),
+			 "Detect SCENE: %s, score: %d",
+			 teaisppq_scene_str[scene_id], scene_info.scene_score);
+	}
+
+	if (stTEAISPPQAttr.Enable &&
+	    stTEAISPPQAttr.SceneBypass[scene_id] == 0 &&
+	    (scene_info.scene_score >=
+	     stTEAISPPQAttr.SceneConfThres[scene_id])) {
+		strncat(scene_text, " (accpet)",
+			sizeof(scene_text) - strlen(scene_text) - 1);
+	} else {
+		strncat(scene_text, " (bypass)",
+			sizeof(scene_text) - strlen(scene_text) - 1);
+		if (!stTEAISPPQAttr.Enable) {
+			strncat(scene_text, " [disable]",
+				sizeof(scene_text) - strlen(scene_text) - 1);
+		} else if (stTEAISPPQAttr.SceneBypass[scene_id] != 0) {
+			strncat(scene_text, " [scene bypass]",
+				sizeof(scene_text) - strlen(scene_text) - 1);
+		} else {
+			strncat(scene_text, " [Low score]",
+				sizeof(scene_text) - strlen(scene_text) - 1);
+		}
+	}
+
+	ctx->api->service_object_write_text(scene_text, pos_x, pos_y,
+					    pstVideoFrame, c_r, c_g, c_b);
+}
+
+#define TEAISP_PQ_RUN_INTERVAL_FRAME 5
+
+static void *worker(void *arg)
+{
+	int ret = 0;
+	int run_interval_frame = 0;
+	struct module_t *thiz = (struct module_t *)arg;
+	teaisp_pq_ctx_t *ctx = (teaisp_pq_ctx_t *)thiz->private_data;
+
+	clog_i("run, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
+	       thiz->pipe_chn);
+
+	prctl(PR_SET_NAME, "teaisp_pq", 0, 0, 0);
+
+	cvtdl_isp_meta_t isp_meta;
+	cvtdl_class_meta_t cls_meta;
+	VIDEO_FRAME_INFO_S stVideoFrame[2] = {};
+
+	while (thiz->thread_run) {
+		ret = CVI_ISP_GetVDTimeOut(thiz->pipe_id, ISP_VD_BE_END,
+					   DAEMON_TIMEOUT_MS);
+		if (ret != 0) {
+			clog_w("get vd timeout, go on wait...\n");
+			continue;
+		}
+		run_interval_frame++;
+		if (run_interval_frame < TEAISP_PQ_RUN_INTERVAL_FRAME) {
+			continue;
+		}
+		run_interval_frame = 0;
+
+		ret = update_isp_meta(thiz->pipe_id, &isp_meta);
+		if (ret != 0) {
+			clog_e("update isp meta failed, ret: %d\n", ret);
+			continue;
+		}
+
+		memset(stVideoFrame, 0, sizeof(stVideoFrame));
+		ret = get_vi_raw(thiz->pipe_id, stVideoFrame);
+		if (ret != 0) {
+			clog_e("get vi raw failed, ret: %d\n", ret);
+			continue;
+		}
+
+		stVideoFrame[0].stVFrame.u32Width =
+			stVideoFrame[0].stVFrame.u32Width * 3 / 2;
+
+		memset(&cls_meta, 0, sizeof(cls_meta));
+		ret = ctx->api->isp_image_classification(
+			ctx->handle, stVideoFrame, &cls_meta, &isp_meta);
+		if (ret != 0) {
+			clog_e("isp image classification failed, ret: %d\n",
+			       ret);
+			continue;
+		}
+
+		stVideoFrame[0].stVFrame.u32Width =
+			stVideoFrame[0].stVFrame.u32Width * 2 / 3;
+
+		if (getenv("TEAISP_PQ_DEBUG")) {
+			for (int i = 0; i < TEAISP_PQ_SCENE_MAX_TYPE; i++) {
+				clog_i("scene: %s, score: %f\n",
+				       teaisppq_scene_str[i],
+				       cls_meta.score[i]);
+			}
+		}
+		put_vi_raw(thiz->pipe_id, stVideoFrame);
+		update_isp_scene(thiz->pipe_id, &cls_meta);
+	}
+
+	return NULL;
+}
+
+static int start(struct module_t *thiz)
+{
+	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	thiz->thread_run = 1;
+	pthread_create(&thiz->thread_id, NULL, worker, thiz);
+	return 0;
+}
+
+static int stop(struct module_t *thiz)
+{
+	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	thiz->thread_run = 0;
+	pthread_join(thiz->thread_id, NULL);
+	return 0;
+}
+
+static int get(struct module_t *thiz, void **data)
+{
+	int ret = 0;
+	struct module_t *src_module =
+		&(GET_MODULE_PIPE_NODE_PTR(thiz)->prev->module);
+
+	ret = src_module->fun.get(src_module, data);
+	if (ret != 0) {
+		return ret;
+	}
+
+	teaisp_pq_ctx_t *ctx = (teaisp_pq_ctx_t *)thiz->private_data;
+
+	teaisppq_put_text(thiz->pipe_id, ctx, (VIDEO_FRAME_INFO_S *)*data);
+	return 0;
+}
+
+static int put(struct module_t *thiz, void *data)
+{
+	int ret = 0;
+	struct module_t *src_module =
+		&(GET_MODULE_PIPE_NODE_PTR(thiz)->prev->module);
+
+	ret = src_module->fun.put(src_module, data);
+	if (ret != 0) {
+		return ret;
+	}
+	return 0;
+}
+
+struct module_fun_t teaisp_pq_fun = {
+	.init = init,
+	.deinit = deinit,
+	.start = start,
+	.stop = stop,
+	.get = get,
+	.put = put,
+};
