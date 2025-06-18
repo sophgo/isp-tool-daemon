@@ -167,7 +167,7 @@ static CVI_S32 vi_start_dev(SAMPLE_VI_INFO_S *pstViInfo)
 {
 	CVI_S32 s32Ret;
 	VI_DEV ViDev;
-	SAMPLE_SNS_TYPE_E enSnsType;
+	CVI_SNS_TYPE_E enSnsType;
 	VI_DEV_ATTR_S stViDevAttr;
 	VI_DEV_BIND_PIPE_S stViDevBindAttr;
 	ISP_PUB_ATTR_S pstPubAttr;
