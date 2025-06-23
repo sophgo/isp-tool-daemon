@@ -17,6 +17,7 @@ while getopts "hr" OPTION; do
         r)
             echo "start replay mode"
             sed -i 's/"replay-mode": false/"replay-mode": true/g' $CFG_JSON_FILE
+            export CVI_REPLAY_MODE=1
             ;;
         h)
             echo "Usage:"

@@ -99,12 +99,18 @@ static uint8_t g_video_src_init_cnt;
 
 static int init(struct module_t *thiz)
 {
+	char bin_path[256] = {0};
 	daemon_pipe_cfg_t *p_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
 
 	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
 	module_queue_init(&thiz->queue, VIDEO_SRC_QUEUE_SIZE);
 	if (g_video_src_init_cnt == 0) {
 		int vi_num = 1;
+
+		snprintf(bin_path, sizeof(bin_path), "%s/cvi_sdr_bin", p_cfg->cvi_bin_path);
+		CVI_BIN_SetBinName(WDR_MODE_NONE, bin_path);
+		snprintf(bin_path, sizeof(bin_path), "%s/cvi_wdr_bin", p_cfg->cvi_bin_path);
+		CVI_BIN_SetBinName(WDR_MODE_2To1_LINE, bin_path);
 
 		if (p_cfg->raw_replay_enable) {
 			vi_num = replay_sys_vi_int(p_cfg);
@@ -162,15 +168,9 @@ static int deinit(struct module_t *thiz)
 static int get_frame(module_t *thiz, VIDEO_FRAME_INFO_S *pframe)
 {
 	int ret = 0;
-	daemon_pipe_cfg_t *p_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
 
-	if (p_cfg->raw_replay_enable) {
-		ret = CVI_VI_GetChnFrame(0, thiz->pipe_chn, pframe,
-					 DAEMON_TIMEOUT_MS);
-	} else {
-		ret = CVI_VPSS_GetChnFrame(thiz->pipe_id, 0, pframe,
-					   DAEMON_TIMEOUT_MS);
-	}
+	ret = CVI_VPSS_GetChnFrame(thiz->pipe_id, 0, pframe,
+				   DAEMON_TIMEOUT_MS);
 
 	if (ret != CVI_SUCCESS) {
 		clog_e("get chn frame failed with %#x\n", ret);
@@ -183,13 +183,7 @@ static int put_frame(module_t *thiz, VIDEO_FRAME_INFO_S *pframe)
 {
 	int ret = 0;
 
-	daemon_pipe_cfg_t *p_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
-
-	if (p_cfg->raw_replay_enable) {
-		ret = CVI_VI_ReleaseChnFrame(0, thiz->pipe_chn, pframe);
-	} else {
-		ret = CVI_VPSS_ReleaseChnFrame(thiz->pipe_id, 0, pframe);
-	}
+	ret = CVI_VPSS_ReleaseChnFrame(thiz->pipe_id, 0, pframe);
 
 	if (ret != CVI_SUCCESS) {
 		clog_e("release chn frame failed with %#x\n", ret);

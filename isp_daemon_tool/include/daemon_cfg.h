@@ -96,6 +96,7 @@ typedef struct video_pipe_cfg_t {
 } video_pipe_cfg_t;
 
 typedef struct raw_replay_cfg_t {
+	int replay_scene;
 	int pixel_format;
 	int width;
 	int height;
@@ -104,6 +105,7 @@ typedef struct raw_replay_cfg_t {
 	int wdr_mode;
 	int bayer_format;
 	char compress_mode[MAX_COMPRESS_MODE_LEN];
+	char offline_raw_dir[MAX_PATH_LEN];
 } raw_replay_cfg_t;
 
 typedef struct daemon_pipe_cfg_t {
@@ -116,6 +118,8 @@ typedef struct daemon_pipe_cfg_t {
 	int raw_replay_enable;
 	char teaisp_faceae_model_path[MAX_PATH_LEN];
 	char teaisp_pq_model_path[MAX_PATH_LEN];
+	char cvi_bin_path[MAX_PATH_LEN];
+	char sns_cfg_ini[MAX_PATH_LEN];
 	raw_replay_cfg_t raw_replay_cfg;
 	video_pipe_cfg_t video_pipe_cfg;
 } daemon_pipe_cfg_t;

@@ -100,12 +100,16 @@ PKG_CONFIG_PATH = $(MW_PATH)/pkgconfig
 REQUIRES = cvi_common cvi_sample
 MW_LIBS = $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --libs --define-variable=mw_dir=$(MW_PATH) $(REQUIRES))
 
+BM_LIB = $(OUTPUT_DIR)/rootfs/system/lib
+TPU_KERNEL_LIB = $(TOP_DIR)/libsophon/tpu-kernel/lib/$(SDK_VER)
+
 LIBS += $(MW_LIBS) -latomic -ldl
 LIBS += -lcvi_bin -lini
 LIBS += -lcvi_ispd2
 LIBS += -lraw_dump
 LIBS += -lcvi_json-c
 LIBS += -lsensor
+LIBS += -L$(BM_LIB) -lbmrt -lbmlib
 
 ifeq ($(OS_TYPE), DUAL_OS)
 else
@@ -174,6 +178,10 @@ endif
 	do \
 		cp -Lrf $$so install/lib > /dev/null 2>&1; \
 	done
+
+	@cp -Lrf $(BM_LIB)/libbmlib.so* install/lib
+	@cp -Lrf $(BM_LIB)/libbmrt.so* install/lib
+	@cp -Lrf $(TPU_KERNEL_LIB)/libtpu_kernel_module.so install/lib
 
 	@mkdir -p install/ko
 ifneq ($(OS_TYPE), DUAL_OS)

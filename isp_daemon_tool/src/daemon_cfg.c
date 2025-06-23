@@ -125,6 +125,16 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 			cvi_json_object_get_string(val_json_object));
 	}
 
+	if (cvi_json_object_object_get_ex(json_obj, "cvi-bin-path", &val_json_object)) {
+		snprintf(p_cfg->cvi_bin_path, MAX_PATH_LEN, "%s",
+			cvi_json_object_get_string(val_json_object));
+	}
+
+	if (cvi_json_object_object_get_ex(json_obj, "sensor-cfg-ini", &val_json_object)) {
+		snprintf(p_cfg->sns_cfg_ini, MAX_PATH_LEN, "%s",
+			cvi_json_object_get_string(val_json_object));
+	}
+
 	if (cvi_json_object_object_get_ex(json_obj, "replay-mode", &val_json_object)) {
 		const char *tmp_str = cvi_json_object_get_string(val_json_object);
 
@@ -141,7 +151,8 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 
 			if (init_raw_replay_param_from_json(tmp_str, &p_cfg->raw_replay_cfg) != 0) {
 				clog_e("init raw replay param fail!\n");
-				p_cfg->raw_replay_enable = 0;
+				free(p_cfg);
+				return -1;
 			} else {
 				print_raw_replay_param(&p_cfg->raw_replay_cfg);
 			}
@@ -453,15 +464,19 @@ static int init_raw_replay_param_from_json(const char *json_path, raw_replay_cfg
 
 	memset(p_cfg, 0, sizeof(raw_replay_cfg_t));
 
+	if (cvi_json_object_object_get_ex(json_obj, "ReplayScene", &json_val)) {
+		p_cfg->replay_scene = cvi_json_object_get_int(json_val);
+	}
+
 	if (cvi_json_object_object_get_ex(json_obj, "PixelFormat", &json_val)) {
 		p_cfg->pixel_format = cvi_json_object_get_int(json_val);
 	}
 
-	if (cvi_json_object_object_get_ex(json_obj, "width", &json_val)) {
+	if (cvi_json_object_object_get_ex(json_obj, "Width", &json_val)) {
 		p_cfg->width = cvi_json_object_get_int(json_val);
 	}
 
-	if (cvi_json_object_object_get_ex(json_obj, "height", &json_val)) {
+	if (cvi_json_object_object_get_ex(json_obj, "Height", &json_val)) {
 		p_cfg->height = cvi_json_object_get_int(json_val);
 	}
 
@@ -493,6 +508,13 @@ static int init_raw_replay_param_from_json(const char *json_path, raw_replay_cfg
 		snprintf(p_cfg->compress_mode, MAX_COMPRESS_MODE_LEN, "%s", tmp_str);
 	}
 
+	if (cvi_json_object_object_get_ex(json_obj, "OfflineRawDir", &json_val)) {
+		const char *tmp_str = cvi_json_object_get_string(json_val);
+
+		snprintf(p_cfg->offline_raw_dir, MAX_PATH_LEN, "%s", tmp_str);
+	}
+
+
 	// free
 	cvi_json_object_put(json_obj);
 
@@ -502,6 +524,7 @@ static int init_raw_replay_param_from_json(const char *json_path, raw_replay_cfg
 static void print_raw_replay_param(raw_replay_cfg_t *p_cfg)
 {
 	printf("--------------------------------Raw Replay Param--------------------------------\n");
+	printf("\tReplayScene: %d\n", p_cfg->replay_scene);
 	printf("\tPixelFormat: %d\n", p_cfg->pixel_format);
 	printf("\tWidth: %d\n", p_cfg->width);
 	printf("\tHeight: %d\n", p_cfg->height);
@@ -510,4 +533,5 @@ static void print_raw_replay_param(raw_replay_cfg_t *p_cfg)
 	printf("\tWDRMode: %d\n", p_cfg->wdr_mode);
 	printf("\tBayerFormat: %d\n", p_cfg->bayer_format);
 	printf("\tCompressMode: %s\n", p_cfg->compress_mode);
+	printf("\tOfflineRawDir: %s\n", p_cfg->offline_raw_dir);
 }
