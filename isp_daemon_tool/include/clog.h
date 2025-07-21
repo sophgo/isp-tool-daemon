@@ -64,7 +64,7 @@ extern "C" {
 	#define clog_debug(tag, ...) \
 			clog_output(CLOG_LVL_DEBUG, tag, __func__, __LINE__, __VA_ARGS__)
 #else
-	#define elog_debug(tag, ...)
+	#define clog_debug(tag, ...)
 #endif
 
 #if CLOG_OUTPUT_LVL >= CLOG_LVL_VERBOSE

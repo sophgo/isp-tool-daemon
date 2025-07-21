@@ -68,11 +68,12 @@ SDK_VER := musl_riscv64
 else ifeq ($(TARGET_MACHINE), riscv64-unknown-linux-musl)
 SDK_VER := glibc_riscv64
 endif
-AI_SDK_PATH = $(OUTPUT_DIR)/tpu_$(SDK_VER)/cvitek_ai_sdk
-TPU_SDK_PATH = $(OUTPUT_DIR)/tpu_$(SDK_VER)/cvitek_tpu_sdk
 
-AI_SDK_PATH_EXIST = $(shell if [ -d $(AI_SDK_PATH) ]; then echo "exist"; else echo "noexist"; fi)
-TPU_SDK_PATH_EXIST = $(shell if [ -d $(TPU_SDK_PATH) ]; then echo "exist"; else echo "noexist"; fi)
+TDL_SDK_LIB_NAME = libtdl_core.so
+TDL_SDK_INSTALL_PATH = $(TOP_DIR)/tdl_sdk/install/$(CHIP_ARCH)
+
+TDL_SDK_LIB_EXIST = $(shell if [ -f $(TDL_SDK_INSTALL_PATH)/lib/$(TDL_SDK_LIB_NAME) ];\
+					then echo "exist"; else echo "noexist"; fi)
 
 ifeq ($(ENABLE_CVI_RTSP2), 1)
 CVI_OSAL_OBJS += $(PWD)/prebuilt/cvi_osal/obj/osal_fs.$(TARGET_MACHINE).o
@@ -126,11 +127,15 @@ else
 LIBS += -lcvi_rtsp
 endif
 
+ifeq "$(TDL_SDK_LIB_EXIST)" "exist"
+	LOCAL_CFLAGS += -DTDL_SDK_LIB=\"$(TDL_SDK_LIB_NAME)\"
+endif
+
 LOCAL_LDFLAGS = $(LIBS) -lm -lpthread
 LOCAL_LDFLAGS += -L$(CVI_RTSP_PATH)/install/lib
-LOCAL_LDFLAGS += -L$(TPU_SDK_PATH)
 LOCAL_LDFLAGS += -L$(ISP_DIR)/$(CHIP_ARCH_L)/isp-daemon2/prebuilt/$(SDK_VER)
 LOCAL_LDFLAGS += -shared-libgcc
+CFLAGS += -DENABLE_TEAISP_PQ -DENABLE_FACE_AE
 
 .PHONY: clean all package test
 all: prepare $(TARGET)
@@ -164,14 +169,15 @@ package: $(TARGET)
 	@cp res/* install/ -rf
 
 	@mkdir install/lib/ai
-ifeq "$(AI_SDK_PATH_EXIST)" "noexist"
-	$(info cvitek_ai_sdk not exist, please export TPU_REL=1 run build_all !!)
-else ifeq "$(TPU_SDK_PATH_EXIST)" "noexist"
-	$(info cvitek_tpu_sdk not exist, please export TPU_REL=1 run build_all !!)
+ifeq "$(TDL_SDK_LIB_EXIST)" "noexist"
+	$(info tdl_sdk not exist, please export TPU_REL=1 run build_all !!)
 else
-	@cp $(AI_SDK_PATH)/lib/*.so* install/lib/ai -rf
-	@cp $(TPU_SDK_PATH)/lib/*.so* install/lib/ai -rf
-	@rm install/lib/ai/libcvi_rtsp.so
+	@cp -Lrf $(TDL_SDK_INSTALL_PATH)/lib/$(TDL_SDK_LIB_NAME)* install/lib/ai
+	@cp -Lrf $(TDL_SDK_INSTALL_PATH)/sample/3rd/opencv/lib/libopencv_core.so* install/lib
+	@cp -Lrf $(TDL_SDK_INSTALL_PATH)/sample/3rd/opencv/lib/libopencv_imgcodecs.so* install/lib
+	@cp -Lrf $(TDL_SDK_INSTALL_PATH)/sample/3rd/opencv/lib/libopencv_imgproc.so* install/lib
+	@cp -Lrf $(TDL_SDK_INSTALL_PATH)/sample/3rd/curl/lib/libcurl.so* install/lib
+	@cp -Lrf $(TDL_SDK_INSTALL_PATH)/sample/3rd/libwebsockets/lib/libwebsockets.so* install/lib
 endif
 
 	@for so in $(file); \

@@ -224,7 +224,7 @@ int module_sys_vi_init(void *pipe_cfg)
 		g_stViConfig.astViInfo[i].stChnInfo.ViChn = 0;
 		g_stViConfig.astViInfo[i].stChnInfo.enPixFormat =
 			stSnsCfg->bBypassIsp[i] ? PIXEL_FORMAT_YUYV :
-						  PIXEL_FORMAT_NV21;
+						  SAMPLE_PIXEL_FORMAT;
 		g_stViConfig.astViInfo[i].stChnInfo.enDynamicRange =
 			DYNAMIC_RANGE_SDR8;
 		g_stViConfig.astViInfo[i].stChnInfo.enVideoFormat =
@@ -553,7 +553,7 @@ int module_sys_vi_init(void *pipe_cfg)
 		stChnAttr.enVideoFormat  = g_stViConfig.astViInfo[i].stChnInfo.enVideoFormat;
 		stChnAttr.enCompressMode = g_stViConfig.astViInfo[i].stChnInfo.enCompressMode;
 		stChnAttr.enPixelFormat = g_stViConfig.astViInfo[i].stChnInfo.enPixFormat;
-		stChnAttr.u32Depth = 1;
+		stChnAttr.u32Depth = 0;
 		stChnAttr.u32BindVbPool = -1;
 
 		/* fill the sensor orientation */

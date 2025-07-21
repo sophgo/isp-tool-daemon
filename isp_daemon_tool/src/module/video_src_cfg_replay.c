@@ -101,7 +101,7 @@ static COMPRESS_MODE_E get_compress_mode(const char *mode)
 	}
 }
 
-static int replay_sys_init(raw_replay_cfg_t *cfg, int vb_blk_cnt)
+static int replay_sys_init(daemon_pipe_cfg_t *pipe_cfg)
 {
 	CVI_S32 s32Ret = CVI_SUCCESS;
 	SIZE_S stSize;
@@ -109,6 +109,9 @@ static int replay_sys_init(raw_replay_cfg_t *cfg, int vb_blk_cnt)
 	CVI_U32 u32BlkSize;
 	// TODO: check
 	CVI_S32 dft_vb_cnt = 6;
+	raw_replay_cfg_t *cfg = &pipe_cfg->raw_replay_cfg;
+	int vb_blk_cnt = pipe_cfg->video_pipe_cfg.buf_blk_cnt;
+	int vi_vpss_mode = pipe_cfg->vi_vpss_mode;
 
 	memset(&stVbConf, 0, sizeof(VB_CONFIG_S));
 
@@ -128,7 +131,7 @@ static int replay_sys_init(raw_replay_cfg_t *cfg, int vb_blk_cnt)
 		return s32Ret;
 	}
 
-	stVIVPSSMode.aenMode[0] = VI_ONLINE_VPSS_ONLINE;
+	stVIVPSSMode.aenMode[0] = vi_vpss_mode;
 
 	s32Ret = CVI_SYS_SetVIVPSSMode(&stVIVPSSMode);
 	if (s32Ret != CVI_SUCCESS) {
@@ -136,14 +139,17 @@ static int replay_sys_init(raw_replay_cfg_t *cfg, int vb_blk_cnt)
 		return s32Ret;
 	}
 
-	stVPSSMode.enMode = VPSS_MODE_DUAL;
-	stVPSSMode.aenInput[0] = VPSS_INPUT_MEM;
-	stVPSSMode.aenInput[1] = VPSS_INPUT_ISP;
+	if (stVIVPSSMode.aenMode[0] == VI_ONLINE_VPSS_ONLINE ||
+			stVIVPSSMode.aenMode[0] == VI_OFFLINE_VPSS_ONLINE) {
+		stVPSSMode.enMode = VPSS_MODE_DUAL;
+		stVPSSMode.aenInput[0] = VPSS_INPUT_MEM;
+		stVPSSMode.aenInput[1] = VPSS_INPUT_ISP;
 
-	s32Ret = CVI_VPSS_SetMode(&stVPSSMode);
-	if (s32Ret != CVI_SUCCESS) {
-		clog_e("CVI_SYS_SetVPSSModeEx failed with %#x\n", s32Ret);
-		return s32Ret;
+		s32Ret = CVI_VPSS_SetMode(&stVPSSMode);
+		if (s32Ret != CVI_SUCCESS) {
+			clog_e("CVI_SYS_SetVPSSModeEx failed with %#x\n", s32Ret);
+			return s32Ret;
+		}
 	}
 
 	// set vb
@@ -181,7 +187,7 @@ static int replay_sys_init(raw_replay_cfg_t *cfg, int vb_blk_cnt)
 		return s32Ret;
 	}
 
-	return s32Ret;
+	return CVI_SUCCESS;
 }
 
 static CVI_S32 replay_vi_start_dev(raw_replay_cfg_t *cfg)
@@ -388,7 +394,7 @@ static CVI_S32 replay_vi_start_chn(raw_replay_cfg_t *cfg)
 	CVI_S32 s32Ret = CVI_SUCCESS;
 	VI_PIPE ViPipe = 0;
 	VI_CHN ViChn = 0;
-	VI_CHN_ATTR_S stChnAttr;
+	VI_CHN_ATTR_S stChnAttr = {0};
 
 	memcpy(&stChnAttr, &CHN_ATTR_DEFAULT, sizeof(VI_CHN_ATTR_S));
 	stChnAttr.enPixelFormat = PIXEL_FORMAT_NV21;
@@ -398,6 +404,8 @@ static CVI_S32 replay_vi_start_chn(raw_replay_cfg_t *cfg)
 		cfg->wdr_mode ? DYNAMIC_RANGE_HDR10 : DYNAMIC_RANGE_SDR10;
 	stChnAttr.enVideoFormat = VIDEO_FORMAT_LINEAR;
 	stChnAttr.enCompressMode = get_compress_mode(cfg->compress_mode);
+	stChnAttr.u32Depth = 0;
+	stChnAttr.u32BindVbPool = -1;
 	/* fill the sensor orientation */
 	stChnAttr.bMirror = 0;
 	stChnAttr.bFlip = 0;
@@ -417,40 +425,42 @@ static CVI_S32 replay_vi_start_chn(raw_replay_cfg_t *cfg)
 	return CVI_SUCCESS;
 }
 
-static CVI_S32 replay_vpss_init(raw_replay_cfg_t *cfg)
+static CVI_S32 replay_vpss_init(daemon_pipe_cfg_t *pipe_cfg)
 {
 	VPSS_GRP_ATTR_S stVpssGrpAttr;
 	VPSS_CHN VpssChn = 0;
 	VPSS_CHN_ATTR_S astVpssChnAttr;
 	CVI_S32 s32Ret = CVI_SUCCESS;
+	raw_replay_cfg_t *cfg = &pipe_cfg->raw_replay_cfg;
+	int vi_vpss_mode = pipe_cfg->vi_vpss_mode;
 
 	memset(&stVpssGrpAttr, 0, sizeof(VPSS_GRP_ATTR_S));
 	memset(&astVpssChnAttr, 0, sizeof(VPSS_CHN_ATTR_S));
 
 	stVpssGrpAttr.stFrameRate.s32SrcFrameRate = -1;
 	stVpssGrpAttr.stFrameRate.s32DstFrameRate = -1;
-	stVpssGrpAttr.enPixelFormat = SAMPLE_PIXEL_FORMAT;
+	stVpssGrpAttr.enPixelFormat = PIXEL_FORMAT_NV21;
 	stVpssGrpAttr.u32MaxW = cfg->width;
 	stVpssGrpAttr.u32MaxH = cfg->height;
 	stVpssGrpAttr.u8VpssDev = 1;
-
-	astVpssChnAttr.u32Width = cfg->width;
-	astVpssChnAttr.u32Height = cfg->height;
-	astVpssChnAttr.enVideoFormat = VIDEO_FORMAT_LINEAR;
-	astVpssChnAttr.enPixelFormat = PIXEL_FORMAT_NV12;
-	astVpssChnAttr.stFrameRate.s32SrcFrameRate = -1;
-	astVpssChnAttr.stFrameRate.s32DstFrameRate = -1;
-	astVpssChnAttr.u32Depth = 1;
-	astVpssChnAttr.bMirror = CVI_FALSE;
-	astVpssChnAttr.bFlip = CVI_FALSE;
-	astVpssChnAttr.stAspectRatio.enMode = ASPECT_RATIO_NONE;
-	astVpssChnAttr.stNormalize.bEnable = CVI_FALSE;
 
 	s32Ret = CVI_VPSS_CreateGrp(0, &stVpssGrpAttr);
 	if (s32Ret != CVI_SUCCESS) {
 		clog_e("CVI_VPSS_CreateGrp failed with %#x!\n", s32Ret);
 		return s32Ret;
 	}
+
+	astVpssChnAttr.u32Width = cfg->width;
+	astVpssChnAttr.u32Height = cfg->height;
+	astVpssChnAttr.enVideoFormat = VIDEO_FORMAT_LINEAR;
+	astVpssChnAttr.enPixelFormat = PIXEL_FORMAT_NV12;
+	astVpssChnAttr.stFrameRate.s32SrcFrameRate = 30;
+	astVpssChnAttr.stFrameRate.s32DstFrameRate = 30;
+	astVpssChnAttr.u32Depth = 0;
+	astVpssChnAttr.bMirror = CVI_FALSE;
+	astVpssChnAttr.bFlip = CVI_FALSE;
+	astVpssChnAttr.stAspectRatio.enMode = ASPECT_RATIO_NONE;
+	astVpssChnAttr.stNormalize.bEnable = CVI_FALSE;
 
 	s32Ret = CVI_VPSS_SetChnAttr(0, VpssChn, &astVpssChnAttr);
 	if (s32Ret != CVI_SUCCESS) {
@@ -474,6 +484,76 @@ static CVI_S32 replay_vpss_init(raw_replay_cfg_t *cfg)
 	if (s32Ret != CVI_SUCCESS) {
 		clog_e("CVI_BIN_SetVpssGrpParams failed with %#x!\n", s32Ret);
 		return s32Ret;
+	}
+
+	if (vi_vpss_mode == VI_ONLINE_VPSS_OFFLINE ||
+		vi_vpss_mode == VI_OFFLINE_VPSS_OFFLINE) {
+		MMF_CHN_S stSrcChn;
+		MMF_CHN_S stDestChn;
+
+		stSrcChn.enModId = CVI_ID_VI;
+		stSrcChn.s32DevId = 0;
+		stSrcChn.s32ChnId = 0;
+
+		stDestChn.enModId = CVI_ID_VPSS;
+		stDestChn.s32DevId = 0;
+		stDestChn.s32ChnId = 0;
+
+		s32Ret = CVI_SYS_Bind(&stSrcChn, &stDestChn);
+		if (s32Ret != CVI_SUCCESS) {
+			clog_e("CVI_BIN_SetVpssGrpParams failed with %#x!\n", s32Ret);
+			return s32Ret;
+		}
+	}
+
+	return s32Ret;
+}
+
+
+static CVI_S32 replay_vpss_deinit(daemon_pipe_cfg_t *pipe_cfg)
+{
+	int s32Ret = CVI_SUCCESS;
+	int vi_vpss_mode = pipe_cfg->vi_vpss_mode;
+	VPSS_GRP VpssGrp = 0;
+	VPSS_CHN VpssChn = 0;
+
+	s32Ret = CVI_VPSS_DisableChn(VpssGrp, VpssChn);
+	if (s32Ret != CVI_SUCCESS) {
+		clog_e("CVI_VPSS_DisableChn failed with %#x!\n", s32Ret);
+		return s32Ret;
+	}
+
+	s32Ret = CVI_VPSS_StopGrp(VpssGrp);
+	if (s32Ret != CVI_SUCCESS) {
+		clog_e("CVI_VPSS_StopGrp failed with %#x!\n", s32Ret);
+		return s32Ret;
+	}
+
+	s32Ret = CVI_VPSS_DestroyGrp(VpssGrp);
+	if (s32Ret != CVI_SUCCESS) {
+		clog_e("CVI_VPSS_DestroyGrp failed with %#x!\n", s32Ret);
+		return s32Ret;
+	}
+
+	if (vi_vpss_mode == VI_ONLINE_VPSS_OFFLINE ||
+		vi_vpss_mode == VI_OFFLINE_VPSS_OFFLINE) {
+		MMF_CHN_S stSrcChn;
+		MMF_CHN_S stDestChn;
+
+		stSrcChn.enModId = CVI_ID_VI;
+		stSrcChn.s32DevId = 0;
+		stSrcChn.s32ChnId = 0;
+
+		stDestChn.enModId = CVI_ID_VPSS;
+		stDestChn.s32DevId = 0;
+		stDestChn.s32ChnId = 0;
+
+		printf("cvi sys bind!\n");
+		s32Ret = CVI_SYS_UnBind(&stSrcChn, &stDestChn);
+		if (s32Ret != CVI_SUCCESS) {
+			clog_e("CVI_SYS_UnBind failed with %#x!\n", s32Ret);
+			return s32Ret;
+		}
 	}
 
 	return s32Ret;
@@ -615,54 +695,52 @@ static CVI_S32 replay_send_usr_pic(raw_replay_cfg_t *cfg)
 	return CVI_SUCCESS;
 }
 
-
 int replay_sys_vi_int(daemon_pipe_cfg_t *pipe_cfg)
 {
 	raw_replay_cfg_t *replay_cfg = &pipe_cfg->raw_replay_cfg;
 	CVI_S32 s32Ret = CVI_SUCCESS;
 
-	s32Ret = replay_sys_init(replay_cfg,
-				 pipe_cfg->video_pipe_cfg.buf_blk_cnt);
+	s32Ret = replay_sys_init(pipe_cfg);
 	if (s32Ret != CVI_SUCCESS) {
 		clog_e("replay_sys_init failed with %#x!\n", s32Ret);
-		return s32Ret;
+		return -1;
 	}
 
 	s32Ret = replay_send_usr_pic(replay_cfg);
 	if (s32Ret != CVI_SUCCESS) {
 		clog_e("replay_send_usr_pic failed with %#x!\n", s32Ret);
-		return s32Ret;
+		return -1;
 	}
 
 	s32Ret = replay_vi_start_dev(replay_cfg);
 	if (s32Ret != CVI_SUCCESS) {
 		clog_e("replay_vi_start_dev failed with %#x!\n", s32Ret);
-		return s32Ret;
+		return -1;
 	}
 
 	s32Ret = replay_vi_start_pipe(replay_cfg);
 	if (s32Ret != CVI_SUCCESS) {
 		clog_e("replay_vi_start_pipe failed with %#x!\n", s32Ret);
-		return s32Ret;
+		return -1;
 	}
 
 	s32Ret = replay_vi_create_isp(replay_cfg,
 				pipe_cfg->video_pipe_cfg.enable_teaisp_bnr);
 	if (s32Ret != CVI_SUCCESS) {
 		clog_e("replay_vi_create_isp failed with %#x!\n", s32Ret);
-		return s32Ret;
+		return -1;
 	}
 
 	s32Ret = replay_vi_start_chn(replay_cfg);
 	if (s32Ret != CVI_SUCCESS) {
 		clog_e("replay_vi_start_chn failed with %#x!\n", s32Ret);
-		return s32Ret;
+		return -1;
 	}
 
-	s32Ret = replay_vpss_init(replay_cfg);
+	s32Ret = replay_vpss_init(pipe_cfg);
 	if (s32Ret != CVI_SUCCESS) {
 		clog_e("replay_vpss_init failed with %#x!\n", s32Ret);
-		return s32Ret;
+		return -1;
 	}
 
 	// ofline replay init
@@ -670,39 +748,24 @@ int replay_sys_vi_int(daemon_pipe_cfg_t *pipe_cfg)
 		s32Ret = replay_offline_init(replay_cfg);
 		if (s32Ret != CVI_SUCCESS) {
 			clog_e("replay offline init failed with %#x!\n", s32Ret);
-			return s32Ret;
+			return -1;
 		}
 	}
 
-	return CVI_SUCCESS;
+	// return the vi num, raw replay is 1
+	return 1;
 }
 
 int replay_sys_vi_deinit(daemon_pipe_cfg_t *pipe_cfg)
 {
 	int s32Ret = CVI_SUCCESS;
-	VPSS_GRP VpssGrp = 0;
-	VPSS_CHN VpssChn = 0;
 	VI_DEV ViDev = 0;
 	VI_PIPE ViPipe = 0;
 	VI_CHN chn = 0;
 
-	UNUSED(pipe_cfg);
-
-	s32Ret = CVI_VPSS_DisableChn(VpssGrp, VpssChn);
+	s32Ret = replay_vpss_deinit(pipe_cfg);
 	if (s32Ret != CVI_SUCCESS) {
-		clog_e("CVI_VPSS_DisableChn failed with %#x!\n", s32Ret);
-		return s32Ret;
-	}
-
-	s32Ret = CVI_VPSS_StopGrp(VpssGrp);
-	if (s32Ret != CVI_SUCCESS) {
-		clog_e("CVI_VPSS_StopGrp failed with %#x!\n", s32Ret);
-		return s32Ret;
-	}
-
-	s32Ret = CVI_VPSS_DestroyGrp(VpssGrp);
-	if (s32Ret != CVI_SUCCESS) {
-		clog_e("CVI_VPSS_DestroyGrp failed with %#x!\n", s32Ret);
+		clog_e("replay_vpss_deinit failed with %#x!\n", s32Ret);
 		return s32Ret;
 	}
 
@@ -735,7 +798,8 @@ int replay_sys_vi_deinit(daemon_pipe_cfg_t *pipe_cfg)
 	CVI_VI_UnRegChnFlipMirrorCallBack(0, ViDev);
 	CVI_VI_UnRegPmCallBack(ViDev);
 
-	SAMPLE_COMM_SYS_Exit();
+	CVI_VB_Exit();
+	CVI_SYS_Exit();
 
 	return CVI_SUCCESS;
 }

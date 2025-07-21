@@ -115,6 +115,11 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 		p_cfg->vi_vpss_mode = cvi_json_object_get_int(val_json_object);
 	}
 
+	p_cfg->max_use_tpu_num = 1;
+	if (cvi_json_object_object_get_ex(json_obj, "max-use-tpu-num", &val_json_object)) {
+		p_cfg->max_use_tpu_num = cvi_json_object_get_int(val_json_object);
+	}
+
 	if (cvi_json_object_object_get_ex(json_obj, "teaisp-faceae-model", &val_json_object)) {
 		snprintf(p_cfg->teaisp_faceae_model_path, MAX_PATH_LEN, "%s",
 			cvi_json_object_get_string(val_json_object));
@@ -203,6 +208,13 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 				} else {
 					p_cfg[i].video_pipe_cfg.enable_isp_info_osd = 0;
 				}
+			}
+
+			p_cfg[i].video_pipe_cfg.tpu_device_id = 0;
+			if (cvi_json_object_object_get_ex(json_obj, "tpu-device-id", &arr_val_json_object)) {
+				p_cfg[i].video_pipe_cfg.tpu_device_id = cvi_json_object_get_int(arr_val_json_object);
+				if (p_cfg[i].video_pipe_cfg.tpu_device_id >= p_cfg->max_use_tpu_num)
+					p_cfg[i].video_pipe_cfg.tpu_device_id = p_cfg->max_use_tpu_num - 1;
 			}
 
 			if (cvi_json_object_object_get_ex(array_ele, "enable-faceae", &arr_val_json_object)) {
@@ -310,6 +322,8 @@ static int print_daemon_pipe_cfg(daemon_pipe_cfg_t *p_cfg)
 		printf("\tcodec: %s\n", p_cfg[i].video_pipe_cfg.codec);
 		printf("\tcompress-mode: %s\n", p_cfg[i].video_pipe_cfg.compress_mode);
 		printf("\tenable-patgen: %d\n", p_cfg[i].video_pipe_cfg.enable_patgen);
+		printf("\tmax-use-tpu-num: %d\n", p_cfg[i].max_use_tpu_num);
+		printf("\ttpu-device-id: %d\n", p_cfg[i].video_pipe_cfg.tpu_device_id);
 	}
 
 	return 0;
