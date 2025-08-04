@@ -25,53 +25,68 @@ int create_pipe(daemon_pipe_cfg_t *p_cfg)
 		clog_i("create pipe: %d, %d\n", i, p_cfg[i].video_pipe_cfg.chn);
 		pdaemon_pipe[i].pipe_cfg = &p_cfg[i];
 
-		module.name = "video_src";
-		module.pipe_id = i;
-		module.pipe_chn = i;
-		module.pipe_cfg = &p_cfg[i];
-		module.fun = video_src_fun;
-		module_pipe_add(&pdaemon_pipe[i], &module);
-	#ifdef ENABLE_TEAISP_PQ
-		if (p_cfg[i].video_pipe_cfg.enable_teaisp_pq) {
-			module.name = "teaisp_pq";
+		if (p_cfg->is_fastboot_mode == 0) {
+			module.name = "video_src";
 			module.pipe_id = i;
 			module.pipe_chn = i;
-			module.fun = teaisp_pq_fun;
+			module.pipe_cfg = &p_cfg[i];
+			module.fun = video_src_fun;
 			module_pipe_add(&pdaemon_pipe[i], &module);
-		}
-	#endif
-	#ifdef ENABLE_FACE_AE
-		if (p_cfg[i].video_pipe_cfg.enable_face_ae) {
-			module.name = "face_ae";
-			module.pipe_id = i;
-			module.pipe_chn = i;
-			module.fun = face_ae_fun;
-			module_pipe_add(&pdaemon_pipe[i], &module);
-		}
-	#endif
+		#ifdef ENABLE_TEAISP_PQ
+			if (p_cfg[i].video_pipe_cfg.enable_teaisp_pq) {
+				module.name = "teaisp_pq";
+				module.pipe_id = i;
+				module.pipe_chn = i;
+				module.fun = teaisp_pq_fun;
+				module_pipe_add(&pdaemon_pipe[i], &module);
+			}
+		#endif
+		#ifdef ENABLE_FACE_AE
+			if (p_cfg[i].video_pipe_cfg.enable_face_ae) {
+				module.name = "face_ae";
+				module.pipe_id = i;
+				module.pipe_chn = i;
+				module.fun = face_ae_fun;
+				module_pipe_add(&pdaemon_pipe[i], &module);
+			}
+		#endif
 
-		if (p_cfg[i].video_pipe_cfg.enable_isp_info_osd) {
-			module.name = "osd";
+			if (p_cfg[i].video_pipe_cfg.enable_isp_info_osd) {
+				module.name = "osd";
+				module.pipe_id = i;
+				module.pipe_chn = i;
+				module.fun = osd_fun;
+				module_pipe_add(&pdaemon_pipe[i], &module);
+			}
+
+			module.name = "venc";
 			module.pipe_id = i;
 			module.pipe_chn = i;
-			module.fun = osd_fun;
+			module.fun = venc_fun;
+			module_pipe_add(&pdaemon_pipe[i], &module);
+		} else {
+			module.name = "venc_fastboot";
+			module.pipe_id = i;
+			module.pipe_chn = i;
+			module.pipe_cfg = &p_cfg[i];
+			module.fun = venc_fun_fastboot;
 			module_pipe_add(&pdaemon_pipe[i], &module);
 		}
-
-		module.name = "venc";
-		module.pipe_id = i;
-		module.pipe_chn = i;
-		module.fun = venc_fun;
-		module_pipe_add(&pdaemon_pipe[i], &module);
 
 		module.name = "rtsp";
 		module.pipe_id = i;
 		module.pipe_chn = i;
-#ifdef ENABLE_CVI_RTSP2
-		module.fun = cvi_rtsp2_fun;
+
+		if (p_cfg[i].rtsp_server_select == 3) {
+			module.fun = cvi_rtsp3_fun;
+		} else {
+#ifndef ENABLE_CVI_RTSP2
+			module.fun = cvi_rtsp_fun;
 #else
-		module.fun = cvi_rtsp_fun;
+			module.fun = cvi_rtsp2_fun;
 #endif
+		}
+
 		module_pipe_add(&pdaemon_pipe[i], &module);
 
 		ret = module_pipe_init(&pdaemon_pipe[i]);

@@ -9,7 +9,7 @@
 #define VPSS_ONLINE_GRP_0 0
 #define USE_USER_SEN_DRIVER 1
 
-#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #undef CLOG_TAG
 #define CLOG_TAG "video_src_cfg"
 

@@ -2,7 +2,7 @@
 #ifdef ENABLE_FACE_AE
 #include <sys/prctl.h>
 
-#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #define CLOG_TAG "face_ae"
 
 #include <math.h>

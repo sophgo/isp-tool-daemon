@@ -8,7 +8,6 @@ file += $(MW_LIB)/libisp_algo.so
 file += $(MW_LIB)/libraw_replay.so
 file += $(MW_LIB)/libraw_replay_offline.so
 file += $(MW_LIB)/libraw_dump.so
-file += $(MW_LIB)/libcvi_bin_isp.so
 file += $(MW_LIB)/libcvi_ispd2.so
 #file += $(MW_LIB)/libteaisp.so
 
@@ -22,7 +21,6 @@ file += $(MW_LIB)/libvpss.so
 file += $(MW_LIB)/libvo.so
 file += $(MW_LIB)/librgn.so
 file += $(MW_LIB)/libgdc.so
-file += $(MW_LIB)/libcvi_ive.so
 file += $(MW_LIB)/libcvi_vqe.so
 file += $(MW_LIB)/libcvi_VoiceEngine.so
 file += $(MW_LIB)/libcvi_RES1.so
@@ -30,14 +28,12 @@ file += $(MW_LIB)/libtinyalsa.so
 file += $(MW_LIB)/libcvi_ssp.so
 file += $(MW_LIB)/libcvi_ssp2.so
 file += $(MW_LIB)/libcvi_dnvqe.so
-file += $(MW_LIB)/libmisc.so
 file += $(MW_LIB)/libsensor.so
 file += $(MW_LIB)/libmipi.so
 
 # misc lib
 file += $(MW_LIB)/libsns_full.so
 file += $(MW_LIB)/3rd/libini.so
-file += $(MW_LIB)/3rd/libsbc.so
 
 # rtsp lib
 file += $(CVI_RTSP_PATH)/install/lib/libcvi_rtsp.so

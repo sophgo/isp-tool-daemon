@@ -115,8 +115,10 @@ typedef struct daemon_pipe_cfg_t {
 	int src_height;
 	int rtsp_port;
 	unsigned long long rtsp_max_buf_size;
+	int rtsp_server_select;
 	int vi_vpss_mode;
 	int raw_replay_enable;
+	int is_fastboot_mode;
 	int max_use_tpu_num;
 	char teaisp_faceae_model_path[MAX_PATH_LEN];
 	char teaisp_pq_model_path[MAX_PATH_LEN];

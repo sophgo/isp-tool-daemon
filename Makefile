@@ -108,7 +108,6 @@ LIBS += $(MW_LIBS) -latomic -ldl
 LIBS += -lcvi_bin -lini
 LIBS += -lcvi_ispd2
 LIBS += -lraw_dump
-LIBS += -lcvi_json-c
 LIBS += -lsensor
 LIBS += -L$(BM_LIB) -lbmrt -lbmlib
 
@@ -133,7 +132,6 @@ endif
 
 LOCAL_LDFLAGS = $(LIBS) -lm -lpthread
 LOCAL_LDFLAGS += -L$(CVI_RTSP_PATH)/install/lib
-LOCAL_LDFLAGS += -L$(ISP_DIR)/$(CHIP_ARCH_L)/isp-daemon2/prebuilt/$(SDK_VER)
 LOCAL_LDFLAGS += -shared-libgcc
 CFLAGS += -DENABLE_TEAISP_PQ -DENABLE_FACE_AE
 
@@ -182,7 +180,11 @@ endif
 
 	@for so in $(file); \
 	do \
-		cp -Lrf $$so install/lib > /dev/null 2>&1; \
+		if [ -f $$so ]; then \
+			cp -Lrf $$so install/lib > /dev/null 2>&1; \
+		else \
+			echo "Packing warning: $$so not found!"; \
+		fi; \
 	done
 
 	@cp -Lrf $(BM_LIB)/libbmlib.so* install/lib

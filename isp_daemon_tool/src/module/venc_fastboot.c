@@ -2,7 +2,7 @@
 #include <sys/prctl.h>
 
 #define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
-#define CLOG_TAG "venc"
+#define CLOG_TAG "venc_fastboot"
 
 #include "daemon_base.h"
 #include "daemon_cfg.h"
@@ -10,6 +10,7 @@
 #include "venc_cfg.h"
 #include "cvi_isp.h"
 #include "cvi_venc.h"
+#include "cvi_sys.h"
 
 // touch /tmp/venc_dump
 #define ENABLE_VENC_DUMP_DEBUG (1)
@@ -17,20 +18,23 @@
 
 static int init(struct module_t *thiz)
 {
-	int ret = 0;
+	int ret = CVI_SUCCESS;
 
 	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
 	       thiz->pipe_chn);
 	module_queue_init(&thiz->queue, VENC_QUEUE_SIZE);
 
 	daemon_pipe_cfg_t *pipe_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
-	int chn = thiz->pipe_chn;
+	int dev_num = pipe_cfg->dev_num;
 
-	pipe_cfg->video_pipe_cfg.chn = chn;
-	ret = module_venc_init(pipe_cfg);
-	if (ret != 0) {
-		clog_a("module_venc_init failed with %#x\n", ret);
-		return ret;
+	CVI_SYS_Init();
+
+	for (int i = 0; i < dev_num; ++i) {
+		ret = CVI_ISP_MemInit(i);
+		if (ret != CVI_SUCCESS) {
+			clog_e("pipe: %d, CVI_ISP_MemInit fail!\n", i);
+			return -1;
+		}
 	}
 
 	return 0;
@@ -43,12 +47,10 @@ static int deinit(struct module_t *thiz)
 	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
 	       thiz->pipe_chn);
 
-	ret = module_venc_deinit(thiz->pipe_cfg);
-	if (ret != CVI_SUCCESS) {
-		clog_e("module_venc_deinit failed with %#x\n", ret);
-	}
+	CVI_SYS_Exit();
 
 	module_queue_deinit(&thiz->queue);
+
 	return ret;
 }
 
@@ -56,8 +58,6 @@ static void *worker(void *arg)
 {
 	int ret = 0;
 	struct module_t *thiz = (struct module_t *)arg;
-	struct module_t *src_module =
-		&(GET_MODULE_PIPE_NODE_PTR(thiz)->prev->module);
 	int chn = thiz->pipe_chn;
 
 	clog_i("run, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
@@ -67,29 +67,19 @@ static void *worker(void *arg)
 
 	daemon_pipe_cfg_t *pipe_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
 	VENC_CHN_STATUS_S stStat;
-	VIDEO_FRAME_INFO_S *pframe = NULL;
+	VENC_RECV_PIC_PARAM_S stRecvParam = {0};
 
-	// for debug
+	stRecvParam.s32RecvPicNum = -1;
+
+	ret = CVI_VENC_StartRecvFrame(chn, &stRecvParam);
+
+	if (ret != CVI_SUCCESS) {
+		clog_e("venc start recv frame fail!\n");
+	}
+
 	FILE *fp = NULL;
 
 	while (thiz->thread_run) {
-		if (pframe != NULL) {
-			src_module->fun.put(src_module, pframe);
-			pframe = NULL;
-		}
-
-		ret = src_module->fun.get(src_module, (void **)&pframe);
-		if (ret != 0) {
-			clog_e("src module get fail...\n");
-			continue;
-		}
-
-		ret = CVI_VENC_SendFrame(chn, pframe, DAEMON_TIMEOUT_MS);
-		if (ret != CVI_SUCCESS) {
-			clog_e("venc chn %d, send frame fail: %#x...\n", chn, ret);
-			continue;
-		}
-
 		memset(&stStat, 0, sizeof(VENC_CHN_STATUS_S));
 		ret = CVI_VENC_QueryStatus(chn, &stStat);
 		if (ret != CVI_SUCCESS) {
@@ -168,11 +158,6 @@ static void *worker(void *arg)
 		}
 	}
 
-	if (pframe != NULL) {
-		src_module->fun.put(src_module, pframe);
-		pframe = NULL;
-	}
-
 	while (module_queue_size(&thiz->queue) > 0) {
 		VENC_STREAM_S *pstStream = NULL;
 
@@ -225,7 +210,7 @@ static int put(struct module_t *thiz, void *data)
 	return 0;
 }
 
-struct module_fun_t venc_fun = {
+struct module_fun_t venc_fun_fastboot = {
 	.init = init,
 	.deinit = deinit,
 	.start = start,

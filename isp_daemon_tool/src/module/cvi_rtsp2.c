@@ -2,7 +2,7 @@
 #ifdef ENABLE_CVI_RTSP2
 #include <sys/prctl.h>
 
-#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #define CLOG_TAG "rtsp2"
 
 #include "daemon_base.h"

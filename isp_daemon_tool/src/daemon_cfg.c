@@ -111,6 +111,10 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 		p_cfg->rtsp_max_buf_size = cvi_json_object_get_int(val_json_object);
 	}
 
+	if (cvi_json_object_object_get_ex(json_obj, "rtsp-server-select", &val_json_object)) {
+		p_cfg->rtsp_server_select = cvi_json_object_get_int(val_json_object);
+	}
+
 	if (cvi_json_object_object_get_ex(json_obj, "vi-vpss-mode", &val_json_object)) {
 		p_cfg->vi_vpss_mode = cvi_json_object_get_int(val_json_object);
 	}
@@ -138,6 +142,16 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 	if (cvi_json_object_object_get_ex(json_obj, "sensor-cfg-ini", &val_json_object)) {
 		snprintf(p_cfg->sns_cfg_ini, MAX_PATH_LEN, "%s",
 			cvi_json_object_get_string(val_json_object));
+	}
+
+	if (cvi_json_object_object_get_ex(json_obj, "is_fastboot_mode", &val_json_object)) {
+		const char *tmp_str = cvi_json_object_get_string(val_json_object);
+
+		if (strcmp(tmp_str, "true") == 0) {
+			p_cfg->is_fastboot_mode = 1;
+		} else {
+			p_cfg->is_fastboot_mode = 0;
+		}
 	}
 
 	if (cvi_json_object_object_get_ex(json_obj, "replay-mode", &val_json_object)) {
@@ -182,6 +196,7 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 			p_cfg[i].dev_num = p_cfg[0].dev_num;
 			p_cfg[i].rtsp_port = p_cfg[0].rtsp_port;
 			p_cfg[i].rtsp_max_buf_size = p_cfg[0].rtsp_max_buf_size;
+			p_cfg[i].rtsp_server_select = p_cfg[0].rtsp_server_select;
 
 			array_ele = cvi_json_object_array_get_idx(val_json_object, i);
 			p_cfg[i].video_pipe_cfg.chn = i;
@@ -274,9 +289,14 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 			}
 
 			if (cvi_json_object_object_get_ex(array_ele, "enable-patgen", &arr_val_json_object)) {
-				p_cfg[i].video_pipe_cfg.enable_patgen = cvi_json_object_get_int(arr_val_json_object);
-			}
+				const char *tmp_str = cvi_json_object_get_string(arr_val_json_object);
 
+				if (strcmp(tmp_str, "true") == 0) {
+					p_cfg[i].video_pipe_cfg.enable_patgen = 1;
+				} else {
+					p_cfg[i].video_pipe_cfg.enable_patgen = 0;
+				}
+			}
 		}
 		print_daemon_pipe_cfg(p_cfg);
 
@@ -311,9 +331,12 @@ static int print_daemon_pipe_cfg(daemon_pipe_cfg_t *p_cfg)
 		printf("------------------------daemon pipe chn: %d, pipe info--------------------------\n", i);
 		printf("\trtsp-port:%d\n", p_cfg[i].rtsp_port);
 		printf("\trtsp-max-buf-size:%llu\n", p_cfg[i].rtsp_max_buf_size);
+		printf("\trtsp-server-select: %d\n", p_cfg[i].rtsp_server_select);
 		printf("\tvi-vpss-mode: %d\n", p_cfg[i].vi_vpss_mode);
 		printf("\tteaisp-faceae-model: %s\n", p_cfg[i].teaisp_faceae_model_path);
 		printf("\tteaisp-pq-model: %s\n", p_cfg[i].teaisp_pq_model_path);
+		printf("\treplay-mode: %d\n", p_cfg[i].raw_replay_enable);
+		printf("\tis_fastboot_mode: %d\n", p_cfg[i].is_fastboot_mode);
 		printf("\tchn: %d\n", p_cfg[i].video_pipe_cfg.chn);
 		printf("\tbuf-blk-cnt: %d\n", p_cfg[i].video_pipe_cfg.buf_blk_cnt);
 		printf("\tis_wdr_mode: %d\n", p_cfg[i].video_pipe_cfg.is_wdr_mode);

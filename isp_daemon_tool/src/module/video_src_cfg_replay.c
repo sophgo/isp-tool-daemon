@@ -11,7 +11,7 @@
 
 //#include "raw_replay_offline.h"
 
-#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #undef CLOG_TAG
 #define CLOG_TAG "video_src_cfg_replay"
 

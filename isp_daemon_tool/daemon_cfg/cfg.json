@@ -12,6 +12,7 @@
 	"dev-num": 1,
 	"rtsp-port": 8554,
 	"rtsp-max-buf-size": 10485760,
+	"rtsp-server-select": 3,
 	"vi-vpss-mode": 1,
 	"max-use-tpu-num": 1,
 	"teaisp-faceae-model": "./cvi_models/retinaface_mnet0.25_342_608.cvimodel",
@@ -23,6 +24,7 @@
 	"sbm": 0,
 	"sbm-buf-line": 64,
 	"sbm-buf-size": 16,
+	"is_fastboot_mode": false,
 	"video-src-info": [
 		{
 			"chn": 0,

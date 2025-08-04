@@ -3,7 +3,7 @@
 #include <sys/prctl.h>
 #include "cvi_sys.h"
 
-#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #define CLOG_TAG "teaisp_pq"
 
 #include "daemon_base.h"
