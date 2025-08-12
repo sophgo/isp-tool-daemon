@@ -63,7 +63,6 @@ LIBS += $(MW_LIBS) -latomic
 LIBS += -lcvi_bin -lini
 LIBS += -lcvi_ispd2
 LIBS += -lraw_dump
-LIBS += -lcvi_json-c
 LIBS += -ldl -lcvi_rtsp
 LIBS += -lraw_replay_offline
 LIBS += -lteaisp -lbmlib -lbmrt
@@ -82,6 +81,7 @@ all: prepare $(TARGET)
 prepare:
 	-@mkdir -p $(TMP_FOLDER)
 	-@mkdir -p $(TMP_FOLDER)/module
+	@cp $(MW_SNS_INC)/sensor_cfg/*.h $(MW_INC)
 
 $(TMP_FOLDER)/%.o: $(SDIR)/%.c | prepare
 	$(CC) $(CFLAGS) $(LOCAL_CFLAGS) -c $< -o $@
@@ -129,6 +129,7 @@ clean:
 	@rm -f $(COBJS) $(SAMPLE_OBJS) $(CDEPS) $(TARGET) $(SAMPLE_DEPS)
 	@rm -rf install $(TMP_FOLDER)
 	@rm -rf $(OUT_TARBALL)
+	@rm -f $(MW_INC)/sensor_cfg.h
 
 test:
 	@echo "mw sample objectd: " $(SAMPLE_OBJS)

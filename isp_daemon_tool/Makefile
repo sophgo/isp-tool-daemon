@@ -77,7 +77,6 @@ LIBS += -lcvi_ispd2
 LIBS += -lraw_dump
 LIBS += -lraw_replay_offline
 LIBS += -lteaisp -lbmlib -lbmrt
-LIBS += -lcvi_json-c
 
 LOCAL_CFLAGS = $(DEFS) $(INCS) -DSDK_VER=$(SDK_VER)
 LOCAL_CFLAGS += -MMD -MP
