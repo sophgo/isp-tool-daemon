@@ -80,11 +80,7 @@ int create_pipe(daemon_pipe_cfg_t *p_cfg)
 		if (p_cfg[i].rtsp_server_select == 3) {
 			module.fun = cvi_rtsp3_fun;
 		} else {
-#ifndef ENABLE_CVI_RTSP2
 			module.fun = cvi_rtsp_fun;
-#else
-			module.fun = cvi_rtsp2_fun;
-#endif
 		}
 
 		module_pipe_add(&pdaemon_pipe[i], &module);

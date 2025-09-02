@@ -1,5 +1,4 @@
 
-#ifndef ENABLE_CVI_RTSP2
 #include <sys/prctl.h>
 
 #define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
@@ -252,4 +251,3 @@ struct module_fun_t cvi_rtsp_fun = {
 	.get = NULL,
 	.put = NULL,
 };
-#endif // ENABLE_CVI_RTSP2

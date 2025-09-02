@@ -14,7 +14,6 @@ extern struct module_fun_t video_src_fun;
 extern struct module_fun_t venc_fun;
 extern struct module_fun_t venc_fun_fastboot;
 extern struct module_fun_t cvi_rtsp_fun;
-extern struct module_fun_t cvi_rtsp2_fun;
 extern struct module_fun_t cvi_rtsp3_fun;
 extern struct module_fun_t osd_fun;
 

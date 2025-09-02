@@ -611,7 +611,6 @@ int module_sys_vi_deinit(void *pipe_cfg)
 	SAMPLE_VI_INFO_S stViInfo;
 	VI_CHN ViChn;
 	VI_PIPE ViPipe = 0;
-	VI_VPSS_MODE_E enMastPipeMode;
 	VI_DEV ViDev;
 
 	daemon_pipe_cfg_t *cfg = (daemon_pipe_cfg_t *)pipe_cfg;
@@ -635,26 +634,24 @@ int module_sys_vi_deinit(void *pipe_cfg)
 		s32ViNum  = g_stViConfig.as32WorkingViId[i];
 		stViInfo = g_stViConfig.astViInfo[s32ViNum];
 
-	/************************************************
-	 *  VI chn stop
-	 ************************************************/
+		/************************************************
+		 *  VI chn stop
+		 ************************************************/
 		ViChn  = stViInfo.stChnInfo.ViChn;
-		if (ViChn < VI_MAX_CHN_NUM) {
-			enMastPipeMode = stViInfo.stPipeInfo.enMastPipeMode;
-
-			if (enMastPipeMode == VI_OFFLINE_VPSS_OFFLINE
-				|| enMastPipeMode == VI_ONLINE_VPSS_OFFLINE) {
+		for (i = 0; i < WDR_MAX_PIPE_NUM; i++) {
+			if (stViInfo.stPipeInfo.aPipe[i] >= 0 && stViInfo.stPipeInfo.aPipe[i] < VI_MAX_PIPE_NUM) {
+				ViPipe = stViInfo.stPipeInfo.aPipe[i];
 				s32Ret = CVI_VI_DisableChn(ViPipe, ViChn);
 				if (s32Ret != CVI_SUCCESS) {
-					clog_e("CVI_VI_DisableChn failed with %#x!\n",
-									s32Ret);
+					clog_e("CVI_VI_DisableChn failed with %#x!\n", s32Ret);
 					return s32Ret;
 				}
 			}
 		}
-	/************************************************
-	 *  VI pipe stop
-	 ************************************************/
+
+		/************************************************
+		 *  VI pipe stop
+		 ************************************************/
 		for (i = 0; i < WDR_MAX_PIPE_NUM; i++) {
 			if (stViInfo.stPipeInfo.aPipe[i] >= 0  && stViInfo.stPipeInfo.aPipe[i] < VI_MAX_PIPE_NUM) {
 				ViPipe = stViInfo.stPipeInfo.aPipe[i];
@@ -673,9 +670,9 @@ int module_sys_vi_deinit(void *pipe_cfg)
 			}
 		}
 
-	/************************************************
-	 *  VI dev stop
-	 ************************************************/
+		/************************************************
+		 *  VI dev stop
+		 ************************************************/
 		ViDev   = stViInfo.stDevInfo.ViDev;
 		s32Ret  = CVI_VI_DisableDev(ViDev);
 

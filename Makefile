@@ -18,14 +18,11 @@ MW_SAMPLE_COMMON_PATH=$(TOP_DIR)/cvi_mpi/sample_app/common
 #include $(BUILD_PATH)/.config
 #include $(MW_PATH)/component/isp/common/Kbuild
 
-ENABLE_CVI_RTSP2 := 1
-
 SDIR = $(PWD)/isp_daemon_tool/src
 TMP_FOLDER = tmp
 ISP_DIR = $(TOP_DIR)/cvi_mpi/modules/isp
 ISP_COMMON_DIR = $(ISP_DIR)/common
 CVI_RTSP_PATH = $(TOP_DIR)/cvi_rtsp
-CVI_RTSP2_PATH = $(PWD)/prebuilt/cvi_rtsp
 
 ifeq ($(DESTDIR),)
 	DESTDIR := $(shell pwd)/install
@@ -33,7 +30,6 @@ endif
 
 INCS = -I$(KERNEL_INC) -I$(MW_INC) -I$(ISP_INC) -I$(MW_SAMPLE_COMMON_PATH)
 INCS += -I$(CVI_RTSP_PATH)/include/cvi_rtsp
-INCS += -I$(CVI_RTSP2_PATH)/include/
 INCS += -I$(PWD)/isp_daemon_tool/include
 INCS += -I$(ISP_COMMON_DIR)/clog
 INCS += -I$(ISP_COMMON_DIR)/raw_dump/inc
@@ -75,26 +71,10 @@ TDL_SDK_INSTALL_PATH = $(TOP_DIR)/tdl_sdk/install/$(CHIP_ARCH)
 TDL_SDK_LIB_EXIST = $(shell if [ -f $(TDL_SDK_INSTALL_PATH)/lib/$(TDL_SDK_LIB_NAME) ];\
 					then echo "exist"; else echo "noexist"; fi)
 
-ifeq ($(ENABLE_CVI_RTSP2), 1)
-CVI_OSAL_OBJS += $(PWD)/prebuilt/cvi_osal/obj/osal_fs.$(TARGET_MACHINE).o
-CVI_OSAL_OBJS += $(PWD)/prebuilt/cvi_osal/obj/osal_mutex.$(TARGET_MACHINE).o
-CVI_OSAL_OBJS += $(PWD)/prebuilt/cvi_osal/obj/osal_task.$(TARGET_MACHINE).o
-CVI_OSAL_OBJS += $(PWD)/prebuilt/cvi_osal/obj/osal_time.$(TARGET_MACHINE).o
-
-CVI_RINGBUF_OBJS += $(PWD)/prebuilt/ringbuffer/obj/cvi_rbuf.$(TARGET_MACHINE).o
-
-CVI_RTSP2_OBJS += $(PWD)/prebuilt/cvi_rtsp/obj/cvi_rtsp.$(TARGET_MACHINE).o
-CVI_RTSP2_OBJS += $(PWD)/prebuilt/cvi_rtsp/obj/network.$(TARGET_MACHINE).o
-CVI_RTSP2_OBJS += $(PWD)/prebuilt/cvi_rtsp/obj/rtp.$(TARGET_MACHINE).o
-
-PREBUILT_OBJS += $(CVI_RTSP2_OBJS)
-PREBUILT_OBJS += $(CVI_OSAL_OBJS)
-PREBUILT_OBJS += $(CVI_RINGBUF_OBJS)
-else
 PREBUILT_OBJS :=
-endif
 
 TARGET = isp_tool_daemon
+CTRL_TARGET = isp_tool_daemon_ctrl
 OUT_TARBALL = isp_tool_daemon.tar.gz
 
 PKG_CONFIG_PATH = $(MW_PATH)/pkgconfig
@@ -119,12 +99,7 @@ endif
 
 LOCAL_CFLAGS = $(DEFS) $(INCS) -DSDK_VER=$(SDK_VER)
 LOCAL_CFLAGS += -MMD -MP
-
-ifeq ($(ENABLE_CVI_RTSP2), 1)
-LOCAL_CFLAGS += -DENABLE_CVI_RTSP2
-else
 LIBS += -lcvi_rtsp
-endif
 
 ifeq "$(TDL_SDK_LIB_EXIST)" "exist"
 	LOCAL_CFLAGS += -DTDL_SDK_LIB=\"$(TDL_SDK_LIB_NAME)\"
@@ -136,7 +111,10 @@ LOCAL_LDFLAGS += -shared-libgcc
 CFLAGS += -DENABLE_TEAISP_PQ -DENABLE_FACE_AE
 
 .PHONY: clean all package test
-all: prepare $(TARGET)
+all: prepare ctrl_tool $(TARGET)
+
+ctrl_tool:
+	@cd isp_daemon_ctrl_tool;make;cd ..
 
 prepare:
 	-@mkdir -p $(TMP_FOLDER)
@@ -158,10 +136,11 @@ $(TMP_FOLDER)/%.o: $(CTRL_SRC_DIR)/%.c | prepare
 	$(CC) $(CFLAGS) $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) -c $< -o $@
 	@echo [$(notdir $(CXX))] $(notdir $@)
 
-package: $(TARGET)
+package: $(TARGET) ctrl_tool
 	@rm -rf install/*
 	@mkdir -p install/lib
 	@cp $(TARGET) install/
+	@cp isp_daemon_ctrl_tool/$(CTRL_TARGET) install/
 	@cp isp_daemon_tool/CviIspTool.sh install/
 	@cp isp_daemon_tool/daemon_cfg/* install/
 	@cp res/* install/ -rf
@@ -191,22 +170,11 @@ endif
 	@cp -Lrf $(BM_LIB)/libbmrt.so* install/lib
 	@cp -Lrf $(TPU_KERNEL_LIB)/libtpu_kernel_module.so install/lib
 
-	@mkdir -p install/ko
-ifneq ($(OS_TYPE), DUAL_OS)
-	@cp $(TOP_DIR)/osdrv/interdrv/base/*.ko install/ko
-	@cp $(TOP_DIR)/osdrv/interdrv/cif/*.ko install/ko
-	@cp $(TOP_DIR)/osdrv/interdrv/osal/*.ko install/ko
-	@cp $(TOP_DIR)/osdrv/interdrv/snsr_i2c/*.ko install/ko
-	@cp $(TOP_DIR)/osdrv/interdrv/sys/*.ko install/ko
-	@cp $(TOP_DIR)/osdrv/interdrv/vc_drv/*.ko install/ko
-	@cp $(TOP_DIR)/osdrv/interdrv/vi/*.ko install/ko
-	@cp $(TOP_DIR)/osdrv/interdrv/vpss/*.ko install/ko
-	@cp $(PWD)/res/loadsystemko.sh install
-endif
-
 	@tar -zcf $(OUT_TARBALL) install
+	@echo "package: tar $(OUT_TARBALL) successful!"
 
 clean:
+	@cd isp_daemon_ctrl_tool;make clean;cd ..
 	@rm -f $(COBJS) $(SAMPLE_OBJS) $(CDEPS) $(TARGET) $(SAMPLE_DEPS)
 	@rm -rf install $(TMP_FOLDER)
 	@rm -rf $(OUT_TARBALL)

@@ -2,5 +2,4 @@
 
 make clean
 make -j || exit "$?"
-make package
-exit 0
+make package || exit "$?"
