@@ -30,6 +30,7 @@
 		{
 			"chn": 0,
 			"buf-blk-cnt": 5,
+			"tpu-device-id": 0,
 			"venc-bind-vpss": false,
 			"enable-isp-info-osd": false,
 			"enable-faceae": false,
@@ -47,6 +48,7 @@
 		{
 			"chn": 1,
 			"buf-blk-cnt": 5,
+			"tpu-device-id": 0,
 			"venc-bind-vpss": false,
 			"enable-isp-info-osd": false,
 			"enable-faceae": false,

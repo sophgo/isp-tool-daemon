@@ -106,6 +106,7 @@ int create_pipe(daemon_pipe_cfg_t *p_cfg)
 		module.fun = video_src_fun;
 		module_pipe_add(&pdaemon_pipe[i], &module);
 
+#ifdef ENABLE_TEAISP_PQ
 		if (p_cfg[i].video_pipe_cfg.enable_teaisp_pq) {
 			module.name = "teaisp_pq";
 			module.pipe_id = i;
@@ -113,11 +114,13 @@ int create_pipe(daemon_pipe_cfg_t *p_cfg)
 			module.fun = teaisp_pq_fun;
 			module_pipe_add(&pdaemon_pipe[i], &module);
 		}
+#endif
 
 		if (p_cfg[i].video_pipe_cfg.enable_teaisp_drc) {
 			insert_teaisp_drc_module(&pdaemon_pipe[i], &p_cfg[i], i, i);
 		}
 
+#ifdef ENABLE_FACE_AE
 		if (p_cfg[i].video_pipe_cfg.enable_face_ae) {
 			module.name = "face_ae";
 			module.pipe_id = i;
@@ -125,6 +128,7 @@ int create_pipe(daemon_pipe_cfg_t *p_cfg)
 			module.fun = face_ae_fun;
 			module_pipe_add(&pdaemon_pipe[i], &module);
 		}
+#endif
 
 		if (p_cfg[i].video_pipe_cfg.enable_isp_info_osd) {
 			module.name = "osd";

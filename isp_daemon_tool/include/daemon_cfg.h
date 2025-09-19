@@ -78,6 +78,7 @@ typedef struct video_pipe_cfg_t {
 	int chn;
 	int buf_blk_cnt;
 	int is_wdr_mode;
+	int tpu_device_id;
 	int enable_isp_info_osd;
 	int enable_face_ae;
 	int enable_teaisp_pq;
@@ -112,6 +113,7 @@ typedef struct daemon_pipe_cfg_t {
 	unsigned long long rtsp_max_buf_size;
 	int vi_vpss_mode;
 	int raw_replay_enable;
+	int max_use_tpu_num;
 	char teaisp_faceae_model_path[MAX_PATH_LEN];
 	char teaisp_pq_model_path[MAX_PATH_LEN];
 	char teaisp_drc_model_path[MAX_PATH_LEN];

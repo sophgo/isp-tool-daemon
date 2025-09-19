@@ -1,3 +1,4 @@
+#if defined(ENABLE_FACE_AE) || defined(ENABLE_TEAISP_PQ)
 
 #include <dlfcn.h>
 #include "daemon_base.h"
@@ -6,7 +7,7 @@
 static int tdl_sdk_lib_ref_count;
 static tdl_sdk_api_t *tdl_sdk_api;
 
-#define TDL_SDK_LIB "libcvi_tdl.so"
+#define TDL_SDK_LIB "libtdl.so"
 static void *dl;
 
 #define LOAD_SYMBOL(dl, sym, type, fn)                                         \
@@ -21,41 +22,33 @@ static int load_tdl_so(void)
 {
 	dl = dlopen(TDL_SDK_LIB, RTLD_LAZY);
 	if (dl == NULL) {
-		clog_a("dlopen %s failed\n", TDL_SDK_LIB);
+		clog_a("dlopen [%s] failed: %s\n", TDL_SDK_LIB, dlerror());
 		return -1;
 	}
 
-	LOAD_SYMBOL(dl, "CVI_TDL_CreateHandle", create_handle_t,
+	LOAD_SYMBOL(dl, "TDL_CreateHandle", create_handle_t,
 		    tdl_sdk_api->create_handle);
-	LOAD_SYMBOL(dl, "CVI_TDL_DestroyHandle", destroy_handle_t,
+	LOAD_SYMBOL(dl, "TDL_DestroyHandle", destroy_handle_t,
 		    tdl_sdk_api->destroy_handle);
-	LOAD_SYMBOL(dl, "CVI_TDL_OpenModel", open_model_t,
+	LOAD_SYMBOL(dl, "TDL_OpenModel", open_model_t,
 		    tdl_sdk_api->open_model);
-	LOAD_SYMBOL(dl, "CVI_TDL_SetSkipVpssPreprocess",
-		    set_skip_vpss_preprocess_t,
-		    tdl_sdk_api->set_skip_vpss_preprocess);
-	LOAD_SYMBOL(dl, "CVI_TDL_FaceDetection", face_detection_t,
+	LOAD_SYMBOL(dl, "TDL_CloseModel", close_model_t,
+		    tdl_sdk_api->close_model);
+	LOAD_SYMBOL(dl, "TDL_WrapFrame", wrap_vpss_frame_t,
+		    tdl_sdk_api->wrap_vpss_frame);
+	LOAD_SYMBOL(dl, "TDL_DestroyImage", free_vpss_frame_t,
+		    tdl_sdk_api->free_vpss_frame);
+	LOAD_SYMBOL(dl, "TDL_FaceDetection", face_detection_t,
 		    tdl_sdk_api->face_detection);
-	LOAD_SYMBOL(dl, "CVI_TDL_FreeFace", free_face_meta_t,
+	LOAD_SYMBOL(dl, "TDL_ReleaseFaceMeta", free_face_meta_t,
 		    tdl_sdk_api->free_face_meta);
-	//LOAD_SYMBOL(dl, "CVI_TDL_RescaleMetaCenterFace", rescale_face_meta_t, tdl_sdk_api->rescale_face_meta);
-	LOAD_SYMBOL(dl, "CVI_TDL_RescaleMetaRBFace", rescale_face_meta_t,
-		    tdl_sdk_api->rescale_face_meta);
-	LOAD_SYMBOL(dl, "CVI_TDL_Isp_Image_Classification",
-		    isp_image_classification_t,
+	LOAD_SYMBOL(dl, "TDL_IspClassification", isp_image_classification_t,
 		    tdl_sdk_api->isp_image_classification);
-	LOAD_SYMBOL(dl, "CVI_TDL_FreeClassMeta", free_class_meta_t,
+	LOAD_SYMBOL(dl, "TDL_ReleaseClassMeta", free_class_meta_t,
 		    tdl_sdk_api->free_class_meta);
-	LOAD_SYMBOL(dl, "CVI_TDL_Service_CreateHandle", service_create_handle_t,
-		    tdl_sdk_api->service_create_handle);
-	LOAD_SYMBOL(dl, "CVI_TDL_Service_DestroyHandle",
-		    service_destroy_handle_t,
-		    tdl_sdk_api->service_destroy_handle);
-	LOAD_SYMBOL(dl, "CVI_TDL_Service_FaceDrawRect",
-		    service_face_draw_rect_t,
+	LOAD_SYMBOL(dl, "TDL_FaceDrawRect", service_face_draw_rect_t,
 		    tdl_sdk_api->service_face_draw_rect);
-	LOAD_SYMBOL(dl, "CVI_TDL_Service_ObjectWriteText",
-		    service_object_write_text_t,
+	LOAD_SYMBOL(dl, "TDL_ObjectWriteText", service_object_write_text_t,
 		    tdl_sdk_api->service_object_write_text);
 
 	return 0;
@@ -107,3 +100,4 @@ tdl_sdk_api_t *get_tdl_sdk_api(void)
 	}
 	return tdl_sdk_api;
 }
+#endif
