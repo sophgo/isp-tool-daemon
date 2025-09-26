@@ -86,7 +86,7 @@ TPU_KERNEL_LIB = $(TOP_DIR)/libsophon/tpu-kernel/lib/$(SDK_VER)
 
 LIBS += $(MW_LIBS) -latomic -ldl
 LIBS += -lcvi_bin -lini
-LIBS += -lcvi_ispd2
+LIBS += -Wl,-Bstatic -lcvi_ispd2 -Wl,-Bdynamic
 LIBS += -lraw_dump
 LIBS += -lsensor
 LIBS += -L$(BM_LIB) -lbmrt -lbmlib
@@ -95,6 +95,7 @@ ifeq ($(OS_TYPE), DUAL_OS)
 else
 LIBS += -lisp_algo
 LIBS += -lsns_full
+LIBS += -lteaisp
 endif
 
 LOCAL_CFLAGS = $(DEFS) $(INCS) -DSDK_VER=$(SDK_VER)
@@ -174,6 +175,7 @@ endif
 	@echo "package: tar $(OUT_TARBALL) successful!"
 
 clean:
+	@cd isp_test;make clean
 	@cd isp_daemon_ctrl_tool;make clean;cd ..
 	@rm -f $(COBJS) $(SAMPLE_OBJS) $(CDEPS) $(TARGET) $(SAMPLE_DEPS)
 	@rm -rf install $(TMP_FOLDER)

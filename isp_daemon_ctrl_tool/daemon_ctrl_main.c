@@ -15,14 +15,14 @@
 #define UNUSED(x) ((void)(x))
 #endif
 
-static int g_main_loog_run = 1;
+static int g_main_loop_run = 1;
 
 static void signal_handler(int signo)
 {
 	switch (signo) {
 	case SIGINT:
 	case SIGTERM:
-		g_main_loog_run = 0;
+		g_main_loop_run = 0;
 		break;
 	default:
 		break;
@@ -81,8 +81,8 @@ int main(int argc, char **argv)
 	CVI_ISP_Client_Init(pipe);
 	isp_daemon2_init(port);
 
-	g_main_loog_run = 1;
-	while (g_main_loog_run) {
+	g_main_loop_run = 1;
+	while (g_main_loop_run) {
 		sleep(1);
 	}
 

@@ -1,11 +1,12 @@
 
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #define CLOG_TAG "pipe"
 
 #include "daemon_module.h"
 #include "daemon_pipe.h"
 #include "cvi_isp.h"
 
-extern int g_main_loog_run;
+extern int g_main_loop_run;
 static struct module_pipe_t *pdaemon_pipe;
 
 int create_pipe(daemon_pipe_cfg_t *p_cfg)
@@ -99,7 +100,7 @@ int create_pipe(daemon_pipe_cfg_t *p_cfg)
 	int wait_frame_cont = 0;
 
 	do {
-		if (g_main_loog_run == 0)
+		if (g_main_loop_run == 0)
 			break;
 		ret = CVI_ISP_GetVDTimeOut(0, ISP_VD_BE_END,
 					   DAEMON_TIMEOUT_MS * 2);
@@ -109,6 +110,10 @@ int create_pipe(daemon_pipe_cfg_t *p_cfg)
 			clog_w("wait vi working timeout, go on wait...\n");
 		}
 	} while (wait_frame_cont < __WAIT_FRAME_MAX_CONT);
+
+	if (wait_frame_cont >= __WAIT_FRAME_MAX_CONT) {
+		clog_i("wait vi working done!\n"); // for auto test, don't modify
+	}
 
 	for (int i = 0; i < p_cfg->dev_num; i++) {
 		module_pipe_start(&pdaemon_pipe[i]);

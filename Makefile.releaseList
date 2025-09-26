@@ -9,7 +9,8 @@ file += $(MW_LIB)/libraw_replay.so
 file += $(MW_LIB)/libraw_replay_offline.so
 file += $(MW_LIB)/libraw_dump.so
 file += $(MW_LIB)/libcvi_ispd2.so
-#file += $(MW_LIB)/libteaisp.so
+file += $(MW_PATH)/../isp-tool-daemon/isp_test/libisp_test.so
+file += $(MW_LIB)/libteaisp.so
 
 # mw lib
 file += $(MW_LIB)/libcvi_bin.so

@@ -6,3 +6,6 @@ isp_tool_daemon
 isp_tool_daemon_ctrl
 install
 tmp
+isp_test/**/*.o
+isp_test/**/*.a
+isp_test/**/*.so

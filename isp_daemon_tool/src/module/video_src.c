@@ -18,9 +18,21 @@
 // touch /tmp/dump_video_src
 #define ENABLE_VIDEO_SRC_DUMP_DEBUG (1)
 #define VIDEO_SRC_QUEUE_SIZE (1)
-//#define ENABLE_TEAISP_BNR (1)
+
+#ifndef CONFIG_DUAL_OS
+#define ENABLE_TEAISP_BNR (1)
+#endif
+
+static uint8_t g_video_src_init_cnt;
 
 #ifdef ENABLE_TEAISP_BNR
+#define TEAISP_SO_LIB "libteaisp.so"
+static void *teaisp_so_dl;
+typedef CVI_S32 (*TEAISP_FUN)(VI_PIPE ViPipe, CVI_S32 param);
+static TEAISP_FUN teaisp_init;
+static TEAISP_FUN teaisp_bnr_set_driver_init;
+static TEAISP_FUN teaisp_bnr_set_driver_deinit;
+
 static int load_bnr_model(VI_PIPE ViPipe, char *model_path)
 {
 	FILE *fp = fopen(model_path, "r");
@@ -64,13 +76,7 @@ static int load_bnr_model(VI_PIPE ViPipe, char *model_path)
 	return 0;
 }
 
-typedef CVI_S32 (*TEAISP_INIT_FUN)(VI_PIPE ViPipe, CVI_S32 maxDev);
-
-#define TEAISP_SO_LIB "libteaisp.so"
-static void *teaisp_so_dl;
-static TEAISP_INIT_FUN teaisp_init;
-
-static int init_teaisp_bnr(int pipe, char *model_list)
+static int init_teaisp_bnr(int pipe, daemon_pipe_cfg_t *p_cfg)
 {
 	if (teaisp_so_dl == NULL) {
 		teaisp_so_dl = dlopen(TEAISP_SO_LIB, RTLD_LAZY);
@@ -82,20 +88,45 @@ static int init_teaisp_bnr(int pipe, char *model_list)
 
 		dlerror();
 
-		teaisp_init =
-			(TEAISP_INIT_FUN)dlsym(teaisp_so_dl, "CVI_TEAISP_Init");
+		teaisp_init = (TEAISP_FUN)dlsym(teaisp_so_dl, "CVI_TEAISP_Init");
 		if (!teaisp_init) {
 			clog_e("dlsym CVI_TEAISP_Init fail: %s\n", dlerror());
 			return -1;
 		}
+		teaisp_bnr_set_driver_init = (TEAISP_FUN)dlsym(teaisp_so_dl, "CVI_TEAISP_BNR_Set_Driver_Init");
+		if (!teaisp_bnr_set_driver_init) {
+			clog_e("dlsym CVI_TEAISP_BNR_Set_Driver_Init fail: %s\n", dlerror());
+			return -1;
+		}
+		teaisp_bnr_set_driver_deinit = (TEAISP_FUN)dlsym(teaisp_so_dl, "CVI_TEAISP_BNR_Set_Driver_Deinit");
+		if (!teaisp_bnr_set_driver_deinit) {
+			clog_e("dlsym CVI_TEAISP_BNR_Set_Driver_Deinit fail: %s\n", dlerror());
+			return -1;
+		}
 	}
 
-	teaisp_init(pipe, 1);
-	return load_bnr_model(pipe, model_list);
+	teaisp_init(pipe, p_cfg->max_use_tpu_num);
+	return teaisp_bnr_set_driver_init(pipe, 0);
+}
+
+static int deinit_teaisp_bnr(int pipe)
+{
+	if (!teaisp_bnr_set_driver_deinit) {
+		return -1;
+	}
+	if (teaisp_bnr_set_driver_deinit(pipe, 0) != 0) {
+		clog_e("teaisp_bnr_set_driver_deinit failed\n");
+		return -1;
+	}
+	if (g_video_src_init_cnt == 0) {
+		if (teaisp_so_dl) {
+			dlclose(teaisp_so_dl);
+			teaisp_so_dl = NULL;
+		}
+	}
+	return 0;
 }
 #endif
-
-static uint8_t g_video_src_init_cnt;
 
 static int init(struct module_t *thiz)
 {
@@ -104,6 +135,15 @@ static int init(struct module_t *thiz)
 
 	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
 	module_queue_init(&thiz->queue, VIDEO_SRC_QUEUE_SIZE);
+
+#ifdef ENABLE_TEAISP_BNR
+	if (p_cfg->video_pipe_cfg.enable_teaisp_bnr) {
+		if (init_teaisp_bnr(thiz->pipe_id, p_cfg) != 0) {
+			clog_a("init_teaisp_bnr failed\n");
+		}
+	}
+#endif
+
 	if (g_video_src_init_cnt == 0) {
 		int vi_num = 1;
 
@@ -129,15 +169,15 @@ static int init(struct module_t *thiz)
 			p_cfg->dev_num = vi_num;
 		}
 	}
+
 #ifdef ENABLE_TEAISP_BNR
 	if (p_cfg->video_pipe_cfg.enable_teaisp_bnr) {
-		if (init_teaisp_bnr(thiz->pipe_id,
-				    p_cfg->video_pipe_cfg.bnr_model_list) !=
-		    0) {
-			clog_a("init_teaisp_bnr failed\n");
+		if (load_bnr_model(thiz->pipe_id, p_cfg->video_pipe_cfg.bnr_model_list) != 0) {
+			clog_a("load_bnr_model failed\n");
 		}
 	}
 #endif
+
 	g_video_src_init_cnt++;
 	return 0;
 }
@@ -154,13 +194,12 @@ static int deinit(struct module_t *thiz)
 		} else {
 			module_sys_vi_deinit(p_cfg);
 		}
-#ifdef ENABLE_TEAISP_BNR
-		if (teaisp_so_dl) {
-			dlclose(teaisp_so_dl);
-			teaisp_so_dl = NULL;
-		}
-#endif
 	}
+
+#ifdef ENABLE_TEAISP_BNR
+	deinit_teaisp_bnr(thiz->pipe_id);
+#endif
+
 	module_queue_deinit(&thiz->queue);
 	return 0;
 }

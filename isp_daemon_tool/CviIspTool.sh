@@ -12,16 +12,21 @@ fi
 
 sed -i 's/"replay-mode": true/"replay-mode": false/g' $CFG_JSON_FILE
 
-while getopts "hr" OPTION; do
+while getopts "hrt:" OPTION; do
     case $OPTION in
         r)
             echo "start replay mode"
             sed -i 's/"replay-mode": false/"replay-mode": true/g' $CFG_JSON_FILE
             export CVI_REPLAY_MODE=1
             ;;
+        t)
+            echo "start isp auto test case: $OPTARG"
+            export CVI_ISP_AUTO_TEST_CASE="$OPTARG"
+            ;;
         h)
             echo "Usage:"
             echo "   -r     enter replay mode"
+            echo "   -t N   start isp auto test case number N"
             echo "   -h     help (this output)"
             exit 0
             ;;

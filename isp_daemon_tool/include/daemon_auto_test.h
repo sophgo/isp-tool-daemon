@@ -1,0 +1,14 @@
+
+#ifndef __DAEMON_AUTO_TEST_H__
+#define __DAEMON_AUTO_TEST_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int run_isp_auto_test_case(int case_num);
+
+#ifdef __cplusplus
+}
+#endif
+#endif
