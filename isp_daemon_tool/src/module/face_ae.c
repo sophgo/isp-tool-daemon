@@ -1,4 +1,5 @@
 
+#ifdef ENABLE_FACE_AE
 #include <sys/prctl.h>
 
 #define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
@@ -15,8 +16,7 @@
 
 typedef struct {
 	tdl_sdk_api_t *api;
-	cvitdl_handle_t handle;
-	cvitdl_service_handle_t service_handle;
+	TDLHandle handle;
 } face_ae_ctx_t;
 
 static int init(struct module_t *thiz)
@@ -39,22 +39,16 @@ static int init(struct module_t *thiz)
 	thiz->private_data = ctx;
 	ctx->api = get_tdl_sdk_api();
 
-	ret = ctx->api->create_handle(&ctx->handle);
-	if (ret != 0) {
-		clog_e("create_handle failed, ret: %d\n", ret);
-		return -1;
-	}
-
-	ret = ctx->api->service_create_handle(&ctx->service_handle,
-					      ctx->handle);
-	if (ret != 0) {
-		clog_e("create_service_handle failed, ret: %d\n", ret);
+	ctx->handle = ctx->api->create_handle(pipe_cfg->video_pipe_cfg.tpu_device_id);
+	if (ctx->handle == NULL) {
+		clog_e("Create face_ae handle failed!\n");
 		return -1;
 	}
 
 	ret = ctx->api->open_model(ctx->handle,
-				   CVI_TDL_SUPPORTED_MODEL_SCRFDFACE,
-				   pipe_cfg->teaisp_faceae_model_path);
+				   TDL_SUPPORTED_MODEL_FACE,
+				   pipe_cfg->teaisp_faceae_model_path,
+				   NULL);
 	if (ret != 0) {
 		clog_e("open_model failed, ret: %d, model: %s\n", ret,
 		       pipe_cfg->teaisp_faceae_model_path);
@@ -68,7 +62,7 @@ static int deinit(struct module_t *thiz)
 {
 	face_ae_ctx_t *ctx = (face_ae_ctx_t *)thiz->private_data;
 
-	ctx->api->service_destroy_handle(ctx->service_handle);
+	ctx->api->close_model(ctx->handle, TDL_SUPPORTED_MODEL_FACE);
 	ctx->api->destroy_handle(ctx->handle);
 
 	unload_tdl_sdk_lib();
@@ -78,7 +72,7 @@ static int deinit(struct module_t *thiz)
 	return 0;
 }
 
-static void update_face_ae(cvtdl_face_t *face, CVI_U32 width, CVI_U32 height,
+static void update_face_ae(TDLFace *face, CVI_U32 width, CVI_U32 height,
 			   VI_PIPE ViPipe)
 {
 	ISP_SMART_INFO_S stFaceInfo;
@@ -90,7 +84,7 @@ static void update_face_ae(cvtdl_face_t *face, CVI_U32 width, CVI_U32 height,
 		size_t max_idx = 0;
 
 		for (size_t i = 0; i < face->size; i++) {
-			cvtdl_bbox_t bbox = face->info[i].bbox;
+			TDLBox bbox = face->info[i].box;
 			float area = fabs(bbox.x2 - bbox.x1) *
 				     fabs(bbox.y2 - bbox.y1);
 			if (area > max_area) {
@@ -98,7 +92,7 @@ static void update_face_ae(cvtdl_face_t *face, CVI_U32 width, CVI_U32 height,
 				max_idx = i;
 			}
 		}
-		cvtdl_bbox_t max_bbox = face->info[max_idx].bbox;
+		TDLBox max_bbox = face->info[max_idx].box;
 
 		stFaceInfo.stROI[0].u8Num = 1;
 		stFaceInfo.stROI[0].u16PosX[0] = max_bbox.x1;
@@ -152,35 +146,34 @@ static void *worker(void *arg)
 			continue;
 		}
 
-		cvtdl_face_t face_meta;
-		cvtdl_service_brush_t brush = {};
+		TDLFace face_meta;
+		TDLBrush brush = {0};
 
 		brush.color.b = 53.f;
 		brush.color.g = 208.f;
 		brush.color.r = 217.f;
 		brush.size = 4;
 
-		memset(&face_meta, 0, sizeof(cvtdl_face_t));
+		TDLImage vpss_image = ctx->api->wrap_vpss_frame(src_frame, false);
+
+		memset(&face_meta, 0, sizeof(TDLFace));
 		ret = ctx->api->face_detection(
-			ctx->handle, src_frame,
-			CVI_TDL_SUPPORTED_MODEL_SCRFDFACE, &face_meta);
+					ctx->handle, TDL_SUPPORTED_MODEL_FACE,
+					vpss_image, &face_meta);
 		if (ret != 0) {
 			clog_e("face_detection failed, ret: %d\n", ret);
 			continue;
 		}
 
-		ctx->api->rescale_face_meta(src_frame, &face_meta);
-
 		if (face_meta.size > 0) {
-			ctx->api->service_face_draw_rect(ctx->service_handle,
-							 &face_meta, src_frame,
-							 true, brush);
+			ctx->api->service_face_draw_rect(&face_meta, (void *)src_frame, true, brush);
 		}
 
 		update_face_ae(&face_meta, src_frame->stVFrame.u32Width,
-			       src_frame->stVFrame.u32Height, thiz->pipe_id);
+						src_frame->stVFrame.u32Height, thiz->pipe_id);
 
 		ctx->api->free_face_meta(&face_meta);
+		ctx->api->free_vpss_frame(vpss_image);
 
 		ret = module_queue_push(&thiz->queue, src_frame,
 					DAEMON_TIMEOUT_MS);
@@ -254,3 +247,4 @@ struct module_fun_t face_ae_fun = {
 	.get = get,
 	.put = put,
 };
+#endif

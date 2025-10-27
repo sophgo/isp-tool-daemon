@@ -1,5 +1,7 @@
 
+#ifdef ENABLE_TEAISP_PQ
 #include <sys/prctl.h>
+#include "cvi_sys.h"
 
 #define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
 #define CLOG_TAG "teaisp_pq"
@@ -19,8 +21,7 @@ static const char *teaisppq_scene_str[TEAISP_PQ_SCENE_MAX_TYPE] = {
 
 typedef struct {
 	tdl_sdk_api_t *api;
-	cvitdl_handle_t handle;
-	cvitdl_service_handle_t service_handle;
+	TDLHandle handle;
 } teaisp_pq_ctx_t;
 
 static int init(struct module_t *thiz)
@@ -43,33 +44,19 @@ static int init(struct module_t *thiz)
 	thiz->private_data = ctx;
 	ctx->api = get_tdl_sdk_api();
 
-	ret = ctx->api->create_handle(&ctx->handle);
-	if (ret != 0) {
-		clog_e("create_handle failed, ret: %d\n", ret);
+	ctx->handle = ctx->api->create_handle(pipe_cfg->video_pipe_cfg.tpu_device_id);
+	if (ctx->handle == NULL) {
+		clog_e("Create teaisppq handle failed!\n");
 		return -1;
 	}
 
-	ret = ctx->api->service_create_handle(&ctx->service_handle,
-					      ctx->handle);
-	if (ret != 0) {
-		clog_e("create_service_handle failed, ret: %d\n", ret);
-		return -1;
-	}
-
-	ret = ctx->api->open_model(
-		ctx->handle, CVI_TDL_SUPPORTED_MODEL_ISP_IMAGE_CLASSIFICATION,
-		pipe_cfg->teaisp_pq_model_path);
+	ret = ctx->api->open_model(ctx->handle,
+		TDL_SUPPORTED_MODEL_CLASSIFICATION,
+		pipe_cfg->teaisp_pq_model_path,
+		NULL);
 	if (ret != 0) {
 		clog_e("open_model failed, ret: %d, model: %s\n", ret,
 		       pipe_cfg->teaisp_pq_model_path);
-		return -1;
-	}
-
-	ret = ctx->api->set_skip_vpss_preprocess(
-		ctx->handle, CVI_TDL_SUPPORTED_MODEL_ISP_IMAGE_CLASSIFICATION,
-		true);
-	if (ret != 0) {
-		clog_e("set_skip_vpss_preprocess failed, ret: %d\n", ret);
 		return -1;
 	}
 
@@ -80,7 +67,7 @@ static int deinit(struct module_t *thiz)
 {
 	teaisp_pq_ctx_t *ctx = (teaisp_pq_ctx_t *)thiz->private_data;
 
-	ctx->api->service_destroy_handle(ctx->service_handle);
+	ctx->api->close_model(ctx->handle, TDL_SUPPORTED_MODEL_CLASSIFICATION);
 	ctx->api->destroy_handle(ctx->handle);
 	unload_tdl_sdk_lib();
 	free(thiz->private_data);
@@ -124,7 +111,7 @@ static int put_vi_raw(int pipe, VIDEO_FRAME_INFO_S frame[])
 	return 0;
 }
 
-static int update_isp_meta(int pipe, cvtdl_isp_meta_t *isp_meta)
+static int update_isp_meta(int pipe, TDLIspMeta *isp_meta)
 {
 	int ret = 0;
 	ISP_WB_Q_INFO_S awb_info;
@@ -159,11 +146,16 @@ static int update_isp_meta(int pipe, cvtdl_isp_meta_t *isp_meta)
 	return 0;
 }
 
-static int update_isp_scene(int pipe, cvtdl_class_meta_t *cls_meta)
+static int update_isp_scene(int pipe, TDLClass *cls_meta)
 {
+#if 1 // TODO
+	UNUSED(pipe);
+	UNUSED(cls_meta);
+	return 0;
+#else
 	TEAISP_PQ_SCENE_INFO scene_info;
 
-	switch (cls_meta->cls[0]) {
+	switch (cls_meta.info[0].class_id) {
 	case 0:
 		scene_info.scene = SCENE_SNOW;
 		break;
@@ -181,16 +173,22 @@ static int update_isp_scene(int pipe, cvtdl_class_meta_t *cls_meta)
 		break;
 	}
 
-	float score = cls_meta->score[0];
+	float score = cls_meta.info[0].score;
 
 	scene_info.scene_score = score * 100;
 	CVI_TEAISP_PQ_SetSceneInfo(pipe, &scene_info);
 	return 0;
+#endif
 }
 
 static void teaisppq_put_text(int pipe, teaisp_pq_ctx_t *ctx,
 			      VIDEO_FRAME_INFO_S *pstVideoFrame)
 {
+#if 1 // TODO
+	UNUSED(pipe);
+	UNUSED(ctx);
+	UNUSED(pstVideoFrame);
+#else
 	char scene_text[128];
 	int pos_x, pos_y;
 	float c_r, c_g, c_b;
@@ -244,6 +242,7 @@ static void teaisppq_put_text(int pipe, teaisp_pq_ctx_t *ctx,
 
 	ctx->api->service_object_write_text(scene_text, pos_x, pos_y,
 					    pstVideoFrame, c_r, c_g, c_b);
+#endif
 }
 
 #define TEAISP_PQ_RUN_INTERVAL_FRAME 5
@@ -260,8 +259,8 @@ static void *worker(void *arg)
 
 	prctl(PR_SET_NAME, "teaisp_pq", 0, 0, 0);
 
-	cvtdl_isp_meta_t isp_meta;
-	cvtdl_class_meta_t cls_meta;
+	TDLIspMeta isp_meta;
+	TDLClass cls_meta;
 	VIDEO_FRAME_INFO_S stVideoFrame[2] = {};
 
 	while (thiz->thread_run) {
@@ -290,30 +289,48 @@ static void *worker(void *arg)
 			continue;
 		}
 
-		stVideoFrame[0].stVFrame.u32Width =
-			stVideoFrame[0].stVFrame.u32Width * 3 / 2;
+		PIXEL_FORMAT_E pixelFormat = stVideoFrame[0].stVFrame.enPixelFormat;
+		CVI_U32 u32Stride = stVideoFrame[0].stVFrame.u32Stride[0];
+
+		stVideoFrame[0].stVFrame.enPixelFormat = PIXEL_FORMAT_RGB_888;
+		stVideoFrame[0].stVFrame.u32Width = stVideoFrame[0].stVFrame.u32Width * 3 / 2;
+
+		stVideoFrame[0].stVFrame.u32Stride[0] = stVideoFrame[0].stVFrame.u32Width;
+		stVideoFrame[0].stVFrame.pu8VirAddr[0] = CVI_SYS_MmapCache(
+												stVideoFrame[0].stVFrame.u64PhyAddr[0],
+												stVideoFrame[0].stVFrame.u32Length[0]);
+		CVI_SYS_IonInvalidateCache(stVideoFrame[0].stVFrame.u64PhyAddr[0],
+									stVideoFrame[0].stVFrame.pu8VirAddr[0],
+									stVideoFrame[0].stVFrame.u32Length[0]);
 
 		memset(&cls_meta, 0, sizeof(cls_meta));
-		ret = ctx->api->isp_image_classification(
-			ctx->handle, stVideoFrame, &cls_meta, &isp_meta);
+		cls_meta.size = topK;
+		cls_meta.info = (TDLClassInfo *) malloc(topK * sizeof(TDLClassInfo));
+		TDLImage vpss_image = ctx->api->wrap_vpss_frame(stVideoFrame, false);
+		ret = ctx->api->isp_image_classification(ctx->handle, TDL_SUPPORTED_MODEL_CLASSIFICATION,
+																vpss_image, &isp_meta, &cls_meta);
 		if (ret != 0) {
-			clog_e("isp image classification failed, ret: %d\n",
-			       ret);
-			continue;
+			clog_e("isp image classification failed, ret: %d\n", ret);
 		}
 
-		stVideoFrame[0].stVFrame.u32Width =
-			stVideoFrame[0].stVFrame.u32Width * 2 / 3;
+		stVideoFrame[0].stVFrame.u32Stride[0] = u32Stride;
+		stVideoFrame[0].stVFrame.enPixelFormat = pixelFormat;
+		stVideoFrame[0].stVFrame.u32Width = stVideoFrame[0].stVFrame.u32Width * 2 / 3;
+		CVI_SYS_Munmap(stVideoFrame[0].stVFrame.pu8VirAddr[0], stVideoFrame[0].stVFrame.u32Length[0]);
 
 		if (getenv("TEAISP_PQ_DEBUG")) {
 			for (int i = 0; i < TEAISP_PQ_SCENE_MAX_TYPE; i++) {
 				clog_i("scene: %s, score: %f\n",
 				       teaisppq_scene_str[i],
-				       cls_meta.score[i]);
+				       cls_meta.info[i].score);
 			}
 		}
 		put_vi_raw(thiz->pipe_id, stVideoFrame);
-		update_isp_scene(thiz->pipe_id, &cls_meta);
+		if (ret == 0)
+			update_isp_scene(thiz->pipe_id, &cls_meta);
+
+		ctx->api->free_vpss_frame(vpss_image);
+		ctx->api->free_class_meta(&cls_meta);
 	}
 
 	return NULL;
@@ -373,3 +390,4 @@ struct module_fun_t teaisp_pq_fun = {
 	.get = get,
 	.put = put,
 };
+#endif
