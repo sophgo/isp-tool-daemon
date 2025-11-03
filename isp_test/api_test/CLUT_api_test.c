@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_CLUT_ClutAttr_Enable(VI_PIPE ViPipe)
@@ -162,7 +162,9 @@ static int test_CLUT_ClutAttr_ClutR(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.ClutR, 0, sizeof(CVI_U16) * 4913);
+	for (int i = 0; i < 4913; ++i) {
+		attr.ClutR[i] = 0;
+	}
 	ret = CVI_ISP_SetClutAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -174,7 +176,9 @@ static int test_CLUT_ClutAttr_ClutR(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.ClutR, 1023, sizeof(CVI_U16) * 4913);
+	for (int i = 0; i < 4913; ++i) {
+		attr.ClutR[i] = 1023;
+	}
 	ret = CVI_ISP_SetClutAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -240,7 +244,9 @@ static int test_CLUT_ClutAttr_ClutG(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.ClutG, 0, sizeof(CVI_U16) * 4913);
+	for (int i = 0; i < 4913; ++i) {
+		attr.ClutG[i] = 0;
+	}
 	ret = CVI_ISP_SetClutAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -252,7 +258,9 @@ static int test_CLUT_ClutAttr_ClutG(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.ClutG, 1023, sizeof(CVI_U16) * 4913);
+	for (int i = 0; i < 4913; ++i) {
+		attr.ClutG[i] = 1023;
+	}
 	ret = CVI_ISP_SetClutAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -318,7 +326,9 @@ static int test_CLUT_ClutAttr_ClutB(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.ClutB, 0, sizeof(CVI_U16) * 4913);
+	for (int i = 0; i < 4913; ++i) {
+		attr.ClutB[i] = 0;
+	}
 	ret = CVI_ISP_SetClutAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -330,7 +340,9 @@ static int test_CLUT_ClutAttr_ClutB(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.ClutB, 1023, sizeof(CVI_U16) * 4913);
+	for (int i = 0; i < 4913; ++i) {
+		attr.ClutB[i] = 1023;
+	}
 	ret = CVI_ISP_SetClutAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -528,7 +540,9 @@ static int test_CLUT_ClutHslAttr_HByH(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.HByH, -30, sizeof(CVI_S16) * 37);
+	for (int i = 0; i < 37; ++i) {
+		attr.HByH[i] = -30;
+	}
 	ret = CVI_ISP_SetClutHslAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -540,7 +554,9 @@ static int test_CLUT_ClutHslAttr_HByH(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.HByH, 30, sizeof(CVI_S16) * 37);
+	for (int i = 0; i < 37; ++i) {
+		attr.HByH[i] = 30;
+	}
 	ret = CVI_ISP_SetClutHslAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -606,7 +622,9 @@ static int test_CLUT_ClutHslAttr_SByH(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.SByH, 0, sizeof(CVI_U16) * 37);
+	for (int i = 0; i < 37; ++i) {
+		attr.SByH[i] = 0;
+	}
 	ret = CVI_ISP_SetClutHslAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -618,7 +636,9 @@ static int test_CLUT_ClutHslAttr_SByH(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.SByH, 100, sizeof(CVI_U16) * 37);
+	for (int i = 0; i < 37; ++i) {
+		attr.SByH[i] = 100;
+	}
 	ret = CVI_ISP_SetClutHslAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -684,7 +704,9 @@ static int test_CLUT_ClutHslAttr_LByH(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.LByH, 0, sizeof(CVI_U16) * 37);
+	for (int i = 0; i < 37; ++i) {
+		attr.LByH[i] = 0;
+	}
 	ret = CVI_ISP_SetClutHslAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -696,7 +718,9 @@ static int test_CLUT_ClutHslAttr_LByH(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.LByH, 100, sizeof(CVI_U16) * 37);
+	for (int i = 0; i < 37; ++i) {
+		attr.LByH[i] = 100;
+	}
 	ret = CVI_ISP_SetClutHslAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -762,7 +786,9 @@ static int test_CLUT_ClutHslAttr_SByS(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.SByS, 0, sizeof(CVI_U16) * 21);
+	for (int i = 0; i < 21; ++i) {
+		attr.SByS[i] = 0;
+	}
 	ret = CVI_ISP_SetClutHslAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -774,7 +800,9 @@ static int test_CLUT_ClutHslAttr_SByS(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.SByS, 100, sizeof(CVI_U16) * 21);
+	for (int i = 0; i < 21; ++i) {
+		attr.SByS[i] = 100;
+	}
 	ret = CVI_ISP_SetClutHslAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");

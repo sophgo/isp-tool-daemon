@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_YCONTRAST_YContrastAttr_Enable(VI_PIPE ViPipe)
@@ -296,7 +296,9 @@ static int test_YCONTRAST_YContrastAttr_ContrastLow_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.ContrastLow, 0, sizeof(CVI_U8) * ISP_AUTO_LV_NUM);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.ContrastLow[j] = 0;
+	}
 	ret = CVI_ISP_SetYContrastAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -308,7 +310,9 @@ static int test_YCONTRAST_YContrastAttr_ContrastLow_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.ContrastLow, 100, sizeof(CVI_U8) * ISP_AUTO_LV_NUM);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.ContrastLow[j] = 100;
+	}
 	ret = CVI_ISP_SetYContrastAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -320,7 +324,9 @@ static int test_YCONTRAST_YContrastAttr_ContrastLow_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.ContrastLow, rand_range(0, 100), sizeof(CVI_U8) * ISP_AUTO_LV_NUM);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.ContrastLow[j] = rand_range(0, 100);
+	}
 	ret = CVI_ISP_SetYContrastAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -332,7 +338,9 @@ static int test_YCONTRAST_YContrastAttr_ContrastLow_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.ContrastLow, rand_range(101, 255), sizeof(CVI_U8) * ISP_AUTO_LV_NUM);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.ContrastLow[j] = rand_range(101, 255);
+	}
 	ret = CVI_ISP_SetYContrastAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -444,7 +452,9 @@ static int test_YCONTRAST_YContrastAttr_ContrastHigh_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.ContrastHigh, 0, sizeof(CVI_U8) * ISP_AUTO_LV_NUM);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.ContrastHigh[j] = 0;
+	}
 	ret = CVI_ISP_SetYContrastAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -456,7 +466,9 @@ static int test_YCONTRAST_YContrastAttr_ContrastHigh_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.ContrastHigh, 100, sizeof(CVI_U8) * ISP_AUTO_LV_NUM);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.ContrastHigh[j] = 100;
+	}
 	ret = CVI_ISP_SetYContrastAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -468,7 +480,9 @@ static int test_YCONTRAST_YContrastAttr_ContrastHigh_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.ContrastHigh, rand_range(0, 100), sizeof(CVI_U8) * ISP_AUTO_LV_NUM);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.ContrastHigh[j] = rand_range(0, 100);
+	}
 	ret = CVI_ISP_SetYContrastAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -480,7 +494,9 @@ static int test_YCONTRAST_YContrastAttr_ContrastHigh_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.ContrastHigh, rand_range(101, 255), sizeof(CVI_U8) * ISP_AUTO_LV_NUM);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.ContrastHigh[j] = rand_range(101, 255);
+	}
 	ret = CVI_ISP_SetYContrastAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -592,7 +608,9 @@ static int test_YCONTRAST_YContrastAttr_CenterLuma_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.CenterLuma, 0, sizeof(CVI_U8) * ISP_AUTO_LV_NUM);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.CenterLuma[j] = 0;
+	}
 	ret = CVI_ISP_SetYContrastAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -604,7 +622,9 @@ static int test_YCONTRAST_YContrastAttr_CenterLuma_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.CenterLuma, 64, sizeof(CVI_U8) * ISP_AUTO_LV_NUM);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.CenterLuma[j] = 64;
+	}
 	ret = CVI_ISP_SetYContrastAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -616,7 +636,9 @@ static int test_YCONTRAST_YContrastAttr_CenterLuma_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.CenterLuma, rand_range(0, 64), sizeof(CVI_U8) * ISP_AUTO_LV_NUM);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.CenterLuma[j] = rand_range(0, 64);
+	}
 	ret = CVI_ISP_SetYContrastAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -628,7 +650,9 @@ static int test_YCONTRAST_YContrastAttr_CenterLuma_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.CenterLuma, rand_range(65, 255), sizeof(CVI_U8) * ISP_AUTO_LV_NUM);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.CenterLuma[j] = rand_range(65, 255);
+	}
 	ret = CVI_ISP_SetYContrastAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");

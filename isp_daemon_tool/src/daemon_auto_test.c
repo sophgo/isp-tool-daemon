@@ -9,7 +9,7 @@
 
 typedef int (*test_fn)(VI_PIPE ViPipe);
 
-static int run_isp_module_api_test_case(int pipe)
+static int run_isp_module_api_test_case(int dev_num)
 {
 	clog_i("Run ISP module API test case\n");
 
@@ -28,13 +28,17 @@ static int run_isp_module_api_test_case(int pipe)
 		return -1;
 	}
 
-	int ret = fn(pipe);
+	int ret = 0;
+
+	for (int pipe = 0; pipe < dev_num; ++pipe) {
+		ret |= fn(pipe);
+	}
 
 	dlclose(dl);
 	return ret;
 }
 
-static int run_isp_dump_test_case(int pipe)
+static int run_isp_dump_test_case(int dev_num)
 {
 	clog_i("Run ISP dump test case\n");
 
@@ -53,16 +57,19 @@ static int run_isp_dump_test_case(int pipe)
 		return -1;
 	}
 
-	int ret = fn(pipe);
+	int ret = 0;
+
+	for (int pipe = 0; pipe < dev_num; ++pipe) {
+		ret |= fn(pipe);
+	}
 
 	dlclose(dl);
 	return ret;
 }
 
-int run_isp_auto_test_case(int case_num)
+int run_isp_auto_test_case(int case_num, int dev_num)
 {
 	int ret = 0;
-	int pipe = 0;
 
 	clog_i("Run ISP auto test case: %d\n", case_num);
 
@@ -71,10 +78,16 @@ int run_isp_auto_test_case(int case_num)
 		ret = 0;
 		break;
 	case 1:
-		ret = run_isp_module_api_test_case(pipe);
+		ret = run_isp_module_api_test_case(dev_num);
+		if (ret == 0) {
+			printf("ISP_MODULE_API_TEST SUCCESS!\n");
+		}
 		break;
 	case 2:
-		ret = run_isp_dump_test_case(pipe);
+		ret = run_isp_dump_test_case(dev_num);
+		if (ret == 0) {
+			printf("ISP_DUMP_TEST SUCCESS!\n");
+		}
 		break;
 	default:
 		break;

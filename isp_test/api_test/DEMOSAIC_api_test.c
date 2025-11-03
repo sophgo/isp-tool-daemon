@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_DEMOSAIC_DemosaicAttr_Enable(VI_PIPE ViPipe)
@@ -421,7 +421,9 @@ static int test_DEMOSAIC_DemosaicAttr_CoarseEdgeThr_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.CoarseEdgeThr, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.CoarseEdgeThr[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -433,7 +435,9 @@ static int test_DEMOSAIC_DemosaicAttr_CoarseEdgeThr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.CoarseEdgeThr, 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.CoarseEdgeThr[j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -445,7 +449,9 @@ static int test_DEMOSAIC_DemosaicAttr_CoarseEdgeThr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.CoarseEdgeThr, rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.CoarseEdgeThr[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -457,7 +463,9 @@ static int test_DEMOSAIC_DemosaicAttr_CoarseEdgeThr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.CoarseEdgeThr, rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.CoarseEdgeThr[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -569,7 +577,9 @@ static int test_DEMOSAIC_DemosaicAttr_CoarseStr_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.CoarseStr, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.CoarseStr[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -581,7 +591,9 @@ static int test_DEMOSAIC_DemosaicAttr_CoarseStr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.CoarseStr, 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.CoarseStr[j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -593,7 +605,9 @@ static int test_DEMOSAIC_DemosaicAttr_CoarseStr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.CoarseStr, rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.CoarseStr[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -605,7 +619,9 @@ static int test_DEMOSAIC_DemosaicAttr_CoarseStr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.CoarseStr, rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.CoarseStr[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -717,7 +733,9 @@ static int test_DEMOSAIC_DemosaicAttr_FineEdgeThr_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.FineEdgeThr, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FineEdgeThr[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -729,7 +747,9 @@ static int test_DEMOSAIC_DemosaicAttr_FineEdgeThr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.FineEdgeThr, 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FineEdgeThr[j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -741,7 +761,9 @@ static int test_DEMOSAIC_DemosaicAttr_FineEdgeThr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.FineEdgeThr, rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FineEdgeThr[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -753,7 +775,9 @@ static int test_DEMOSAIC_DemosaicAttr_FineEdgeThr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.FineEdgeThr, rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FineEdgeThr[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -865,7 +889,9 @@ static int test_DEMOSAIC_DemosaicAttr_FineStr_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.FineStr, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FineStr[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -877,7 +903,9 @@ static int test_DEMOSAIC_DemosaicAttr_FineStr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.FineStr, 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FineStr[j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -889,7 +917,9 @@ static int test_DEMOSAIC_DemosaicAttr_FineStr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.FineStr, rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FineStr[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -901,7 +931,9 @@ static int test_DEMOSAIC_DemosaicAttr_FineStr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.FineStr, rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FineStr[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -1013,7 +1045,9 @@ static int test_DEMOSAIC_DemosaicAttr_RbSigLumaThd_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.RbSigLumaThd, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.RbSigLumaThd[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1025,7 +1059,9 @@ static int test_DEMOSAIC_DemosaicAttr_RbSigLumaThd_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.RbSigLumaThd, 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.RbSigLumaThd[j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1037,7 +1073,9 @@ static int test_DEMOSAIC_DemosaicAttr_RbSigLumaThd_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.RbSigLumaThd, rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.RbSigLumaThd[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1049,7 +1087,9 @@ static int test_DEMOSAIC_DemosaicAttr_RbSigLumaThd_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.RbSigLumaThd, rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.RbSigLumaThd[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -1161,7 +1201,9 @@ static int test_DEMOSAIC_DemosaicAttr_FilterMode_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.FilterMode, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FilterMode[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1173,7 +1215,9 @@ static int test_DEMOSAIC_DemosaicAttr_FilterMode_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.FilterMode, 1, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FilterMode[j] = 1;
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1185,7 +1229,9 @@ static int test_DEMOSAIC_DemosaicAttr_FilterMode_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.FilterMode, rand_range(0, 1), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FilterMode[j] = rand_range(0, 1);
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1197,7 +1243,9 @@ static int test_DEMOSAIC_DemosaicAttr_FilterMode_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.FilterMode, rand_range(2, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FilterMode[j] = rand_range(2, 255);
+	}
 	ret = CVI_ISP_SetDemosaicAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -1632,7 +1680,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_AntiFalseColorStr_auto(VI_PIPE ViPi
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.AntiFalseColorStr, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AntiFalseColorStr[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1644,7 +1694,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_AntiFalseColorStr_auto(VI_PIPE ViPi
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.AntiFalseColorStr, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AntiFalseColorStr[j] = 255;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1656,7 +1708,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_AntiFalseColorStr_auto(VI_PIPE ViPi
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.AntiFalseColorStr, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AntiFalseColorStr[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1787,8 +1841,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_SatGainIn_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.SatGainIn[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.SatGainIn[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainIn[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainIn[1][j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1800,8 +1858,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_SatGainIn_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.SatGainIn[0], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.SatGainIn[1], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainIn[0][j] = 4095;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainIn[1][j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1813,8 +1875,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_SatGainIn_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.SatGainIn[0], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.SatGainIn[1], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainIn[0][j] = rand_range(0, 4095);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainIn[1][j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1826,8 +1892,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_SatGainIn_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.SatGainIn[0], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.SatGainIn[1], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainIn[0][j] = rand_range(4096, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainIn[1][j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -1955,8 +2025,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_SatGainOut_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.SatGainOut[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.SatGainOut[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainOut[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainOut[1][j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1968,8 +2042,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_SatGainOut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.SatGainOut[0], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.SatGainOut[1], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainOut[0][j] = 4095;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainOut[1][j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1981,8 +2059,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_SatGainOut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.SatGainOut[0], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.SatGainOut[1], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainOut[0][j] = rand_range(0, 4095);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainOut[1][j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1994,8 +2076,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_SatGainOut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.SatGainOut[0], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.SatGainOut[1], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainOut[0][j] = rand_range(4096, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SatGainOut[1][j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -2123,8 +2209,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_ProtectColorGainIn_auto(VI_PIPE ViP
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.ProtectColorGainIn[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.ProtectColorGainIn[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainIn[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainIn[1][j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -2136,8 +2226,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_ProtectColorGainIn_auto(VI_PIPE ViP
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.ProtectColorGainIn[0], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.ProtectColorGainIn[1], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainIn[0][j] = 4095;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainIn[1][j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -2149,8 +2243,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_ProtectColorGainIn_auto(VI_PIPE ViP
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.ProtectColorGainIn[0], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.ProtectColorGainIn[1], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainIn[0][j] = rand_range(0, 4095);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainIn[1][j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -2162,8 +2260,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_ProtectColorGainIn_auto(VI_PIPE ViP
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.ProtectColorGainIn[0], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.ProtectColorGainIn[1], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainIn[0][j] = rand_range(4096, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainIn[1][j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -2291,8 +2393,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_ProtectColorGainOut_auto(VI_PIPE Vi
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.ProtectColorGainOut[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.ProtectColorGainOut[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainOut[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainOut[1][j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -2304,8 +2410,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_ProtectColorGainOut_auto(VI_PIPE Vi
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.ProtectColorGainOut[0], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.ProtectColorGainOut[1], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainOut[0][j] = 4095;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainOut[1][j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -2317,8 +2427,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_ProtectColorGainOut_auto(VI_PIPE Vi
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.ProtectColorGainOut[0], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.ProtectColorGainOut[1], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainOut[0][j] = rand_range(0, 4095);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainOut[1][j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -2330,8 +2444,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_ProtectColorGainOut_auto(VI_PIPE Vi
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.ProtectColorGainOut[0], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.ProtectColorGainOut[1], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainOut[0][j] = rand_range(4096, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ProtectColorGainOut[1][j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -2445,7 +2563,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_UserDefineProtectColor1_auto(VI_PIP
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.UserDefineProtectColor1, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.UserDefineProtectColor1[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -2457,7 +2577,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_UserDefineProtectColor1_auto(VI_PIP
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.UserDefineProtectColor1, 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.UserDefineProtectColor1[j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -2469,7 +2591,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_UserDefineProtectColor1_auto(VI_PIP
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.UserDefineProtectColor1, rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.UserDefineProtectColor1[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -2481,7 +2605,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_UserDefineProtectColor1_auto(VI_PIP
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.UserDefineProtectColor1, rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.UserDefineProtectColor1[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -2593,7 +2719,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_UserDefineProtectColor2_auto(VI_PIP
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.UserDefineProtectColor2, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.UserDefineProtectColor2[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -2605,7 +2733,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_UserDefineProtectColor2_auto(VI_PIP
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.UserDefineProtectColor2, 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.UserDefineProtectColor2[j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -2617,7 +2747,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_UserDefineProtectColor2_auto(VI_PIP
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.UserDefineProtectColor2, rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.UserDefineProtectColor2[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -2629,7 +2761,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_UserDefineProtectColor2_auto(VI_PIP
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.UserDefineProtectColor2, rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.UserDefineProtectColor2[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -2741,7 +2875,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_UserDefineProtectColor3_auto(VI_PIP
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.UserDefineProtectColor3, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.UserDefineProtectColor3[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -2753,7 +2889,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_UserDefineProtectColor3_auto(VI_PIP
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.UserDefineProtectColor3, 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.UserDefineProtectColor3[j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -2765,7 +2903,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_UserDefineProtectColor3_auto(VI_PIP
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.UserDefineProtectColor3, rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.UserDefineProtectColor3[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -2777,7 +2917,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_UserDefineProtectColor3_auto(VI_PIP
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.UserDefineProtectColor3, rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.UserDefineProtectColor3[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -2903,8 +3045,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeGainIn_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.EdgeGainIn[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.EdgeGainIn[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainIn[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainIn[1][j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -2916,8 +3062,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeGainIn_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.EdgeGainIn[0], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.EdgeGainIn[1], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainIn[0][j] = 4095;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainIn[1][j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -2929,8 +3079,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeGainIn_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.EdgeGainIn[0], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.EdgeGainIn[1], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainIn[0][j] = rand_range(0, 4095);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainIn[1][j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -2942,8 +3096,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeGainIn_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.EdgeGainIn[0], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.EdgeGainIn[1], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainIn[0][j] = rand_range(4096, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainIn[1][j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -3071,8 +3229,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeGainOut_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.EdgeGainOut[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.EdgeGainOut[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainOut[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainOut[1][j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -3084,8 +3246,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeGainOut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.EdgeGainOut[0], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.EdgeGainOut[1], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainOut[0][j] = 4095;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainOut[1][j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -3097,8 +3263,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeGainOut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.EdgeGainOut[0], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.EdgeGainOut[1], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainOut[0][j] = rand_range(0, 4095);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainOut[1][j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -3110,8 +3280,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeGainOut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.EdgeGainOut[0], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.EdgeGainOut[1], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainOut[0][j] = rand_range(4096, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeGainOut[1][j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -3239,8 +3413,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailGainIn_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DetailGainIn[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.DetailGainIn[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGainIn[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGainIn[1][j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -3252,8 +3430,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailGainIn_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DetailGainIn[0], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.DetailGainIn[1], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGainIn[0][j] = 4095;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGainIn[1][j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -3265,8 +3447,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailGainIn_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DetailGainIn[0], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.DetailGainIn[1], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGainIn[0][j] = rand_range(0, 4095);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGainIn[1][j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -3278,8 +3464,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailGainIn_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.DetailGainIn[0], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.DetailGainIn[1], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGainIn[0][j] = rand_range(4096, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGainIn[1][j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -3407,8 +3597,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailGaintOut_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DetailGaintOut[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.DetailGaintOut[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGaintOut[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGaintOut[1][j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -3420,8 +3614,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailGaintOut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DetailGaintOut[0], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.DetailGaintOut[1], 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGaintOut[0][j] = 4095;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGaintOut[1][j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -3433,8 +3631,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailGaintOut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DetailGaintOut[0], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.DetailGaintOut[1], rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGaintOut[0][j] = rand_range(0, 4095);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGaintOut[1][j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -3446,8 +3648,12 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailGaintOut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.DetailGaintOut[0], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.DetailGaintOut[1], rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGaintOut[0][j] = rand_range(4096, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailGaintOut[1][j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -3561,7 +3767,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailDetectLumaStr_auto(VI_PIPE Vi
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DetailDetectLumaStr, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailDetectLumaStr[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -3573,7 +3781,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailDetectLumaStr_auto(VI_PIPE Vi
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DetailDetectLumaStr, 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailDetectLumaStr[j] = 4095;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -3585,7 +3795,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailDetectLumaStr_auto(VI_PIPE Vi
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DetailDetectLumaStr, rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailDetectLumaStr[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -3597,7 +3809,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailDetectLumaStr_auto(VI_PIPE Vi
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.DetailDetectLumaStr, rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailDetectLumaStr[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -3702,7 +3916,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothStr_auto(VI_PIPE ViPipe
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DetailSmoothStr, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothStr[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -3714,7 +3930,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothStr_auto(VI_PIPE ViPipe
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DetailSmoothStr, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothStr[j] = 255;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -3726,7 +3944,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothStr_auto(VI_PIPE ViPipe
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DetailSmoothStr, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothStr[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -3836,7 +4056,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtThr_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DetailWgtThr, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtThr[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -3848,7 +4070,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtThr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DetailWgtThr, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtThr[j] = 255;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -3860,7 +4084,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtThr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DetailWgtThr, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtThr[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -3977,7 +4203,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtMin_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DetailWgtMin, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtMin[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -3989,7 +4217,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtMin_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DetailWgtMin, 256, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtMin[j] = 256;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -4001,7 +4231,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtMin_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DetailWgtMin, rand_range(0, 256), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtMin[j] = rand_range(0, 256);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -4013,7 +4245,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtMin_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.DetailWgtMin, rand_range(257, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtMin[j] = rand_range(257, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -4125,7 +4359,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtMax_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DetailWgtMax, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtMax[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -4137,7 +4373,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtMax_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DetailWgtMax, 256, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtMax[j] = 256;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -4149,7 +4387,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtMax_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DetailWgtMax, rand_range(0, 256), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtMax[j] = rand_range(0, 256);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -4161,7 +4401,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtMax_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.DetailWgtMax, rand_range(257, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtMax[j] = rand_range(257, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -4273,7 +4515,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtSlope_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DetailWgtSlope, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtSlope[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -4285,7 +4529,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtSlope_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DetailWgtSlope, 1024, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtSlope[j] = 1024;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -4297,7 +4543,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtSlope_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DetailWgtSlope, rand_range(0, 1024), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtSlope[j] = rand_range(0, 1024);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -4309,7 +4557,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailWgtSlope_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.DetailWgtSlope, rand_range(1025, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailWgtSlope[j] = rand_range(1025, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -4414,7 +4664,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtNp_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.EdgeWgtNp, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtNp[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -4426,7 +4678,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtNp_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.EdgeWgtNp, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtNp[j] = 255;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -4438,7 +4692,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtNp_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.EdgeWgtNp, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtNp[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -4548,7 +4804,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtThr_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.EdgeWgtThr, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtThr[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -4560,7 +4818,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtThr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.EdgeWgtThr, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtThr[j] = 255;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -4572,7 +4832,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtThr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.EdgeWgtThr, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtThr[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -4689,7 +4951,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtMin_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.EdgeWgtMin, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtMin[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -4701,7 +4965,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtMin_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.EdgeWgtMin, 256, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtMin[j] = 256;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -4713,7 +4979,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtMin_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.EdgeWgtMin, rand_range(0, 256), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtMin[j] = rand_range(0, 256);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -4725,7 +4993,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtMin_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.EdgeWgtMin, rand_range(257, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtMin[j] = rand_range(257, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -4837,7 +5107,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtMax_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.EdgeWgtMax, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtMax[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -4849,7 +5121,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtMax_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.EdgeWgtMax, 256, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtMax[j] = 256;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -4861,7 +5135,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtMax_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.EdgeWgtMax, rand_range(0, 256), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtMax[j] = rand_range(0, 256);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -4873,7 +5149,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtMax_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.EdgeWgtMax, rand_range(257, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtMax[j] = rand_range(257, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -4985,7 +5263,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtSlope_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.EdgeWgtSlope, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtSlope[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -4997,7 +5277,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtSlope_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.EdgeWgtSlope, 1024, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtSlope[j] = 1024;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -5009,7 +5291,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtSlope_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.EdgeWgtSlope, rand_range(0, 1024), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtSlope[j] = rand_range(0, 1024);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -5021,7 +5305,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_EdgeWgtSlope_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.EdgeWgtSlope, rand_range(1025, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.EdgeWgtSlope[j] = rand_range(1025, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -5126,7 +5412,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapTh_auto(VI_PIPE ViPi
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DetailSmoothMapTh, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapTh[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -5138,7 +5426,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapTh_auto(VI_PIPE ViPi
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DetailSmoothMapTh, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapTh[j] = 255;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -5150,7 +5440,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapTh_auto(VI_PIPE ViPi
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DetailSmoothMapTh, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapTh[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -5267,7 +5559,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapMin_auto(VI_PIPE ViP
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DetailSmoothMapMin, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapMin[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -5279,7 +5573,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapMin_auto(VI_PIPE ViP
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DetailSmoothMapMin, 256, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapMin[j] = 256;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -5291,7 +5587,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapMin_auto(VI_PIPE ViP
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DetailSmoothMapMin, rand_range(0, 256), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapMin[j] = rand_range(0, 256);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -5303,7 +5601,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapMin_auto(VI_PIPE ViP
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.DetailSmoothMapMin, rand_range(257, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapMin[j] = rand_range(257, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -5415,7 +5715,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapMax_auto(VI_PIPE ViP
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DetailSmoothMapMax, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapMax[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -5427,7 +5729,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapMax_auto(VI_PIPE ViP
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DetailSmoothMapMax, 256, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapMax[j] = 256;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -5439,7 +5743,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapMax_auto(VI_PIPE ViP
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DetailSmoothMapMax, rand_range(0, 256), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapMax[j] = rand_range(0, 256);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -5451,7 +5757,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapMax_auto(VI_PIPE ViP
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.DetailSmoothMapMax, rand_range(257, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapMax[j] = rand_range(257, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -5563,7 +5871,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapSlope_auto(VI_PIPE V
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DetailSmoothMapSlope, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapSlope[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -5575,7 +5885,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapSlope_auto(VI_PIPE V
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DetailSmoothMapSlope, 1024, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapSlope[j] = 1024;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -5587,7 +5899,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapSlope_auto(VI_PIPE V
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DetailSmoothMapSlope, rand_range(0, 1024), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapSlope[j] = rand_range(0, 1024);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -5599,7 +5913,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_DetailSmoothMapSlope_auto(VI_PIPE V
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.DetailSmoothMapSlope, rand_range(1025, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DetailSmoothMapSlope[j] = rand_range(1025, 65535);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -5704,7 +6020,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_LumaWgt_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.LumaWgt, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumaWgt[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -5716,7 +6034,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_LumaWgt_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.LumaWgt, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumaWgt[j] = 255;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -5728,7 +6048,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_LumaWgt_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.LumaWgt, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumaWgt[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -5838,7 +6160,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_SharpenGain_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.SharpenGain, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SharpenGain[j] = 0;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -5850,7 +6174,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_SharpenGain_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.SharpenGain, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SharpenGain[j] = 255;
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -5862,7 +6188,9 @@ static int test_DEMOSAIC_DemosaicDemoireAttr_SharpenGain_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.SharpenGain, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.SharpenGain[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetDemosaicDemoireAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");

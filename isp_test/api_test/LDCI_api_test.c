@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_LDCI_LDCIAttr_Enable(VI_PIPE ViPipe)
@@ -459,15 +459,33 @@ static int test_LDCI_LDCIAttr_LdciStrength_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.LdciStrength[0], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[1], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[2], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[3], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[4], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[5], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[6], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[7], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[8], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[1][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[2][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[3][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[4][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[5][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[6][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[7][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[8][j] = 0;
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -479,15 +497,33 @@ static int test_LDCI_LDCIAttr_LdciStrength_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.LdciStrength[0], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[1], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[2], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[3], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[4], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[5], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[6], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[7], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[8], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[0][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[1][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[2][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[3][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[4][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[5][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[6][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[7][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[8][j] = 255;
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -499,15 +535,33 @@ static int test_LDCI_LDCIAttr_LdciStrength_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.LdciStrength[0], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[1], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[2], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[3], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[4], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[5], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[6], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[7], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LdciStrength[8], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[0][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[1][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[2][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[3][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[4][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[5][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[6][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[7][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciStrength[8][j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -633,7 +687,9 @@ static int test_LDCI_LDCIAttr_AdaptiveGainMax_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.AdaptiveGainMax, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AdaptiveGainMax[j] = 0;
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -645,7 +701,9 @@ static int test_LDCI_LDCIAttr_AdaptiveGainMax_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.AdaptiveGainMax, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AdaptiveGainMax[j] = 255;
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -657,7 +715,9 @@ static int test_LDCI_LDCIAttr_AdaptiveGainMax_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.AdaptiveGainMax, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AdaptiveGainMax[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -767,7 +827,9 @@ static int test_LDCI_LDCIAttr_AdaptiveGainMin_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.AdaptiveGainMin, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AdaptiveGainMin[j] = 0;
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -779,7 +841,9 @@ static int test_LDCI_LDCIAttr_AdaptiveGainMin_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.AdaptiveGainMin, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AdaptiveGainMin[j] = 255;
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -791,7 +855,9 @@ static int test_LDCI_LDCIAttr_AdaptiveGainMin_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.AdaptiveGainMin, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AdaptiveGainMin[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -908,7 +974,9 @@ static int test_LDCI_LDCIAttr_FBCStrength_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.FBCStrength, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FBCStrength[j] = 0;
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -920,7 +988,9 @@ static int test_LDCI_LDCIAttr_FBCStrength_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.FBCStrength, 31, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FBCStrength[j] = 31;
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -932,7 +1002,9 @@ static int test_LDCI_LDCIAttr_FBCStrength_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.FBCStrength, rand_range(0, 31), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FBCStrength[j] = rand_range(0, 31);
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -944,7 +1016,9 @@ static int test_LDCI_LDCIAttr_FBCStrength_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.FBCStrength, rand_range(32, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FBCStrength[j] = rand_range(32, 255);
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -1049,7 +1123,9 @@ static int test_LDCI_LDCIAttr_LdciThres1_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.LdciThres1, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciThres1[j] = 0;
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1061,7 +1137,9 @@ static int test_LDCI_LDCIAttr_LdciThres1_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.LdciThres1, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciThres1[j] = 255;
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1073,7 +1151,9 @@ static int test_LDCI_LDCIAttr_LdciThres1_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.LdciThres1, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LdciThres1[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");

@@ -564,13 +564,14 @@ static void *rtsp_server_loop(void *arg)
 	FD_SET(listen_fd, &all_set);
 	max_fd = listen_fd;
 
-	struct timeval timeout = { 0, 500 * 1000 }; // 500ms
 	char *msg_buf = (char *)calloc(RTSP_MSG_BUF_SIZE, sizeof(char));
 
 	clog_i("rtsp server listening on port %d\n", port);
 
 	while (rtsp_server_thread_run) {
 		r_set = all_set;
+
+		struct timeval timeout = { 0, 500 * 1000 }; // 500ms
 
 		if (select(max_fd + 1, &r_set, NULL, NULL, &timeout) == -1) {
 			if (errno == EINTR)

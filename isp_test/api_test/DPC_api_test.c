@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_DPC_DPDynamicAttr_Enable(VI_PIPE ViPipe)
@@ -216,7 +216,9 @@ static int test_DPC_DPDynamicAttr_DarkDefectThresh(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.DarkDefectThresh, 0, sizeof(CVI_U16) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.DarkDefectThresh[i] = 0;
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -228,7 +230,9 @@ static int test_DPC_DPDynamicAttr_DarkDefectThresh(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.DarkDefectThresh, 4095, sizeof(CVI_U16) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.DarkDefectThresh[i] = 4095;
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -294,7 +298,9 @@ static int test_DPC_DPDynamicAttr_BrightDefectThresh(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.BrightDefectThresh, 0, sizeof(CVI_U16) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.BrightDefectThresh[i] = 0;
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -306,7 +312,9 @@ static int test_DPC_DPDynamicAttr_BrightDefectThresh(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.BrightDefectThresh, 4095, sizeof(CVI_U16) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.BrightDefectThresh[i] = 4095;
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -657,7 +665,9 @@ static int test_DPC_DPDynamicAttr_DefectCnt1_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DefectCnt1, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DefectCnt1[j] = 0;
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -669,7 +679,9 @@ static int test_DPC_DPDynamicAttr_DefectCnt1_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DefectCnt1, 16, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DefectCnt1[j] = 16;
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -681,7 +693,9 @@ static int test_DPC_DPDynamicAttr_DefectCnt1_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DefectCnt1, rand_range(0, 16), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DefectCnt1[j] = rand_range(0, 16);
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -693,7 +707,9 @@ static int test_DPC_DPDynamicAttr_DefectCnt1_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.DefectCnt1, rand_range(17, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DefectCnt1[j] = rand_range(17, 255);
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -805,7 +821,9 @@ static int test_DPC_DPDynamicAttr_DefectCnt2_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.DefectCnt2, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DefectCnt2[j] = 0;
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -817,7 +835,9 @@ static int test_DPC_DPDynamicAttr_DefectCnt2_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.DefectCnt2, 16, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DefectCnt2[j] = 16;
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -829,7 +849,9 @@ static int test_DPC_DPDynamicAttr_DefectCnt2_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.DefectCnt2, rand_range(0, 16), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DefectCnt2[j] = rand_range(0, 16);
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -841,7 +863,9 @@ static int test_DPC_DPDynamicAttr_DefectCnt2_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.DefectCnt2, rand_range(17, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.DefectCnt2[j] = rand_range(17, 255);
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -953,7 +977,9 @@ static int test_DPC_DPDynamicAttr_AdvMode_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.AdvMode, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AdvMode[j] = 0;
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -965,7 +991,9 @@ static int test_DPC_DPDynamicAttr_AdvMode_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.AdvMode, 1, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AdvMode[j] = 1;
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -977,7 +1005,9 @@ static int test_DPC_DPDynamicAttr_AdvMode_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.AdvMode, rand_range(0, 1), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AdvMode[j] = rand_range(0, 1);
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -989,7 +1019,9 @@ static int test_DPC_DPDynamicAttr_AdvMode_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.AdvMode, rand_range(2, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AdvMode[j] = rand_range(2, 255);
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -1101,7 +1133,9 @@ static int test_DPC_DPDynamicAttr_AvgMode_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.AvgMode, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AvgMode[j] = 0;
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1113,7 +1147,9 @@ static int test_DPC_DPDynamicAttr_AvgMode_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.AvgMode, 1, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AvgMode[j] = 1;
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1125,7 +1161,9 @@ static int test_DPC_DPDynamicAttr_AvgMode_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.AvgMode, rand_range(0, 1), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AvgMode[j] = rand_range(0, 1);
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1137,7 +1175,9 @@ static int test_DPC_DPDynamicAttr_AvgMode_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.AvgMode, rand_range(2, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.AvgMode[j] = rand_range(2, 255);
+	}
 	ret = CVI_ISP_SetDPDynamicAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");

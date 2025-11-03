@@ -145,6 +145,7 @@ package: $(TARGET) ctrl_tool
 	@cp isp_daemon_tool/CviIspTool.sh install/
 	@cp isp_daemon_tool/daemon_cfg/* install/
 	@cp res/* install/ -rf
+	@cp isp_test/scripts/*.sh install/
 
 	@mkdir install/lib/ai
 ifeq "$(TDL_SDK_LIB_EXIST)" "noexist"

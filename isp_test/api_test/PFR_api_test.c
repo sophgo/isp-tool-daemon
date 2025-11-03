@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_PFR_PFRAttr_Enable(VI_PIPE ViPipe)
@@ -348,7 +348,9 @@ static int test_PFR_PFRAttr_UVENLut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.UVENLut, 0, sizeof(CVI_BOOL) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.UVENLut[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -360,7 +362,9 @@ static int test_PFR_PFRAttr_UVENLut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.UVENLut, 1, sizeof(CVI_BOOL) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.UVENLut[i] = 1;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -417,7 +421,9 @@ static int test_PFR_PFRAttr_HueENLut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.HueENLut, 0, sizeof(CVI_BOOL) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.HueENLut[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -429,7 +435,9 @@ static int test_PFR_PFRAttr_HueENLut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.HueENLut, 1, sizeof(CVI_BOOL) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.HueENLut[i] = 1;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -486,7 +494,9 @@ static int test_PFR_PFRAttr_ULut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.ULut, 0, sizeof(CVI_U8) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.ULut[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -498,7 +508,9 @@ static int test_PFR_PFRAttr_ULut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.ULut, 255, sizeof(CVI_U8) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.ULut[i] = 255;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -555,7 +567,9 @@ static int test_PFR_PFRAttr_VLut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.VLut, 0, sizeof(CVI_U8) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.VLut[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -567,7 +581,9 @@ static int test_PFR_PFRAttr_VLut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.VLut, 255, sizeof(CVI_U8) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.VLut[i] = 255;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -624,7 +640,9 @@ static int test_PFR_PFRAttr_UVDiffThLut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.UVDiffThLut, 0, sizeof(CVI_U8) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.UVDiffThLut[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -636,7 +654,9 @@ static int test_PFR_PFRAttr_UVDiffThLut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.UVDiffThLut, 255, sizeof(CVI_U8) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.UVDiffThLut[i] = 255;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -693,7 +713,9 @@ static int test_PFR_PFRAttr_UVDiffLut0(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.UVDiffLut0, 0, sizeof(CVI_U8) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.UVDiffLut0[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -705,7 +727,9 @@ static int test_PFR_PFRAttr_UVDiffLut0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.UVDiffLut0, 255, sizeof(CVI_U8) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.UVDiffLut0[i] = 255;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -762,7 +786,9 @@ static int test_PFR_PFRAttr_UVDiffLut1(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.UVDiffLut1, 0, sizeof(CVI_U8) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.UVDiffLut1[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -774,7 +800,9 @@ static int test_PFR_PFRAttr_UVDiffLut1(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.UVDiffLut1, 255, sizeof(CVI_U8) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.UVDiffLut1[i] = 255;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -831,7 +859,9 @@ static int test_PFR_PFRAttr_RWetLut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.RWetLut, 0, sizeof(CVI_U8) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.RWetLut[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -843,7 +873,9 @@ static int test_PFR_PFRAttr_RWetLut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.RWetLut, 255, sizeof(CVI_U8) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.RWetLut[i] = 255;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -900,7 +932,9 @@ static int test_PFR_PFRAttr_BWetLut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.BWetLut, 0, sizeof(CVI_U8) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.BWetLut[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -912,7 +946,9 @@ static int test_PFR_PFRAttr_BWetLut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.BWetLut, 255, sizeof(CVI_U8) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.BWetLut[i] = 255;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -969,7 +1005,9 @@ static int test_PFR_PFRAttr_HueLut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.HueLut, 0, sizeof(CVI_U16) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.HueLut[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -981,7 +1019,9 @@ static int test_PFR_PFRAttr_HueLut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.HueLut, 359, sizeof(CVI_U16) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.HueLut[i] = 359;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1047,7 +1087,9 @@ static int test_PFR_PFRAttr_HueRngLut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.HueRngLut, 0, sizeof(CVI_U8) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.HueRngLut[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1059,7 +1101,9 @@ static int test_PFR_PFRAttr_HueRngLut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.HueRngLut, 255, sizeof(CVI_U8) * 2);
+	for (int i = 0; i < 2; ++i) {
+		attr.HueRngLut[i] = 255;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1182,7 +1226,9 @@ static int test_PFR_PFRAttr_EdgeThLut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.EdgeThLut, 0, sizeof(CVI_U8) * 4);
+	for (int i = 0; i < 4; ++i) {
+		attr.EdgeThLut[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1194,7 +1240,9 @@ static int test_PFR_PFRAttr_EdgeThLut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.EdgeThLut, 255, sizeof(CVI_U8) * 4);
+	for (int i = 0; i < 4; ++i) {
+		attr.EdgeThLut[i] = 255;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1251,7 +1299,9 @@ static int test_PFR_PFRAttr_GDiffLut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.GDiffLut, 0, sizeof(CVI_U8) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.GDiffLut[i] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1263,7 +1313,9 @@ static int test_PFR_PFRAttr_GDiffLut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.GDiffLut, 127, sizeof(CVI_U8) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.GDiffLut[i] = 127;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1395,7 +1447,9 @@ static int test_PFR_PFRAttr_LumaIniVal_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.LumaIniVal, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumaIniVal[j] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1407,7 +1461,9 @@ static int test_PFR_PFRAttr_LumaIniVal_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.LumaIniVal, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumaIniVal[j] = 255;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1419,7 +1475,9 @@ static int test_PFR_PFRAttr_LumaIniVal_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.LumaIniVal, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumaIniVal[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1529,7 +1587,9 @@ static int test_PFR_PFRAttr_LumLevelTh_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.LumLevelTh, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelTh[j] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1541,7 +1601,9 @@ static int test_PFR_PFRAttr_LumLevelTh_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.LumLevelTh, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelTh[j] = 255;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1553,7 +1615,9 @@ static int test_PFR_PFRAttr_LumLevelTh_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.LumLevelTh, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelTh[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1871,23 +1935,57 @@ static int test_PFR_PFRAttr_LumLevelLut_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.LumLevelLut[0], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[1], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[2], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[3], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[4], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[5], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[6], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[7], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[8], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[9], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[10], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[11], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[12], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[13], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[14], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[15], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[16], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[1][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[2][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[3][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[4][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[5][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[6][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[7][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[8][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[9][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[10][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[11][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[12][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[13][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[14][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[15][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[16][j] = 0;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1899,23 +1997,57 @@ static int test_PFR_PFRAttr_LumLevelLut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.LumLevelLut[0], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[1], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[2], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[3], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[4], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[5], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[6], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[7], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[8], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[9], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[10], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[11], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[12], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[13], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[14], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[15], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[16], 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[0][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[1][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[2][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[3][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[4][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[5][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[6][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[7][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[8][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[9][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[10][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[11][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[12][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[13][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[14][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[15][j] = 255;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[16][j] = 255;
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1927,23 +2059,57 @@ static int test_PFR_PFRAttr_LumLevelLut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.LumLevelLut[0], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[1], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[2], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[3], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[4], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[5], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[6], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[7], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[8], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[9], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[10], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[11], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[12], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[13], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[14], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[15], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.LumLevelLut[16], rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[0][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[1][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[2][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[3][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[4][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[5][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[6][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[7][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[8][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[9][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[10][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[11][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[12][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[13][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[14][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[15][j] = rand_range(0, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.LumLevelLut[16][j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetPFRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");

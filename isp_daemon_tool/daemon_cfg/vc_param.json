@@ -212,6 +212,12 @@
     "RC Param": {
         "items": [
             {
+                "key": "RowQpDelta",
+                "optype": "Manual",
+                "value": 1,
+                "value_type": "int"
+            },
+            {
                 "key": "ThrdLv",
                 "optype": "Manual",
                 "value": 2,

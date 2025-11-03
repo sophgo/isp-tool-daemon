@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_FSHDR_FSHDRAttr_enOpType(VI_PIPE ViPipe)
@@ -1655,7 +1655,9 @@ static int test_FSHDR_FSHDRAttr_NDBldDiffLut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.NDBldDiffLut, 0, sizeof(CVI_U8) * 16);
+	for (int i = 0; i < 16; ++i) {
+		attr.NDBldDiffLut[i] = 0;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1667,7 +1669,9 @@ static int test_FSHDR_FSHDRAttr_NDBldDiffLut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.NDBldDiffLut, 16, sizeof(CVI_U8) * 16);
+	for (int i = 0; i < 16; ++i) {
+		attr.NDBldDiffLut[i] = 16;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -2430,7 +2434,9 @@ static int test_FSHDR_FSHDRAttr_MCurveFlumWet(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.MCurveFlumWet, 0, sizeof(CVI_U8) * 17);
+	for (int i = 0; i < 17; ++i) {
+		attr.MCurveFlumWet[i] = 0;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -2442,7 +2448,9 @@ static int test_FSHDR_FSHDRAttr_MCurveFlumWet(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.MCurveFlumWet, 255, sizeof(CVI_U8) * 17);
+	for (int i = 0; i < 17; ++i) {
+		attr.MCurveFlumWet[i] = 255;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");

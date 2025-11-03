@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_BNR_BNRAttr_Enable(VI_PIPE ViPipe)
@@ -421,7 +421,9 @@ static int test_BNR_BNRAttr_FilterKsize_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.FilterKsize, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FilterKsize[j] = 0;
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -433,7 +435,9 @@ static int test_BNR_BNRAttr_FilterKsize_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.FilterKsize, 1, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FilterKsize[j] = 1;
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -445,7 +449,9 @@ static int test_BNR_BNRAttr_FilterKsize_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.FilterKsize, rand_range(0, 1), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FilterKsize[j] = rand_range(0, 1);
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -457,7 +463,9 @@ static int test_BNR_BNRAttr_FilterKsize_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.FilterKsize, rand_range(2, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.FilterKsize[j] = rand_range(2, 255);
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -569,7 +577,9 @@ static int test_BNR_BNRAttr_PreFilterStdThr1_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.PreFilterStdThr1, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.PreFilterStdThr1[j] = 0;
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -581,7 +591,9 @@ static int test_BNR_BNRAttr_PreFilterStdThr1_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.PreFilterStdThr1, 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.PreFilterStdThr1[j] = 1023;
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -593,7 +605,9 @@ static int test_BNR_BNRAttr_PreFilterStdThr1_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.PreFilterStdThr1, rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.PreFilterStdThr1[j] = rand_range(0, 1023);
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -605,7 +619,9 @@ static int test_BNR_BNRAttr_PreFilterStdThr1_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.PreFilterStdThr1, rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.PreFilterStdThr1[j] = rand_range(1024, 65535);
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -717,7 +733,9 @@ static int test_BNR_BNRAttr_PreFilterStdThr2_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.PreFilterStdThr2, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.PreFilterStdThr2[j] = 0;
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -729,7 +747,9 @@ static int test_BNR_BNRAttr_PreFilterStdThr2_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.PreFilterStdThr2, 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.PreFilterStdThr2[j] = 1023;
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -741,7 +761,9 @@ static int test_BNR_BNRAttr_PreFilterStdThr2_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.PreFilterStdThr2, rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.PreFilterStdThr2[j] = rand_range(0, 1023);
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -753,7 +775,9 @@ static int test_BNR_BNRAttr_PreFilterStdThr2_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.PreFilterStdThr2, rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.PreFilterStdThr2[j] = rand_range(1024, 65535);
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -991,16 +1015,36 @@ static int test_BNR_BNRAttr_GussianKernelWt_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.GussianKernelWt[0], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[1], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[2], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[3], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[4], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[5], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[6], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[7], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[8], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[9], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[1][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[2][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[3][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[4][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[5][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[6][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[7][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[8][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[9][j] = 0;
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1012,16 +1056,36 @@ static int test_BNR_BNRAttr_GussianKernelWt_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.GussianKernelWt[0], 31, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[1], 31, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[2], 31, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[3], 31, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[4], 31, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[5], 31, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[6], 31, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[7], 31, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[8], 31, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[9], 31, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[0][j] = 31;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[1][j] = 31;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[2][j] = 31;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[3][j] = 31;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[4][j] = 31;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[5][j] = 31;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[6][j] = 31;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[7][j] = 31;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[8][j] = 31;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[9][j] = 31;
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1033,16 +1097,36 @@ static int test_BNR_BNRAttr_GussianKernelWt_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.GussianKernelWt[0], rand_range(0, 31), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[1], rand_range(0, 31), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[2], rand_range(0, 31), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[3], rand_range(0, 31), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[4], rand_range(0, 31), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[5], rand_range(0, 31), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[6], rand_range(0, 31), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[7], rand_range(0, 31), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[8], rand_range(0, 31), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[9], rand_range(0, 31), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[0][j] = rand_range(0, 31);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[1][j] = rand_range(0, 31);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[2][j] = rand_range(0, 31);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[3][j] = rand_range(0, 31);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[4][j] = rand_range(0, 31);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[5][j] = rand_range(0, 31);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[6][j] = rand_range(0, 31);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[7][j] = rand_range(0, 31);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[8][j] = rand_range(0, 31);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[9][j] = rand_range(0, 31);
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1054,16 +1138,36 @@ static int test_BNR_BNRAttr_GussianKernelWt_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.GussianKernelWt[0], rand_range(32, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[1], rand_range(32, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[2], rand_range(32, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[3], rand_range(32, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[4], rand_range(32, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[5], rand_range(32, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[6], rand_range(32, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[7], rand_range(32, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[8], rand_range(32, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.GussianKernelWt[9], rand_range(32, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[0][j] = rand_range(32, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[1][j] = rand_range(32, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[2][j] = rand_range(32, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[3][j] = rand_range(32, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[4][j] = rand_range(32, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[5][j] = rand_range(32, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[6][j] = rand_range(32, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[7][j] = rand_range(32, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[8][j] = rand_range(32, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.GussianKernelWt[9][j] = rand_range(32, 255);
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -1193,7 +1297,9 @@ static int test_BNR_BNRAttr_NrBlendWt_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.NrBlendWt, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.NrBlendWt[j] = 0;
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1205,7 +1311,9 @@ static int test_BNR_BNRAttr_NrBlendWt_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.NrBlendWt, 16, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.NrBlendWt[j] = 16;
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1217,7 +1325,9 @@ static int test_BNR_BNRAttr_NrBlendWt_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.NrBlendWt, rand_range(0, 16), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.NrBlendWt[j] = rand_range(0, 16);
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1229,7 +1339,9 @@ static int test_BNR_BNRAttr_NrBlendWt_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.NrBlendWt, rand_range(17, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.NrBlendWt[j] = rand_range(17, 255);
+	}
 	ret = CVI_ISP_SetBNRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -1484,12 +1596,24 @@ static int test_BNR_BNRFilterAttr_Filter1GaussianCurve_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.Filter1GaussianCurve[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[2], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[3], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[4], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[5], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[1][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[2][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[3][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[4][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[5][j] = 0;
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1501,12 +1625,24 @@ static int test_BNR_BNRFilterAttr_Filter1GaussianCurve_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.Filter1GaussianCurve[0], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[1], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[2], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[3], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[4], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[5], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[0][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[1][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[2][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[3][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[4][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[5][j] = 1023;
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1518,12 +1654,24 @@ static int test_BNR_BNRFilterAttr_Filter1GaussianCurve_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.Filter1GaussianCurve[0], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[1], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[2], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[3], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[4], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[5], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[0][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[1][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[2][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[3][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[4][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[5][j] = rand_range(0, 1023);
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1535,12 +1683,24 @@ static int test_BNR_BNRFilterAttr_Filter1GaussianCurve_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.Filter1GaussianCurve[0], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[1], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[2], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[3], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[4], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1GaussianCurve[5], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[0][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[1][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[2][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[3][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[4][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1GaussianCurve[5][j] = rand_range(1024, 65535);
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -1886,23 +2046,57 @@ static int test_BNR_BNRFilterAttr_Filter1LumaOffset_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.Filter1LumaOffset[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[2], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[3], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[4], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[5], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[6], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[7], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[8], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[9], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[10], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[11], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[12], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[13], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[14], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[15], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[16], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[1][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[2][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[3][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[4][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[5][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[6][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[7][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[8][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[9][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[10][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[11][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[12][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[13][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[14][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[15][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[16][j] = 0;
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1914,23 +2108,57 @@ static int test_BNR_BNRFilterAttr_Filter1LumaOffset_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.Filter1LumaOffset[0], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[1], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[2], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[3], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[4], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[5], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[6], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[7], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[8], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[9], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[10], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[11], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[12], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[13], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[14], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[15], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[16], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[0][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[1][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[2][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[3][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[4][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[5][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[6][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[7][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[8][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[9][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[10][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[11][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[12][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[13][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[14][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[15][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[16][j] = 1023;
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1942,23 +2170,57 @@ static int test_BNR_BNRFilterAttr_Filter1LumaOffset_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.Filter1LumaOffset[0], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[1], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[2], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[3], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[4], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[5], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[6], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[7], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[8], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[9], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[10], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[11], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[12], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[13], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[14], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[15], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[16], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[0][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[1][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[2][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[3][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[4][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[5][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[6][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[7][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[8][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[9][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[10][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[11][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[12][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[13][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[14][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[15][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[16][j] = rand_range(0, 1023);
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1970,23 +2232,57 @@ static int test_BNR_BNRFilterAttr_Filter1LumaOffset_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.Filter1LumaOffset[0], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[1], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[2], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[3], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[4], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[5], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[6], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[7], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[8], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[9], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[10], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[11], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[12], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[13], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[14], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[15], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter1LumaOffset[16], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[0][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[1][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[2][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[3][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[4][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[5][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[6][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[7][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[8][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[9][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[10][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[11][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[12][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[13][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[14][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[15][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter1LumaOffset[16][j] = rand_range(1024, 65535);
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -2200,12 +2496,24 @@ static int test_BNR_BNRFilterAttr_Filter2GaussianCurve_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.Filter2GaussianCurve[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[2], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[3], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[4], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[5], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[1][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[2][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[3][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[4][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[5][j] = 0;
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -2217,12 +2525,24 @@ static int test_BNR_BNRFilterAttr_Filter2GaussianCurve_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.Filter2GaussianCurve[0], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[1], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[2], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[3], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[4], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[5], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[0][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[1][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[2][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[3][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[4][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[5][j] = 1023;
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -2234,12 +2554,24 @@ static int test_BNR_BNRFilterAttr_Filter2GaussianCurve_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.Filter2GaussianCurve[0], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[1], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[2], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[3], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[4], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[5], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[0][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[1][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[2][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[3][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[4][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[5][j] = rand_range(0, 1023);
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -2251,12 +2583,24 @@ static int test_BNR_BNRFilterAttr_Filter2GaussianCurve_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.Filter2GaussianCurve[0], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[1], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[2], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[3], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[4], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2GaussianCurve[5], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[0][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[1][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[2][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[3][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[4][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2GaussianCurve[5][j] = rand_range(1024, 65535);
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -2602,23 +2946,57 @@ static int test_BNR_BNRFilterAttr_Filter2LumaOffset_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.Filter2LumaOffset[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[2], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[3], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[4], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[5], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[6], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[7], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[8], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[9], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[10], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[11], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[12], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[13], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[14], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[15], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[16], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[1][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[2][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[3][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[4][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[5][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[6][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[7][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[8][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[9][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[10][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[11][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[12][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[13][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[14][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[15][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[16][j] = 0;
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -2630,23 +3008,57 @@ static int test_BNR_BNRFilterAttr_Filter2LumaOffset_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.Filter2LumaOffset[0], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[1], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[2], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[3], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[4], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[5], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[6], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[7], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[8], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[9], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[10], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[11], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[12], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[13], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[14], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[15], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[16], 1023, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[0][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[1][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[2][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[3][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[4][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[5][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[6][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[7][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[8][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[9][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[10][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[11][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[12][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[13][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[14][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[15][j] = 1023;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[16][j] = 1023;
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -2658,23 +3070,57 @@ static int test_BNR_BNRFilterAttr_Filter2LumaOffset_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.Filter2LumaOffset[0], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[1], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[2], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[3], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[4], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[5], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[6], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[7], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[8], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[9], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[10], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[11], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[12], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[13], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[14], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[15], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[16], rand_range(0, 1023), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[0][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[1][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[2][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[3][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[4][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[5][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[6][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[7][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[8][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[9][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[10][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[11][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[12][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[13][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[14][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[15][j] = rand_range(0, 1023);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[16][j] = rand_range(0, 1023);
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -2686,23 +3132,57 @@ static int test_BNR_BNRFilterAttr_Filter2LumaOffset_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.Filter2LumaOffset[0], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[1], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[2], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[3], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[4], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[5], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[6], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[7], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[8], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[9], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[10], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[11], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[12], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[13], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[14], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[15], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Filter2LumaOffset[16], rand_range(1024, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[0][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[1][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[2][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[3][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[4][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[5][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[6][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[7][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[8][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[9][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[10][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[11][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[12][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[13][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[14][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[15][j] = rand_range(1024, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Filter2LumaOffset[16][j] = rand_range(1024, 65535);
+	}
 	ret = CVI_ISP_SetBNRFilterAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");

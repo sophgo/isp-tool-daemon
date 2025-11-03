@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_CA2_CA2Attr_Enable(VI_PIPE ViPipe)
@@ -366,12 +366,24 @@ static int test_CA2_CA2Attr_Ca2In_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.Ca2In[0], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[1], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[2], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[3], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[4], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[5], 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[1][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[2][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[3][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[4][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[5][j] = 0;
+	}
 	ret = CVI_ISP_SetCA2Attr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -383,12 +395,24 @@ static int test_CA2_CA2Attr_Ca2In_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.Ca2In[0], 192, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[1], 192, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[2], 192, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[3], 192, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[4], 192, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[5], 192, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[0][j] = 192;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[1][j] = 192;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[2][j] = 192;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[3][j] = 192;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[4][j] = 192;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[5][j] = 192;
+	}
 	ret = CVI_ISP_SetCA2Attr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -400,12 +424,24 @@ static int test_CA2_CA2Attr_Ca2In_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.Ca2In[0], rand_range(0, 192), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[1], rand_range(0, 192), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[2], rand_range(0, 192), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[3], rand_range(0, 192), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[4], rand_range(0, 192), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[5], rand_range(0, 192), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[0][j] = rand_range(0, 192);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[1][j] = rand_range(0, 192);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[2][j] = rand_range(0, 192);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[3][j] = rand_range(0, 192);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[4][j] = rand_range(0, 192);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[5][j] = rand_range(0, 192);
+	}
 	ret = CVI_ISP_SetCA2Attr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -417,12 +453,24 @@ static int test_CA2_CA2Attr_Ca2In_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.Ca2In[0], rand_range(193, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[1], rand_range(193, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[2], rand_range(193, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[3], rand_range(193, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[4], rand_range(193, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2In[5], rand_range(193, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[0][j] = rand_range(193, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[1][j] = rand_range(193, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[2][j] = rand_range(193, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[3][j] = rand_range(193, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[4][j] = rand_range(193, 255);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2In[5][j] = rand_range(193, 255);
+	}
 	ret = CVI_ISP_SetCA2Attr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -614,12 +662,24 @@ static int test_CA2_CA2Attr_Ca2Out_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.Ca2Out[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[2], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[3], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[4], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[5], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[1][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[2][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[3][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[4][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[5][j] = 0;
+	}
 	ret = CVI_ISP_SetCA2Attr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -631,12 +691,24 @@ static int test_CA2_CA2Attr_Ca2Out_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.Ca2Out[0], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[1], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[2], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[3], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[4], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[5], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[0][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[1][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[2][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[3][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[4][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[5][j] = 2047;
+	}
 	ret = CVI_ISP_SetCA2Attr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -648,12 +720,24 @@ static int test_CA2_CA2Attr_Ca2Out_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.Ca2Out[0], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[1], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[2], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[3], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[4], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[5], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[0][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[1][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[2][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[3][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[4][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[5][j] = rand_range(0, 2047);
+	}
 	ret = CVI_ISP_SetCA2Attr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -665,12 +749,24 @@ static int test_CA2_CA2Attr_Ca2Out_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.Ca2Out[0], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[1], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[2], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[3], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[4], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.Ca2Out[5], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[0][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[1][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[2][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[3][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[4][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Ca2Out[5][j] = rand_range(2048, 65535);
+	}
 	ret = CVI_ISP_SetCA2Attr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");

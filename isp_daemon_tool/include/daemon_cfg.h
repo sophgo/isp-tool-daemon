@@ -54,9 +54,10 @@ typedef struct vc_rc_attr_t {
 } vc_rc_attr_t;
 
 typedef struct vc_rc_param_t {
-	int ThrdLv;
+	int RowQpDelta;
 	int FirstFrameStartQp;
 	int InitialDelay;
+	int ThrdLv;
 	int MinIprop;
 	int MaxIprop;
 	int MaxQp;

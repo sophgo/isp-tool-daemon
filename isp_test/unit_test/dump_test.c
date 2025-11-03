@@ -219,7 +219,7 @@ static int dump_raw_use_vb_test(VI_PIPE ViPipe)
 		return -1;
 	}
 
-	return 0;	
+	return 0;
 }
 
 static int dump_smooth_raw_test(VI_PIPE ViPipe)
@@ -437,10 +437,12 @@ int dump_test_main(VI_PIPE ViPipe)
 		   (float)passed_cnt / g_dump_test_fn_cnt * 100);
 
 	if (failed_cnt > 0) {
-		printf("ISP_DUMP_TEST failed!\n");
+		ret = -1;
+		printf("ISP_DUMP_TEST pipe: %d failed!\n", ViPipe);
 	} else {
-		printf("ISP_DUMP_TEST success!\n");
+		ret = 0;
+		printf("ISP_DUMP_TEST pipe: %d success!\n", ViPipe);
 	}
 
-	return 0;
+	return ret;
 }

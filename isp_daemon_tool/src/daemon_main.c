@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 	if (auto_test_case != NULL && auto_test_case[0] != '\0') {
 		int case_num = atoi(auto_test_case);
 
-		run_isp_auto_test_case(case_num);
+		run_isp_auto_test_case(case_num, p_pipe_cfg->dev_num);
 		g_main_loop_run = 0; // exit after auto test
 	}
 

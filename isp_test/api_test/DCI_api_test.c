@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_DCI_DCIAttr_Enable(VI_PIPE ViPipe)
@@ -296,7 +296,9 @@ static int test_DCI_DCIAttr_DciGamma(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.DciGamma, 0, sizeof(CVI_U8) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.DciGamma[i] = 0;
+	}
 	ret = CVI_ISP_SetDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -308,7 +310,9 @@ static int test_DCI_DCIAttr_DciGamma(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.DciGamma, 31, sizeof(CVI_U8) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.DciGamma[i] = 31;
+	}
 	ret = CVI_ISP_SetDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -374,7 +378,9 @@ static int test_DCI_DCIAttr_DciContrast(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.DciContrast, 0, sizeof(CVI_U8) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.DciContrast[i] = 0;
+	}
 	ret = CVI_ISP_SetDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -386,7 +392,9 @@ static int test_DCI_DCIAttr_DciContrast(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.DciContrast, 3, sizeof(CVI_U8) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.DciContrast[i] = 3;
+	}
 	ret = CVI_ISP_SetDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -452,7 +460,9 @@ static int test_DCI_DCIAttr_DciOffset(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.DciOffset, 0, sizeof(CVI_U8) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.DciOffset[i] = 0;
+	}
 	ret = CVI_ISP_SetDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -464,7 +474,9 @@ static int test_DCI_DCIAttr_DciOffset(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.DciOffset, 15, sizeof(CVI_U8) * 5);
+	for (int i = 0; i < 5; ++i) {
+		attr.DciOffset[i] = 15;
+	}
 	ret = CVI_ISP_SetDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -815,7 +827,9 @@ static int test_DCI_DCIAttr_DehazeLut(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.DehazeLut, 0, sizeof(CVI_U8) * 6);
+	for (int i = 0; i < 6; ++i) {
+		attr.DehazeLut[i] = 0;
+	}
 	ret = CVI_ISP_SetDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -827,7 +841,9 @@ static int test_DCI_DCIAttr_DehazeLut(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.DehazeLut, 100, sizeof(CVI_U8) * 6);
+	for (int i = 0; i < 6; ++i) {
+		attr.DehazeLut[i] = 100;
+	}
 	ret = CVI_ISP_SetDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");

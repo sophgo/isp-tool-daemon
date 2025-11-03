@@ -74,9 +74,10 @@ static int init_chn_input_cfg(daemon_pipe_cfg_t *cfg, chnInputCfg *pIc)
 	// rc param
 	vc_rc_param_t *p_rc_param = &cfg->video_pipe_cfg.st_vc_cfg.st_rc_param;
 
-	pIc->u32ThrdLv = p_rc_param->ThrdLv;
+	pIc->u32RowQpDelta = p_rc_param->RowQpDelta;
 	pIc->firstFrmstartQp = p_rc_param->FirstFrameStartQp;
 	pIc->initialDelay = p_rc_param->InitialDelay;
+	pIc->u32ThrdLv = p_rc_param->ThrdLv;
 	pIc->minIprop = p_rc_param->MinIprop;
 	pIc->maxIprop = p_rc_param->MaxIprop;
 	pIc->maxQp = p_rc_param->MaxQp;

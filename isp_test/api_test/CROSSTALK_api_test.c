@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_Crosstalk_CrosstalkAttr_Enable(VI_PIPE ViPipe)
@@ -216,7 +216,9 @@ static int test_Crosstalk_CrosstalkAttr_GrGbDiffThreSec(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.GrGbDiffThreSec, 0, sizeof(CVI_U16) * 4);
+	for (int i = 0; i < 4; ++i) {
+		attr.GrGbDiffThreSec[i] = 0;
+	}
 	ret = CVI_ISP_SetCrosstalkAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -228,7 +230,9 @@ static int test_Crosstalk_CrosstalkAttr_GrGbDiffThreSec(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.GrGbDiffThreSec, 4095, sizeof(CVI_U16) * 4);
+	for (int i = 0; i < 4; ++i) {
+		attr.GrGbDiffThreSec[i] = 4095;
+	}
 	ret = CVI_ISP_SetCrosstalkAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -294,7 +298,9 @@ static int test_Crosstalk_CrosstalkAttr_FlatThre(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.FlatThre, 0, sizeof(CVI_U16) * 4);
+	for (int i = 0; i < 4; ++i) {
+		attr.FlatThre[i] = 0;
+	}
 	ret = CVI_ISP_SetCrosstalkAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -306,7 +312,9 @@ static int test_Crosstalk_CrosstalkAttr_FlatThre(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.FlatThre, 4095, sizeof(CVI_U16) * 4);
+	for (int i = 0; i < 4; ++i) {
+		attr.FlatThre[i] = 4095;
+	}
 	ret = CVI_ISP_SetCrosstalkAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -445,7 +453,9 @@ static int test_Crosstalk_CrosstalkAttr_Strength_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.Strength, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Strength[j] = 0;
+	}
 	ret = CVI_ISP_SetCrosstalkAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -457,7 +467,9 @@ static int test_Crosstalk_CrosstalkAttr_Strength_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.Strength, 256, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Strength[j] = 256;
+	}
 	ret = CVI_ISP_SetCrosstalkAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -469,7 +481,9 @@ static int test_Crosstalk_CrosstalkAttr_Strength_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.Strength, rand_range(0, 256), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Strength[j] = rand_range(0, 256);
+	}
 	ret = CVI_ISP_SetCrosstalkAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -481,7 +495,9 @@ static int test_Crosstalk_CrosstalkAttr_Strength_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.Strength, rand_range(257, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.Strength[j] = rand_range(257, 65535);
+	}
 	ret = CVI_ISP_SetCrosstalkAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");

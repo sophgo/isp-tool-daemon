@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_RLSC_RadialShadingAttr_Enable(VI_PIPE ViPipe)
@@ -508,7 +508,9 @@ static int test_RLSC_RadialShadingAttr_RadiusStr_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.RadiusStr, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.RadiusStr[j] = 0;
+	}
 	ret = CVI_ISP_SetRadialShadingAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -520,7 +522,9 @@ static int test_RLSC_RadialShadingAttr_RadiusStr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.RadiusStr, 4095, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.RadiusStr[j] = 4095;
+	}
 	ret = CVI_ISP_SetRadialShadingAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -532,7 +536,9 @@ static int test_RLSC_RadialShadingAttr_RadiusStr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.RadiusStr, rand_range(0, 4095), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.RadiusStr[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetRadialShadingAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -544,7 +550,9 @@ static int test_RLSC_RadialShadingAttr_RadiusStr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.RadiusStr, rand_range(4096, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.RadiusStr[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetRadialShadingAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -649,7 +657,9 @@ static int test_RLSC_RadialShadingAttr_NDStr_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.NDStr, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.NDStr[j] = 0;
+	}
 	ret = CVI_ISP_SetRadialShadingAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -661,7 +671,9 @@ static int test_RLSC_RadialShadingAttr_NDStr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.NDStr, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.NDStr[j] = 255;
+	}
 	ret = CVI_ISP_SetRadialShadingAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -673,7 +685,9 @@ static int test_RLSC_RadialShadingAttr_NDStr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.NDStr, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.NDStr[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetRadialShadingAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -783,7 +797,9 @@ static int test_RLSC_RadialShadingAttr_NDThr_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.NDThr, 0, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.NDThr[j] = 0;
+	}
 	ret = CVI_ISP_SetRadialShadingAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -795,7 +811,9 @@ static int test_RLSC_RadialShadingAttr_NDThr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.NDThr, 255, sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.NDThr[j] = 255;
+	}
 	ret = CVI_ISP_SetRadialShadingAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -807,7 +825,9 @@ static int test_RLSC_RadialShadingAttr_NDThr_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.NDThr, rand_range(0, 255), sizeof(CVI_U8) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.NDThr[j] = rand_range(0, 255);
+	}
 	ret = CVI_ISP_SetRadialShadingAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -851,7 +871,9 @@ static int test_RLSC_RadialShadingGainLutAttr_GGain(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.GGain, 0, sizeof(CVI_U16) * 32);
+	for (int i = 0; i < 32; ++i) {
+		attr.GGain[i] = 0;
+	}
 	ret = CVI_ISP_SetRadialShadingGainLutAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -863,7 +885,9 @@ static int test_RLSC_RadialShadingGainLutAttr_GGain(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.GGain, 4095, sizeof(CVI_U16) * 32);
+	for (int i = 0; i < 32; ++i) {
+		attr.GGain[i] = 4095;
+	}
 	ret = CVI_ISP_SetRadialShadingGainLutAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");

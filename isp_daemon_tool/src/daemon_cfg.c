@@ -407,6 +407,7 @@ static int init_vc_from_json(const char *json_path, vc_cfg_t *p_vc_cfg)
 	GET_VC_KEY_VAL(p_vc_cfg, st_rc_attr, "RC Attr", IQP);
 	GET_VC_KEY_VAL(p_vc_cfg, st_rc_attr, "RC Attr", PQP);
 	// RC Param
+	GET_VC_KEY_VAL(p_vc_cfg, st_rc_param, "RC Param", RowQpDelta);
 	GET_VC_KEY_VAL(p_vc_cfg, st_rc_param, "RC Param", ThrdLv);
 	GET_VC_KEY_VAL(p_vc_cfg, st_rc_param, "RC Param", FirstFrameStartQp);
 	GET_VC_KEY_VAL(p_vc_cfg, st_rc_param, "RC Param", InitialDelay);
@@ -469,6 +470,7 @@ static int print_vc_key_val(vc_cfg_t *p_vc_cfg)
 	PR_VC_KEY_VAL(p_vc_cfg, st_rc_attr, "RC Attr", IQP);
 	PR_VC_KEY_VAL(p_vc_cfg, st_rc_attr, "RC Attr", PQP);
 	// RC Param
+	PR_VC_KEY_VAL(p_vc_cfg, st_rc_param, "RC Param", RowQpDelta);
 	PR_VC_KEY_VAL(p_vc_cfg, st_rc_param, "RC Param", ThrdLv);
 	PR_VC_KEY_VAL(p_vc_cfg, st_rc_param, "RC Param", FirstFrameStartQp);
 	PR_VC_KEY_VAL(p_vc_cfg, st_rc_param, "RC Param", InitialDelay);

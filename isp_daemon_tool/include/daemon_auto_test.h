@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-int run_isp_auto_test_case(int case_num);
+int run_isp_auto_test_case(int case_num, int dev_num);
 
 #ifdef __cplusplus
 }

@@ -10,7 +10,7 @@
 
 static long long rand_range(long long a, long long b)
 {
-    return rand() % (b - a + 1) + a;
+	return rand() % (b - a + 1) + a;
 }
 
 static int test_CA_CAAttr_Enable(VI_PIPE ViPipe)
@@ -289,7 +289,9 @@ static int test_CA_CAAttr_CPLutY(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.CPLutY, 0, sizeof(CVI_U8) * 256);
+	for (int i = 0; i < 256; ++i) {
+		attr.CPLutY[i] = 0;
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -301,7 +303,9 @@ static int test_CA_CAAttr_CPLutY(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.CPLutY, 255, sizeof(CVI_U8) * 256);
+	for (int i = 0; i < 256; ++i) {
+		attr.CPLutY[i] = 255;
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -358,7 +362,9 @@ static int test_CA_CAAttr_CPLutU(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.CPLutU, 0, sizeof(CVI_U8) * 256);
+	for (int i = 0; i < 256; ++i) {
+		attr.CPLutU[i] = 0;
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -370,7 +376,9 @@ static int test_CA_CAAttr_CPLutU(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.CPLutU, 255, sizeof(CVI_U8) * 256);
+	for (int i = 0; i < 256; ++i) {
+		attr.CPLutU[i] = 255;
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -427,7 +435,9 @@ static int test_CA_CAAttr_CPLutV(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.CPLutV, 0, sizeof(CVI_U8) * 256);
+	for (int i = 0; i < 256; ++i) {
+		attr.CPLutV[i] = 0;
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -439,7 +449,9 @@ static int test_CA_CAAttr_CPLutV(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.CPLutV, 255, sizeof(CVI_U8) * 256);
+	for (int i = 0; i < 256; ++i) {
+		attr.CPLutV[i] = 255;
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -569,7 +581,9 @@ static int test_CA_CAAttr_ISORatio_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.ISORatio, 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ISORatio[j] = 0;
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -581,7 +595,9 @@ static int test_CA_CAAttr_ISORatio_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.ISORatio, 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ISORatio[j] = 2047;
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -593,7 +609,9 @@ static int test_CA_CAAttr_ISORatio_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.ISORatio, rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ISORatio[j] = rand_range(0, 2047);
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -605,7 +623,9 @@ static int test_CA_CAAttr_ISORatio_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.ISORatio, rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.ISORatio[j] = rand_range(2048, 65535);
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
@@ -4287,262 +4307,774 @@ static int test_CA_CAAttr_YRatioLut_auto(VI_PIPE ViPipe)
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	memset(attr.stAuto.YRatioLut[0], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[1], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[2], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[3], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[4], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[5], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[6], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[7], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[8], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[9], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[10], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[11], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[12], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[13], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[14], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[15], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[16], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[17], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[18], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[19], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[20], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[21], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[22], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[23], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[24], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[25], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[26], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[27], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[28], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[29], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[30], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[31], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[32], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[33], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[34], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[35], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[36], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[37], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[38], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[39], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[40], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[41], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[42], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[43], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[44], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[45], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[46], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[47], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[48], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[49], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[50], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[51], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[52], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[53], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[54], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[55], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[56], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[57], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[58], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[59], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[60], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[61], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[62], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[63], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[64], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[65], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[66], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[67], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[68], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[69], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[70], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[71], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[72], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[73], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[74], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[75], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[76], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[77], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[78], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[79], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[80], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[81], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[82], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[83], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[84], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[85], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[86], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[87], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[88], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[89], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[90], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[91], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[92], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[93], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[94], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[95], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[96], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[97], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[98], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[99], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[100], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[101], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[102], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[103], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[104], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[105], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[106], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[107], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[108], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[109], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[110], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[111], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[112], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[113], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[114], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[115], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[116], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[117], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[118], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[119], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[120], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[121], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[122], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[123], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[124], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[125], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[126], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[127], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[128], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[129], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[130], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[131], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[132], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[133], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[134], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[135], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[136], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[137], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[138], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[139], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[140], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[141], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[142], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[143], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[144], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[145], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[146], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[147], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[148], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[149], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[150], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[151], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[152], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[153], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[154], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[155], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[156], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[157], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[158], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[159], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[160], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[161], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[162], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[163], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[164], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[165], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[166], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[167], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[168], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[169], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[170], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[171], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[172], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[173], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[174], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[175], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[176], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[177], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[178], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[179], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[180], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[181], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[182], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[183], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[184], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[185], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[186], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[187], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[188], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[189], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[190], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[191], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[192], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[193], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[194], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[195], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[196], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[197], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[198], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[199], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[200], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[201], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[202], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[203], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[204], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[205], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[206], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[207], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[208], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[209], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[210], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[211], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[212], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[213], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[214], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[215], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[216], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[217], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[218], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[219], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[220], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[221], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[222], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[223], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[224], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[225], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[226], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[227], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[228], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[229], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[230], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[231], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[232], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[233], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[234], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[235], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[236], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[237], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[238], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[239], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[240], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[241], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[242], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[243], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[244], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[245], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[246], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[247], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[248], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[249], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[250], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[251], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[252], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[253], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[254], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[255], 0, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[0][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[1][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[2][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[3][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[4][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[5][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[6][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[7][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[8][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[9][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[10][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[11][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[12][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[13][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[14][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[15][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[16][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[17][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[18][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[19][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[20][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[21][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[22][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[23][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[24][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[25][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[26][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[27][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[28][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[29][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[30][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[31][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[32][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[33][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[34][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[35][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[36][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[37][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[38][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[39][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[40][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[41][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[42][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[43][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[44][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[45][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[46][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[47][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[48][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[49][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[50][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[51][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[52][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[53][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[54][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[55][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[56][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[57][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[58][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[59][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[60][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[61][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[62][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[63][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[64][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[65][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[66][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[67][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[68][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[69][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[70][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[71][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[72][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[73][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[74][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[75][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[76][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[77][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[78][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[79][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[80][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[81][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[82][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[83][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[84][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[85][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[86][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[87][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[88][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[89][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[90][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[91][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[92][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[93][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[94][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[95][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[96][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[97][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[98][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[99][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[100][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[101][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[102][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[103][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[104][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[105][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[106][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[107][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[108][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[109][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[110][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[111][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[112][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[113][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[114][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[115][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[116][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[117][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[118][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[119][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[120][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[121][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[122][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[123][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[124][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[125][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[126][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[127][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[128][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[129][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[130][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[131][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[132][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[133][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[134][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[135][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[136][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[137][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[138][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[139][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[140][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[141][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[142][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[143][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[144][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[145][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[146][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[147][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[148][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[149][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[150][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[151][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[152][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[153][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[154][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[155][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[156][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[157][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[158][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[159][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[160][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[161][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[162][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[163][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[164][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[165][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[166][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[167][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[168][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[169][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[170][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[171][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[172][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[173][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[174][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[175][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[176][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[177][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[178][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[179][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[180][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[181][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[182][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[183][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[184][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[185][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[186][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[187][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[188][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[189][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[190][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[191][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[192][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[193][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[194][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[195][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[196][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[197][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[198][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[199][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[200][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[201][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[202][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[203][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[204][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[205][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[206][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[207][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[208][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[209][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[210][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[211][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[212][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[213][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[214][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[215][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[216][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[217][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[218][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[219][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[220][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[221][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[222][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[223][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[224][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[225][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[226][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[227][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[228][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[229][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[230][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[231][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[232][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[233][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[234][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[235][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[236][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[237][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[238][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[239][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[240][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[241][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[242][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[243][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[244][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[245][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[246][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[247][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[248][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[249][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[250][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[251][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[252][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[253][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[254][j] = 0;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[255][j] = 0;
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -4554,262 +5086,774 @@ static int test_CA_CAAttr_YRatioLut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	memset(attr.stAuto.YRatioLut[0], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[1], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[2], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[3], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[4], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[5], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[6], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[7], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[8], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[9], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[10], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[11], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[12], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[13], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[14], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[15], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[16], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[17], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[18], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[19], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[20], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[21], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[22], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[23], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[24], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[25], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[26], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[27], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[28], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[29], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[30], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[31], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[32], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[33], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[34], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[35], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[36], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[37], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[38], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[39], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[40], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[41], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[42], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[43], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[44], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[45], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[46], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[47], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[48], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[49], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[50], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[51], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[52], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[53], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[54], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[55], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[56], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[57], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[58], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[59], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[60], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[61], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[62], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[63], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[64], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[65], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[66], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[67], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[68], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[69], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[70], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[71], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[72], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[73], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[74], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[75], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[76], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[77], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[78], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[79], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[80], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[81], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[82], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[83], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[84], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[85], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[86], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[87], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[88], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[89], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[90], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[91], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[92], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[93], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[94], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[95], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[96], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[97], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[98], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[99], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[100], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[101], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[102], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[103], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[104], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[105], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[106], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[107], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[108], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[109], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[110], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[111], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[112], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[113], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[114], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[115], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[116], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[117], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[118], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[119], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[120], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[121], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[122], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[123], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[124], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[125], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[126], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[127], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[128], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[129], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[130], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[131], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[132], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[133], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[134], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[135], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[136], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[137], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[138], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[139], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[140], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[141], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[142], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[143], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[144], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[145], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[146], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[147], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[148], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[149], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[150], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[151], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[152], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[153], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[154], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[155], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[156], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[157], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[158], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[159], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[160], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[161], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[162], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[163], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[164], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[165], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[166], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[167], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[168], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[169], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[170], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[171], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[172], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[173], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[174], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[175], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[176], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[177], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[178], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[179], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[180], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[181], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[182], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[183], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[184], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[185], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[186], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[187], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[188], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[189], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[190], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[191], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[192], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[193], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[194], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[195], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[196], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[197], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[198], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[199], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[200], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[201], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[202], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[203], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[204], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[205], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[206], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[207], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[208], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[209], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[210], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[211], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[212], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[213], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[214], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[215], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[216], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[217], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[218], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[219], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[220], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[221], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[222], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[223], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[224], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[225], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[226], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[227], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[228], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[229], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[230], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[231], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[232], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[233], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[234], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[235], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[236], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[237], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[238], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[239], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[240], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[241], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[242], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[243], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[244], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[245], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[246], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[247], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[248], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[249], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[250], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[251], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[252], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[253], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[254], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[255], 2047, sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[0][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[1][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[2][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[3][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[4][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[5][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[6][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[7][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[8][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[9][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[10][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[11][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[12][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[13][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[14][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[15][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[16][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[17][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[18][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[19][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[20][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[21][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[22][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[23][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[24][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[25][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[26][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[27][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[28][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[29][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[30][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[31][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[32][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[33][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[34][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[35][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[36][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[37][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[38][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[39][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[40][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[41][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[42][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[43][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[44][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[45][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[46][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[47][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[48][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[49][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[50][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[51][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[52][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[53][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[54][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[55][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[56][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[57][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[58][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[59][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[60][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[61][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[62][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[63][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[64][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[65][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[66][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[67][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[68][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[69][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[70][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[71][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[72][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[73][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[74][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[75][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[76][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[77][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[78][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[79][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[80][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[81][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[82][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[83][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[84][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[85][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[86][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[87][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[88][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[89][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[90][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[91][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[92][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[93][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[94][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[95][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[96][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[97][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[98][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[99][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[100][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[101][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[102][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[103][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[104][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[105][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[106][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[107][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[108][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[109][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[110][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[111][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[112][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[113][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[114][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[115][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[116][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[117][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[118][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[119][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[120][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[121][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[122][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[123][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[124][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[125][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[126][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[127][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[128][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[129][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[130][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[131][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[132][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[133][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[134][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[135][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[136][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[137][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[138][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[139][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[140][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[141][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[142][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[143][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[144][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[145][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[146][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[147][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[148][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[149][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[150][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[151][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[152][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[153][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[154][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[155][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[156][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[157][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[158][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[159][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[160][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[161][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[162][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[163][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[164][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[165][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[166][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[167][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[168][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[169][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[170][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[171][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[172][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[173][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[174][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[175][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[176][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[177][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[178][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[179][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[180][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[181][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[182][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[183][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[184][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[185][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[186][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[187][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[188][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[189][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[190][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[191][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[192][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[193][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[194][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[195][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[196][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[197][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[198][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[199][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[200][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[201][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[202][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[203][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[204][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[205][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[206][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[207][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[208][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[209][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[210][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[211][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[212][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[213][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[214][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[215][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[216][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[217][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[218][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[219][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[220][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[221][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[222][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[223][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[224][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[225][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[226][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[227][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[228][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[229][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[230][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[231][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[232][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[233][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[234][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[235][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[236][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[237][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[238][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[239][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[240][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[241][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[242][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[243][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[244][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[245][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[246][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[247][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[248][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[249][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[250][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[251][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[252][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[253][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[254][j] = 2047;
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[255][j] = 2047;
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -4821,262 +5865,774 @@ static int test_CA_CAAttr_YRatioLut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	memset(attr.stAuto.YRatioLut[0], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[1], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[2], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[3], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[4], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[5], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[6], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[7], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[8], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[9], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[10], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[11], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[12], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[13], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[14], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[15], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[16], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[17], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[18], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[19], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[20], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[21], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[22], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[23], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[24], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[25], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[26], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[27], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[28], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[29], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[30], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[31], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[32], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[33], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[34], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[35], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[36], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[37], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[38], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[39], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[40], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[41], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[42], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[43], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[44], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[45], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[46], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[47], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[48], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[49], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[50], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[51], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[52], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[53], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[54], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[55], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[56], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[57], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[58], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[59], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[60], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[61], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[62], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[63], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[64], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[65], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[66], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[67], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[68], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[69], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[70], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[71], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[72], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[73], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[74], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[75], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[76], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[77], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[78], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[79], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[80], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[81], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[82], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[83], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[84], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[85], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[86], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[87], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[88], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[89], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[90], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[91], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[92], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[93], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[94], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[95], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[96], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[97], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[98], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[99], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[100], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[101], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[102], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[103], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[104], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[105], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[106], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[107], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[108], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[109], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[110], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[111], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[112], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[113], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[114], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[115], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[116], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[117], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[118], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[119], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[120], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[121], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[122], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[123], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[124], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[125], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[126], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[127], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[128], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[129], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[130], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[131], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[132], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[133], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[134], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[135], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[136], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[137], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[138], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[139], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[140], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[141], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[142], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[143], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[144], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[145], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[146], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[147], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[148], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[149], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[150], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[151], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[152], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[153], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[154], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[155], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[156], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[157], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[158], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[159], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[160], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[161], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[162], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[163], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[164], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[165], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[166], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[167], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[168], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[169], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[170], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[171], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[172], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[173], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[174], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[175], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[176], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[177], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[178], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[179], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[180], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[181], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[182], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[183], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[184], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[185], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[186], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[187], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[188], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[189], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[190], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[191], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[192], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[193], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[194], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[195], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[196], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[197], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[198], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[199], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[200], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[201], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[202], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[203], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[204], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[205], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[206], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[207], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[208], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[209], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[210], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[211], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[212], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[213], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[214], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[215], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[216], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[217], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[218], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[219], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[220], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[221], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[222], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[223], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[224], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[225], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[226], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[227], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[228], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[229], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[230], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[231], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[232], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[233], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[234], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[235], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[236], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[237], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[238], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[239], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[240], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[241], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[242], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[243], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[244], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[245], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[246], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[247], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[248], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[249], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[250], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[251], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[252], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[253], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[254], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[255], rand_range(0, 2047), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[0][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[1][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[2][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[3][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[4][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[5][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[6][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[7][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[8][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[9][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[10][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[11][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[12][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[13][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[14][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[15][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[16][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[17][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[18][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[19][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[20][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[21][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[22][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[23][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[24][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[25][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[26][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[27][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[28][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[29][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[30][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[31][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[32][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[33][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[34][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[35][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[36][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[37][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[38][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[39][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[40][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[41][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[42][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[43][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[44][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[45][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[46][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[47][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[48][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[49][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[50][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[51][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[52][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[53][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[54][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[55][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[56][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[57][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[58][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[59][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[60][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[61][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[62][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[63][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[64][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[65][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[66][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[67][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[68][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[69][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[70][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[71][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[72][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[73][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[74][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[75][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[76][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[77][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[78][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[79][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[80][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[81][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[82][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[83][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[84][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[85][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[86][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[87][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[88][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[89][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[90][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[91][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[92][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[93][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[94][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[95][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[96][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[97][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[98][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[99][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[100][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[101][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[102][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[103][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[104][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[105][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[106][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[107][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[108][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[109][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[110][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[111][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[112][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[113][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[114][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[115][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[116][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[117][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[118][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[119][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[120][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[121][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[122][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[123][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[124][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[125][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[126][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[127][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[128][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[129][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[130][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[131][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[132][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[133][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[134][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[135][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[136][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[137][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[138][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[139][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[140][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[141][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[142][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[143][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[144][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[145][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[146][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[147][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[148][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[149][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[150][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[151][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[152][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[153][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[154][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[155][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[156][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[157][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[158][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[159][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[160][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[161][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[162][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[163][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[164][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[165][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[166][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[167][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[168][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[169][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[170][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[171][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[172][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[173][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[174][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[175][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[176][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[177][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[178][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[179][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[180][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[181][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[182][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[183][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[184][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[185][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[186][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[187][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[188][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[189][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[190][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[191][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[192][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[193][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[194][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[195][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[196][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[197][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[198][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[199][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[200][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[201][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[202][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[203][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[204][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[205][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[206][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[207][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[208][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[209][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[210][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[211][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[212][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[213][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[214][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[215][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[216][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[217][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[218][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[219][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[220][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[221][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[222][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[223][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[224][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[225][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[226][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[227][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[228][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[229][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[230][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[231][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[232][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[233][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[234][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[235][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[236][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[237][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[238][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[239][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[240][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[241][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[242][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[243][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[244][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[245][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[246][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[247][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[248][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[249][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[250][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[251][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[252][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[253][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[254][j] = rand_range(0, 2047);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[255][j] = rand_range(0, 2047);
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -5088,262 +6644,774 @@ static int test_CA_CAAttr_YRatioLut_auto(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	memset(attr.stAuto.YRatioLut[0], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[1], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[2], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[3], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[4], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[5], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[6], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[7], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[8], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[9], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[10], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[11], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[12], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[13], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[14], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[15], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[16], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[17], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[18], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[19], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[20], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[21], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[22], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[23], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[24], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[25], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[26], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[27], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[28], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[29], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[30], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[31], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[32], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[33], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[34], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[35], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[36], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[37], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[38], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[39], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[40], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[41], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[42], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[43], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[44], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[45], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[46], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[47], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[48], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[49], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[50], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[51], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[52], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[53], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[54], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[55], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[56], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[57], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[58], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[59], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[60], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[61], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[62], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[63], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[64], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[65], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[66], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[67], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[68], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[69], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[70], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[71], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[72], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[73], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[74], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[75], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[76], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[77], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[78], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[79], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[80], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[81], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[82], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[83], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[84], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[85], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[86], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[87], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[88], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[89], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[90], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[91], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[92], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[93], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[94], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[95], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[96], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[97], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[98], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[99], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[100], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[101], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[102], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[103], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[104], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[105], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[106], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[107], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[108], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[109], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[110], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[111], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[112], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[113], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[114], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[115], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[116], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[117], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[118], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[119], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[120], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[121], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[122], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[123], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[124], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[125], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[126], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[127], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[128], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[129], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[130], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[131], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[132], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[133], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[134], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[135], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[136], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[137], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[138], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[139], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[140], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[141], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[142], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[143], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[144], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[145], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[146], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[147], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[148], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[149], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[150], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[151], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[152], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[153], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[154], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[155], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[156], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[157], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[158], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[159], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[160], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[161], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[162], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[163], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[164], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[165], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[166], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[167], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[168], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[169], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[170], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[171], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[172], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[173], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[174], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[175], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[176], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[177], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[178], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[179], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[180], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[181], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[182], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[183], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[184], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[185], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[186], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[187], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[188], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[189], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[190], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[191], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[192], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[193], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[194], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[195], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[196], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[197], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[198], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[199], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[200], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[201], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[202], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[203], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[204], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[205], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[206], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[207], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[208], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[209], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[210], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[211], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[212], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[213], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[214], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[215], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[216], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[217], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[218], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[219], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[220], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[221], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[222], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[223], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[224], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[225], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[226], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[227], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[228], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[229], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[230], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[231], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[232], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[233], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[234], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[235], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[236], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[237], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[238], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[239], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[240], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[241], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[242], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[243], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[244], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[245], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[246], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[247], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[248], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[249], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[250], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[251], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[252], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[253], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[254], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
-	memset(attr.stAuto.YRatioLut[255], rand_range(2048, 65535), sizeof(CVI_U16) * ISP_AUTO_ISO_STRENGTH_NUM);
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[0][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[1][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[2][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[3][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[4][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[5][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[6][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[7][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[8][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[9][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[10][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[11][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[12][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[13][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[14][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[15][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[16][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[17][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[18][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[19][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[20][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[21][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[22][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[23][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[24][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[25][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[26][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[27][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[28][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[29][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[30][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[31][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[32][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[33][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[34][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[35][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[36][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[37][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[38][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[39][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[40][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[41][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[42][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[43][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[44][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[45][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[46][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[47][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[48][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[49][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[50][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[51][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[52][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[53][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[54][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[55][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[56][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[57][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[58][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[59][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[60][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[61][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[62][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[63][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[64][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[65][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[66][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[67][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[68][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[69][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[70][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[71][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[72][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[73][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[74][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[75][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[76][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[77][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[78][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[79][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[80][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[81][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[82][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[83][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[84][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[85][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[86][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[87][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[88][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[89][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[90][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[91][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[92][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[93][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[94][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[95][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[96][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[97][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[98][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[99][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[100][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[101][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[102][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[103][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[104][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[105][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[106][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[107][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[108][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[109][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[110][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[111][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[112][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[113][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[114][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[115][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[116][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[117][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[118][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[119][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[120][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[121][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[122][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[123][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[124][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[125][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[126][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[127][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[128][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[129][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[130][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[131][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[132][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[133][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[134][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[135][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[136][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[137][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[138][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[139][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[140][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[141][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[142][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[143][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[144][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[145][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[146][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[147][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[148][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[149][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[150][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[151][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[152][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[153][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[154][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[155][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[156][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[157][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[158][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[159][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[160][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[161][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[162][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[163][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[164][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[165][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[166][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[167][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[168][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[169][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[170][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[171][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[172][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[173][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[174][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[175][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[176][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[177][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[178][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[179][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[180][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[181][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[182][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[183][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[184][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[185][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[186][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[187][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[188][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[189][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[190][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[191][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[192][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[193][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[194][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[195][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[196][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[197][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[198][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[199][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[200][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[201][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[202][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[203][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[204][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[205][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[206][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[207][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[208][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[209][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[210][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[211][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[212][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[213][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[214][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[215][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[216][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[217][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[218][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[219][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[220][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[221][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[222][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[223][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[224][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[225][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[226][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[227][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[228][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[229][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[230][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[231][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[232][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[233][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[234][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[235][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[236][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[237][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[238][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[239][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[240][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[241][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[242][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[243][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[244][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[245][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[246][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[247][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[248][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[249][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[250][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[251][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[252][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[253][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[254][j] = rand_range(2048, 65535);
+	}
+	for (int j = 0; j < ISP_AUTO_ISO_STRENGTH_NUM; ++j) {
+		attr.stAuto.YRatioLut[255][j] = rand_range(2048, 65535);
+	}
 	ret = CVI_ISP_SetCAAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");

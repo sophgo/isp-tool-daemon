@@ -38,9 +38,18 @@ int api_test_main(VI_PIPE ViPipe)
 		}
 	}
 
-	printf("ISP_MODULE_API_TEST finished, total: %d, passed: %d, failed: %d, passed_ratio: %.2f%%\n",
-	       g_api_test_fn_cnt, passed_cnt, failed_cnt,
+	printf("ISP_MODULE_API_TEST finished[pipe: %d], total: %d, passed: %d, failed: %d, passed_ratio: %.2f%%\n",
+	       ViPipe, g_api_test_fn_cnt, passed_cnt, failed_cnt,
 	       (float)passed_cnt / g_api_test_fn_cnt * 100);
 
-	return 0;
+	if (failed_cnt) {
+		printf("ISP_MODULE_API_TEST pipe %d fail!\n", ViPipe);
+		ret = -1;
+	} else {
+		ret = 0;
+		printf("ISP_MODULE_API_TEST pipe %d success!\n", ViPipe);
+	}
+
+
+	return ret;
 }
