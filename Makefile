@@ -19,6 +19,7 @@ MW_SAMPLE_COMMON_PATH=$(TOP_DIR)/cvi_mpi/sample_app/common
 #include $(MW_PATH)/component/isp/common/Kbuild
 
 SDIR = $(PWD)/isp_daemon_tool/src
+SELF_TEST_SDIR = $(PWD)/self_test
 TMP_FOLDER = tmp
 ISP_DIR = $(TOP_DIR)/cvi_mpi/modules/isp
 ISP_COMMON_DIR = $(ISP_DIR)/common
@@ -42,6 +43,9 @@ COBJS = $(patsubst $(SDIR)/%.c, $(TMP_FOLDER)/%.o, $(wildcard $(SDIR)/*.c))
 CDEPS = $(patsubst $(SDIR)/%.c, $(TMP_FOLDER)/%.d, $(wildcard $(SDIR)/*.c))
 COBJS += $(patsubst $(SDIR)/module/%.c, $(TMP_FOLDER)/module/%.o, $(wildcard $(SDIR)/module/*.c))
 CDEPS += $(patsubst $(SDIR)/module/%.c, $(TMP_FOLDER)/module/%.d, $(wildcard $(SDIR)/module/*.c))
+
+SELF_TEST_OBJS = $(patsubst $(SELF_TEST_SDIR)/%.c, $(TMP_FOLDER)/%.o, $(wildcard $(SELF_TEST_SDIR)/*.c))
+SELF_TEST_DEPS = $(patsubst $(SELF_TEST_SDIR)/%.c, $(TMP_FOLDER)/%.d, $(wildcard $(SELF_TEST_SDIR)/*.c))
 
 # mw sample common
 SAMPLE_SRCS = $(wildcard $(MW_SAMPLE_COMMON_PATH)/*.c)
@@ -75,6 +79,7 @@ PREBUILT_OBJS :=
 
 TARGET = isp_tool_daemon
 CTRL_TARGET = isp_tool_daemon_ctrl
+SELF_TEST_TARGET = self_test.out
 OUT_TARBALL = isp_tool_daemon.tar.gz
 
 PKG_CONFIG_PATH = $(MW_PATH)/pkgconfig
@@ -112,7 +117,7 @@ LOCAL_LDFLAGS += -shared-libgcc
 CFLAGS += -DENABLE_TEAISP_PQ -DENABLE_FACE_AE
 
 .PHONY: clean all package test
-all: prepare ctrl_tool $(TARGET)
+all: prepare ctrl_tool $(TARGET) $(SELF_TEST_TARGET)
 
 ctrl_tool:
 	@cd isp_daemon_ctrl_tool;make;cd ..
@@ -137,10 +142,19 @@ $(TMP_FOLDER)/%.o: $(CTRL_SRC_DIR)/%.c | prepare
 	$(CC) $(CFLAGS) $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) -c $< -o $@
 	@echo [$(notdir $(CXX))] $(notdir $@)
 
-package: $(TARGET) ctrl_tool
+$(TMP_FOLDER)/%.o: $(SELF_TEST_SDIR)/%.c | prepare
+	$(CC) $(CFLAGS) $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) -c $< -o $@
+	@echo [$(notdir $(CXX))] $(notdir $@)
+
+$(SELF_TEST_TARGET): $(SELF_TEST_OBJS) $(SAMPLE_OBJS) | prepare
+	$(CC) -o $@ $^ $(PREBUILT_OBJS) $(ELFFLAGS) $(LOCAL_LDFLAGS)
+	@echo -e $(BLUE)[LINK]$(END)[$(notdir $(CXX))] $(notdir $@)
+
+package: $(TARGET) ctrl_tool $(SELF_TEST_TARGET)
 	@rm -rf install/*
 	@mkdir -p install/lib
 	@cp $(TARGET) install/
+	@cp $(SELF_TEST_TARGET) install/
 	@cp isp_daemon_ctrl_tool/$(CTRL_TARGET) install/
 	@cp isp_daemon_tool/CviIspTool.sh install/
 	@cp isp_daemon_tool/daemon_cfg/* install/
@@ -178,7 +192,7 @@ endif
 clean:
 	@cd isp_test;make clean
 	@cd isp_daemon_ctrl_tool;make clean;cd ..
-	@rm -f $(COBJS) $(SAMPLE_OBJS) $(CDEPS) $(TARGET) $(SAMPLE_DEPS)
+	@rm -f $(COBJS) $(SAMPLE_OBJS) $(CDEPS) $(TARGET) $(SELF_TEST_TARGET) $(SAMPLE_DEPS)
 	@rm -rf install $(TMP_FOLDER)
 	@rm -rf $(OUT_TARBALL)
 

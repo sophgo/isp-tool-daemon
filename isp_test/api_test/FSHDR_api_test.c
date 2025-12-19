@@ -908,7 +908,7 @@ static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_FusionDS2Lb(vo
 	reg_api_test_fn(test_FSHDR_FSHDRAttr_FusionDS2Lb);
 }
 
-static int test_FSHDR_FSHDRAttr_LENormBldRange(VI_PIPE ViPipe)
+static int test_FSHDR_FSHDRAttr_LENormBldRange_manual(VI_PIPE ViPipe)
 {
 	CVI_S32 ret = CVI_SUCCESS;
 	ISP_FSHDR_ATTR_S attr;
@@ -919,12 +919,12 @@ static int test_FSHDR_FSHDRAttr_LENormBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// check default value test
-	if (attr.LENormBldRange != 600) {
-		TEST_FAIL("test default value: 600 != %d\n", (int)attr.LENormBldRange);
+	if (attr.stManual.LENormBldRange != 600) {
+		TEST_FAIL("test default value: 600 != %d\n", (int)attr.stManual.LENormBldRange);
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	attr.LENormBldRange = 0;
+	attr.stManual.LENormBldRange = 0;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -936,7 +936,7 @@ static int test_FSHDR_FSHDRAttr_LENormBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	attr.LENormBldRange = 4095;
+	attr.stManual.LENormBldRange = 4095;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -948,7 +948,7 @@ static int test_FSHDR_FSHDRAttr_LENormBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	attr.LENormBldRange = rand_range(0, 4095);
+	attr.stManual.LENormBldRange = rand_range(0, 4095);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -960,14 +960,14 @@ static int test_FSHDR_FSHDRAttr_LENormBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	attr.LENormBldRange = rand_range(4096, 65535);
+	attr.stManual.LENormBldRange = rand_range(4096, 65535);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
 		return CVI_FAILURE;
 	}
 	// restore default value
-	attr.LENormBldRange = 600;
+	attr.stManual.LENormBldRange = 600;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("restore default value failed\n");
@@ -976,12 +976,12 @@ static int test_FSHDR_FSHDRAttr_LENormBldRange(VI_PIPE ViPipe)
 	return CVI_SUCCESS;
 }
 
-static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_LENormBldRange(void)
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_LENormBldRange_manual(void)
 {
-	reg_api_test_fn(test_FSHDR_FSHDRAttr_LENormBldRange);
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_LENormBldRange_manual);
 }
 
-static int test_FSHDR_FSHDRAttr_LENormBldP0(VI_PIPE ViPipe)
+static int test_FSHDR_FSHDRAttr_LENormBldRange_auto(VI_PIPE ViPipe)
 {
 	CVI_S32 ret = CVI_SUCCESS;
 	ISP_FSHDR_ATTR_S attr;
@@ -992,12 +992,15 @@ static int test_FSHDR_FSHDRAttr_LENormBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// check default value test
-	if (attr.LENormBldP0 != 3000) {
-		TEST_FAIL("test default value: 3000 != %d\n", (int)attr.LENormBldP0);
+	CVI_U16 default_val_0[ISP_AUTO_LV_NUM] = { 600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600 };
+	if (memcmp(default_val_0, attr.stAuto.LENormBldRange, sizeof(CVI_U16) * ISP_AUTO_LV_NUM) != 0) {
+		TEST_FAIL("test default value failed\n");
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	attr.LENormBldP0 = 0;
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LENormBldRange[j] = 0;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1009,7 +1012,9 @@ static int test_FSHDR_FSHDRAttr_LENormBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	attr.LENormBldP0 = 4095;
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LENormBldRange[j] = 4095;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1021,7 +1026,9 @@ static int test_FSHDR_FSHDRAttr_LENormBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	attr.LENormBldP0 = rand_range(0, 4095);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LENormBldRange[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1033,14 +1040,17 @@ static int test_FSHDR_FSHDRAttr_LENormBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	attr.LENormBldP0 = rand_range(4096, 65535);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LENormBldRange[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
 		return CVI_FAILURE;
 	}
 	// restore default value
-	attr.LENormBldP0 = 3000;
+	CVI_U16 restore_val_0[ISP_AUTO_LV_NUM] = { 600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600 };
+	memcpy(attr.stAuto.LENormBldRange, restore_val_0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("restore default value failed\n");
@@ -1049,12 +1059,12 @@ static int test_FSHDR_FSHDRAttr_LENormBldP0(VI_PIPE ViPipe)
 	return CVI_SUCCESS;
 }
 
-static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_LENormBldP0(void)
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_LENormBldRange_auto(void)
 {
-	reg_api_test_fn(test_FSHDR_FSHDRAttr_LENormBldP0);
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_LENormBldRange_auto);
 }
 
-static int test_FSHDR_FSHDRAttr_SENormBldRange(VI_PIPE ViPipe)
+static int test_FSHDR_FSHDRAttr_LENormBldP0_manual(VI_PIPE ViPipe)
 {
 	CVI_S32 ret = CVI_SUCCESS;
 	ISP_FSHDR_ATTR_S attr;
@@ -1065,12 +1075,12 @@ static int test_FSHDR_FSHDRAttr_SENormBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// check default value test
-	if (attr.SENormBldRange != 64) {
-		TEST_FAIL("test default value: 64 != %d\n", (int)attr.SENormBldRange);
+	if (attr.stManual.LENormBldP0 != 3000) {
+		TEST_FAIL("test default value: 3000 != %d\n", (int)attr.stManual.LENormBldP0);
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	attr.SENormBldRange = 0;
+	attr.stManual.LENormBldP0 = 0;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1082,7 +1092,7 @@ static int test_FSHDR_FSHDRAttr_SENormBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	attr.SENormBldRange = 4095;
+	attr.stManual.LENormBldP0 = 4095;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1094,7 +1104,7 @@ static int test_FSHDR_FSHDRAttr_SENormBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	attr.SENormBldRange = rand_range(0, 4095);
+	attr.stManual.LENormBldP0 = rand_range(0, 4095);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1106,14 +1116,14 @@ static int test_FSHDR_FSHDRAttr_SENormBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	attr.SENormBldRange = rand_range(4096, 65535);
+	attr.stManual.LENormBldP0 = rand_range(4096, 65535);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
 		return CVI_FAILURE;
 	}
 	// restore default value
-	attr.SENormBldRange = 64;
+	attr.stManual.LENormBldP0 = 3000;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("restore default value failed\n");
@@ -1122,12 +1132,12 @@ static int test_FSHDR_FSHDRAttr_SENormBldRange(VI_PIPE ViPipe)
 	return CVI_SUCCESS;
 }
 
-static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_SENormBldRange(void)
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_LENormBldP0_manual(void)
 {
-	reg_api_test_fn(test_FSHDR_FSHDRAttr_SENormBldRange);
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_LENormBldP0_manual);
 }
 
-static int test_FSHDR_FSHDRAttr_SENormBldP0(VI_PIPE ViPipe)
+static int test_FSHDR_FSHDRAttr_LENormBldP0_auto(VI_PIPE ViPipe)
 {
 	CVI_S32 ret = CVI_SUCCESS;
 	ISP_FSHDR_ATTR_S attr;
@@ -1138,12 +1148,15 @@ static int test_FSHDR_FSHDRAttr_SENormBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// check default value test
-	if (attr.SENormBldP0 != 192) {
-		TEST_FAIL("test default value: 192 != %d\n", (int)attr.SENormBldP0);
+	CVI_U16 default_val_0[ISP_AUTO_LV_NUM] = { 3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000 };
+	if (memcmp(default_val_0, attr.stAuto.LENormBldP0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM) != 0) {
+		TEST_FAIL("test default value failed\n");
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	attr.SENormBldP0 = 0;
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LENormBldP0[j] = 0;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1155,7 +1168,9 @@ static int test_FSHDR_FSHDRAttr_SENormBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	attr.SENormBldP0 = 4095;
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LENormBldP0[j] = 4095;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1167,7 +1182,9 @@ static int test_FSHDR_FSHDRAttr_SENormBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	attr.SENormBldP0 = rand_range(0, 4095);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LENormBldP0[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1179,14 +1196,17 @@ static int test_FSHDR_FSHDRAttr_SENormBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	attr.SENormBldP0 = rand_range(4096, 65535);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LENormBldP0[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
 		return CVI_FAILURE;
 	}
 	// restore default value
-	attr.SENormBldP0 = 192;
+	CVI_U16 restore_val_0[ISP_AUTO_LV_NUM] = { 3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000 };
+	memcpy(attr.stAuto.LENormBldP0, restore_val_0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("restore default value failed\n");
@@ -1195,12 +1215,12 @@ static int test_FSHDR_FSHDRAttr_SENormBldP0(VI_PIPE ViPipe)
 	return CVI_SUCCESS;
 }
 
-static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_SENormBldP0(void)
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_LENormBldP0_auto(void)
 {
-	reg_api_test_fn(test_FSHDR_FSHDRAttr_SENormBldP0);
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_LENormBldP0_auto);
 }
 
-static int test_FSHDR_FSHDRAttr_LEDynmBldRange(VI_PIPE ViPipe)
+static int test_FSHDR_FSHDRAttr_SENormBldRange_manual(VI_PIPE ViPipe)
 {
 	CVI_S32 ret = CVI_SUCCESS;
 	ISP_FSHDR_ATTR_S attr;
@@ -1211,12 +1231,12 @@ static int test_FSHDR_FSHDRAttr_LEDynmBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// check default value test
-	if (attr.LEDynmBldRange != 1024) {
-		TEST_FAIL("test default value: 1024 != %d\n", (int)attr.LEDynmBldRange);
+	if (attr.stManual.SENormBldRange != 64) {
+		TEST_FAIL("test default value: 64 != %d\n", (int)attr.stManual.SENormBldRange);
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	attr.LEDynmBldRange = 0;
+	attr.stManual.SENormBldRange = 0;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1228,7 +1248,7 @@ static int test_FSHDR_FSHDRAttr_LEDynmBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	attr.LEDynmBldRange = 4095;
+	attr.stManual.SENormBldRange = 4095;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1240,7 +1260,7 @@ static int test_FSHDR_FSHDRAttr_LEDynmBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	attr.LEDynmBldRange = rand_range(0, 4095);
+	attr.stManual.SENormBldRange = rand_range(0, 4095);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1252,14 +1272,14 @@ static int test_FSHDR_FSHDRAttr_LEDynmBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	attr.LEDynmBldRange = rand_range(4096, 65535);
+	attr.stManual.SENormBldRange = rand_range(4096, 65535);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
 		return CVI_FAILURE;
 	}
 	// restore default value
-	attr.LEDynmBldRange = 1024;
+	attr.stManual.SENormBldRange = 64;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("restore default value failed\n");
@@ -1268,12 +1288,12 @@ static int test_FSHDR_FSHDRAttr_LEDynmBldRange(VI_PIPE ViPipe)
 	return CVI_SUCCESS;
 }
 
-static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_LEDynmBldRange(void)
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_SENormBldRange_manual(void)
 {
-	reg_api_test_fn(test_FSHDR_FSHDRAttr_LEDynmBldRange);
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_SENormBldRange_manual);
 }
 
-static int test_FSHDR_FSHDRAttr_LEDynmBldP0(VI_PIPE ViPipe)
+static int test_FSHDR_FSHDRAttr_SENormBldRange_auto(VI_PIPE ViPipe)
 {
 	CVI_S32 ret = CVI_SUCCESS;
 	ISP_FSHDR_ATTR_S attr;
@@ -1284,12 +1304,15 @@ static int test_FSHDR_FSHDRAttr_LEDynmBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// check default value test
-	if (attr.LEDynmBldP0 != 2560) {
-		TEST_FAIL("test default value: 2560 != %d\n", (int)attr.LEDynmBldP0);
+	CVI_U16 default_val_0[ISP_AUTO_LV_NUM] = { 64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64 };
+	if (memcmp(default_val_0, attr.stAuto.SENormBldRange, sizeof(CVI_U16) * ISP_AUTO_LV_NUM) != 0) {
+		TEST_FAIL("test default value failed\n");
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	attr.LEDynmBldP0 = 0;
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SENormBldRange[j] = 0;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1301,7 +1324,9 @@ static int test_FSHDR_FSHDRAttr_LEDynmBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	attr.LEDynmBldP0 = 4095;
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SENormBldRange[j] = 4095;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1313,7 +1338,9 @@ static int test_FSHDR_FSHDRAttr_LEDynmBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	attr.LEDynmBldP0 = rand_range(0, 4095);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SENormBldRange[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1325,14 +1352,17 @@ static int test_FSHDR_FSHDRAttr_LEDynmBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	attr.LEDynmBldP0 = rand_range(4096, 65535);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SENormBldRange[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
 		return CVI_FAILURE;
 	}
 	// restore default value
-	attr.LEDynmBldP0 = 2560;
+	CVI_U16 restore_val_0[ISP_AUTO_LV_NUM] = { 64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64 };
+	memcpy(attr.stAuto.SENormBldRange, restore_val_0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("restore default value failed\n");
@@ -1341,12 +1371,12 @@ static int test_FSHDR_FSHDRAttr_LEDynmBldP0(VI_PIPE ViPipe)
 	return CVI_SUCCESS;
 }
 
-static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_LEDynmBldP0(void)
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_SENormBldRange_auto(void)
 {
-	reg_api_test_fn(test_FSHDR_FSHDRAttr_LEDynmBldP0);
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_SENormBldRange_auto);
 }
 
-static int test_FSHDR_FSHDRAttr_SEDynmBldRange(VI_PIPE ViPipe)
+static int test_FSHDR_FSHDRAttr_SENormBldP0_manual(VI_PIPE ViPipe)
 {
 	CVI_S32 ret = CVI_SUCCESS;
 	ISP_FSHDR_ATTR_S attr;
@@ -1357,12 +1387,12 @@ static int test_FSHDR_FSHDRAttr_SEDynmBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// check default value test
-	if (attr.SEDynmBldRange != 64) {
-		TEST_FAIL("test default value: 64 != %d\n", (int)attr.SEDynmBldRange);
+	if (attr.stManual.SENormBldP0 != 192) {
+		TEST_FAIL("test default value: 192 != %d\n", (int)attr.stManual.SENormBldP0);
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	attr.SEDynmBldRange = 0;
+	attr.stManual.SENormBldP0 = 0;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1374,7 +1404,7 @@ static int test_FSHDR_FSHDRAttr_SEDynmBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	attr.SEDynmBldRange = 4095;
+	attr.stManual.SENormBldP0 = 4095;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1386,7 +1416,7 @@ static int test_FSHDR_FSHDRAttr_SEDynmBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	attr.SEDynmBldRange = rand_range(0, 4095);
+	attr.stManual.SENormBldP0 = rand_range(0, 4095);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1398,14 +1428,14 @@ static int test_FSHDR_FSHDRAttr_SEDynmBldRange(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	attr.SEDynmBldRange = rand_range(4096, 65535);
+	attr.stManual.SENormBldP0 = rand_range(4096, 65535);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
 		return CVI_FAILURE;
 	}
 	// restore default value
-	attr.SEDynmBldRange = 64;
+	attr.stManual.SENormBldP0 = 192;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("restore default value failed\n");
@@ -1414,12 +1444,12 @@ static int test_FSHDR_FSHDRAttr_SEDynmBldRange(VI_PIPE ViPipe)
 	return CVI_SUCCESS;
 }
 
-static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_SEDynmBldRange(void)
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_SENormBldP0_manual(void)
 {
-	reg_api_test_fn(test_FSHDR_FSHDRAttr_SEDynmBldRange);
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_SENormBldP0_manual);
 }
 
-static int test_FSHDR_FSHDRAttr_SEDynmBldP0(VI_PIPE ViPipe)
+static int test_FSHDR_FSHDRAttr_SENormBldP0_auto(VI_PIPE ViPipe)
 {
 	CVI_S32 ret = CVI_SUCCESS;
 	ISP_FSHDR_ATTR_S attr;
@@ -1430,12 +1460,15 @@ static int test_FSHDR_FSHDRAttr_SEDynmBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// check default value test
-	if (attr.SEDynmBldP0 != 192) {
-		TEST_FAIL("test default value: 192 != %d\n", (int)attr.SEDynmBldP0);
+	CVI_U16 default_val_0[ISP_AUTO_LV_NUM] = { 192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192 };
+	if (memcmp(default_val_0, attr.stAuto.SENormBldP0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM) != 0) {
+		TEST_FAIL("test default value failed\n");
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	attr.SEDynmBldP0 = 0;
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SENormBldP0[j] = 0;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -1447,7 +1480,9 @@ static int test_FSHDR_FSHDRAttr_SEDynmBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	attr.SEDynmBldP0 = 4095;
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SENormBldP0[j] = 4095;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1459,7 +1494,9 @@ static int test_FSHDR_FSHDRAttr_SEDynmBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	attr.SEDynmBldP0 = rand_range(0, 4095);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SENormBldP0[j] = rand_range(0, 4095);
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -1471,14 +1508,17 @@ static int test_FSHDR_FSHDRAttr_SEDynmBldP0(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	attr.SEDynmBldP0 = rand_range(4096, 65535);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SENormBldP0[j] = rand_range(4096, 65535);
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
 		return CVI_FAILURE;
 	}
 	// restore default value
-	attr.SEDynmBldP0 = 192;
+	CVI_U16 restore_val_0[ISP_AUTO_LV_NUM] = { 192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192 };
+	memcpy(attr.stAuto.SENormBldP0, restore_val_0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("restore default value failed\n");
@@ -1487,9 +1527,633 @@ static int test_FSHDR_FSHDRAttr_SEDynmBldP0(VI_PIPE ViPipe)
 	return CVI_SUCCESS;
 }
 
-static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_SEDynmBldP0(void)
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_SENormBldP0_auto(void)
 {
-	reg_api_test_fn(test_FSHDR_FSHDRAttr_SEDynmBldP0);
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_SENormBldP0_auto);
+}
+
+static int test_FSHDR_FSHDRAttr_LEDynmBldRange_manual(VI_PIPE ViPipe)
+{
+	CVI_S32 ret = CVI_SUCCESS;
+	ISP_FSHDR_ATTR_S attr;
+
+	ret = CVI_ISP_GetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("CVI_ISP_GetFSHDRAttr failed\n");
+		return ret;
+	}
+	// check default value test
+	if (attr.stManual.LEDynmBldRange != 1024) {
+		TEST_FAIL("test default value: 1024 != %d\n", (int)attr.stManual.LEDynmBldRange);
+		return CVI_FAILURE;
+	}
+	// set minimum value
+	attr.stManual.LEDynmBldRange = 0;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed at VD wait\n");
+		return ret;
+	}
+	// set maximum value
+	attr.stManual.LEDynmBldRange = 4095;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed at VD wait\n");
+		return ret;
+	}
+	// set random value
+	attr.stManual.LEDynmBldRange = rand_range(0, 4095);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed at VD wait\n");
+		return ret;
+	}
+	// set abnormal value test
+	attr.stManual.LEDynmBldRange = rand_range(4096, 65535);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret == CVI_SUCCESS) {
+		TEST_FAIL("test abnormal value should fail\n");
+		return CVI_FAILURE;
+	}
+	// restore default value
+	attr.stManual.LEDynmBldRange = 1024;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("restore default value failed\n");
+		return ret;
+	}
+	return CVI_SUCCESS;
+}
+
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_LEDynmBldRange_manual(void)
+{
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_LEDynmBldRange_manual);
+}
+
+static int test_FSHDR_FSHDRAttr_LEDynmBldRange_auto(VI_PIPE ViPipe)
+{
+	CVI_S32 ret = CVI_SUCCESS;
+	ISP_FSHDR_ATTR_S attr;
+
+	ret = CVI_ISP_GetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("CVI_ISP_GetFSHDRAttr failed\n");
+		return ret;
+	}
+	// check default value test
+	CVI_U16 default_val_0[ISP_AUTO_LV_NUM] = { 1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024 };
+	if (memcmp(default_val_0, attr.stAuto.LEDynmBldRange, sizeof(CVI_U16) * ISP_AUTO_LV_NUM) != 0) {
+		TEST_FAIL("test default value failed\n");
+		return CVI_FAILURE;
+	}
+	// set minimum value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LEDynmBldRange[j] = 0;
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed at VD wait\n");
+		return ret;
+	}
+	// set maximum value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LEDynmBldRange[j] = 4095;
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed at VD wait\n");
+		return ret;
+	}
+	// set random value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LEDynmBldRange[j] = rand_range(0, 4095);
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed at VD wait\n");
+		return ret;
+	}
+	// set abnormal value test
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LEDynmBldRange[j] = rand_range(4096, 65535);
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret == CVI_SUCCESS) {
+		TEST_FAIL("test abnormal value should fail\n");
+		return CVI_FAILURE;
+	}
+	// restore default value
+	CVI_U16 restore_val_0[ISP_AUTO_LV_NUM] = { 1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024 };
+	memcpy(attr.stAuto.LEDynmBldRange, restore_val_0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("restore default value failed\n");
+		return ret;
+	}
+	return CVI_SUCCESS;
+}
+
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_LEDynmBldRange_auto(void)
+{
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_LEDynmBldRange_auto);
+}
+
+static int test_FSHDR_FSHDRAttr_LEDynmBldP0_manual(VI_PIPE ViPipe)
+{
+	CVI_S32 ret = CVI_SUCCESS;
+	ISP_FSHDR_ATTR_S attr;
+
+	ret = CVI_ISP_GetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("CVI_ISP_GetFSHDRAttr failed\n");
+		return ret;
+	}
+	// check default value test
+	if (attr.stManual.LEDynmBldP0 != 2560) {
+		TEST_FAIL("test default value: 2560 != %d\n", (int)attr.stManual.LEDynmBldP0);
+		return CVI_FAILURE;
+	}
+	// set minimum value
+	attr.stManual.LEDynmBldP0 = 0;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed at VD wait\n");
+		return ret;
+	}
+	// set maximum value
+	attr.stManual.LEDynmBldP0 = 4095;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed at VD wait\n");
+		return ret;
+	}
+	// set random value
+	attr.stManual.LEDynmBldP0 = rand_range(0, 4095);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed at VD wait\n");
+		return ret;
+	}
+	// set abnormal value test
+	attr.stManual.LEDynmBldP0 = rand_range(4096, 65535);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret == CVI_SUCCESS) {
+		TEST_FAIL("test abnormal value should fail\n");
+		return CVI_FAILURE;
+	}
+	// restore default value
+	attr.stManual.LEDynmBldP0 = 2560;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("restore default value failed\n");
+		return ret;
+	}
+	return CVI_SUCCESS;
+}
+
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_LEDynmBldP0_manual(void)
+{
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_LEDynmBldP0_manual);
+}
+
+static int test_FSHDR_FSHDRAttr_LEDynmBldP0_auto(VI_PIPE ViPipe)
+{
+	CVI_S32 ret = CVI_SUCCESS;
+	ISP_FSHDR_ATTR_S attr;
+
+	ret = CVI_ISP_GetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("CVI_ISP_GetFSHDRAttr failed\n");
+		return ret;
+	}
+	// check default value test
+	CVI_U16 default_val_0[ISP_AUTO_LV_NUM] = { 2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560 };
+	if (memcmp(default_val_0, attr.stAuto.LEDynmBldP0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM) != 0) {
+		TEST_FAIL("test default value failed\n");
+		return CVI_FAILURE;
+	}
+	// set minimum value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LEDynmBldP0[j] = 0;
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed at VD wait\n");
+		return ret;
+	}
+	// set maximum value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LEDynmBldP0[j] = 4095;
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed at VD wait\n");
+		return ret;
+	}
+	// set random value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LEDynmBldP0[j] = rand_range(0, 4095);
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed at VD wait\n");
+		return ret;
+	}
+	// set abnormal value test
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.LEDynmBldP0[j] = rand_range(4096, 65535);
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret == CVI_SUCCESS) {
+		TEST_FAIL("test abnormal value should fail\n");
+		return CVI_FAILURE;
+	}
+	// restore default value
+	CVI_U16 restore_val_0[ISP_AUTO_LV_NUM] = { 2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560,2560 };
+	memcpy(attr.stAuto.LEDynmBldP0, restore_val_0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("restore default value failed\n");
+		return ret;
+	}
+	return CVI_SUCCESS;
+}
+
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_LEDynmBldP0_auto(void)
+{
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_LEDynmBldP0_auto);
+}
+
+static int test_FSHDR_FSHDRAttr_SEDynmBldRange_manual(VI_PIPE ViPipe)
+{
+	CVI_S32 ret = CVI_SUCCESS;
+	ISP_FSHDR_ATTR_S attr;
+
+	ret = CVI_ISP_GetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("CVI_ISP_GetFSHDRAttr failed\n");
+		return ret;
+	}
+	// check default value test
+	if (attr.stManual.SEDynmBldRange != 64) {
+		TEST_FAIL("test default value: 64 != %d\n", (int)attr.stManual.SEDynmBldRange);
+		return CVI_FAILURE;
+	}
+	// set minimum value
+	attr.stManual.SEDynmBldRange = 0;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed at VD wait\n");
+		return ret;
+	}
+	// set maximum value
+	attr.stManual.SEDynmBldRange = 4095;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed at VD wait\n");
+		return ret;
+	}
+	// set random value
+	attr.stManual.SEDynmBldRange = rand_range(0, 4095);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed at VD wait\n");
+		return ret;
+	}
+	// set abnormal value test
+	attr.stManual.SEDynmBldRange = rand_range(4096, 65535);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret == CVI_SUCCESS) {
+		TEST_FAIL("test abnormal value should fail\n");
+		return CVI_FAILURE;
+	}
+	// restore default value
+	attr.stManual.SEDynmBldRange = 64;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("restore default value failed\n");
+		return ret;
+	}
+	return CVI_SUCCESS;
+}
+
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_SEDynmBldRange_manual(void)
+{
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_SEDynmBldRange_manual);
+}
+
+static int test_FSHDR_FSHDRAttr_SEDynmBldRange_auto(VI_PIPE ViPipe)
+{
+	CVI_S32 ret = CVI_SUCCESS;
+	ISP_FSHDR_ATTR_S attr;
+
+	ret = CVI_ISP_GetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("CVI_ISP_GetFSHDRAttr failed\n");
+		return ret;
+	}
+	// check default value test
+	CVI_U16 default_val_0[ISP_AUTO_LV_NUM] = { 64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64 };
+	if (memcmp(default_val_0, attr.stAuto.SEDynmBldRange, sizeof(CVI_U16) * ISP_AUTO_LV_NUM) != 0) {
+		TEST_FAIL("test default value failed\n");
+		return CVI_FAILURE;
+	}
+	// set minimum value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SEDynmBldRange[j] = 0;
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed at VD wait\n");
+		return ret;
+	}
+	// set maximum value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SEDynmBldRange[j] = 4095;
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed at VD wait\n");
+		return ret;
+	}
+	// set random value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SEDynmBldRange[j] = rand_range(0, 4095);
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed at VD wait\n");
+		return ret;
+	}
+	// set abnormal value test
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SEDynmBldRange[j] = rand_range(4096, 65535);
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret == CVI_SUCCESS) {
+		TEST_FAIL("test abnormal value should fail\n");
+		return CVI_FAILURE;
+	}
+	// restore default value
+	CVI_U16 restore_val_0[ISP_AUTO_LV_NUM] = { 64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64,64 };
+	memcpy(attr.stAuto.SEDynmBldRange, restore_val_0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("restore default value failed\n");
+		return ret;
+	}
+	return CVI_SUCCESS;
+}
+
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_SEDynmBldRange_auto(void)
+{
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_SEDynmBldRange_auto);
+}
+
+static int test_FSHDR_FSHDRAttr_SEDynmBldP0_manual(VI_PIPE ViPipe)
+{
+	CVI_S32 ret = CVI_SUCCESS;
+	ISP_FSHDR_ATTR_S attr;
+
+	ret = CVI_ISP_GetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("CVI_ISP_GetFSHDRAttr failed\n");
+		return ret;
+	}
+	// check default value test
+	if (attr.stManual.SEDynmBldP0 != 192) {
+		TEST_FAIL("test default value: 192 != %d\n", (int)attr.stManual.SEDynmBldP0);
+		return CVI_FAILURE;
+	}
+	// set minimum value
+	attr.stManual.SEDynmBldP0 = 0;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed at VD wait\n");
+		return ret;
+	}
+	// set maximum value
+	attr.stManual.SEDynmBldP0 = 4095;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed at VD wait\n");
+		return ret;
+	}
+	// set random value
+	attr.stManual.SEDynmBldP0 = rand_range(0, 4095);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed at VD wait\n");
+		return ret;
+	}
+	// set abnormal value test
+	attr.stManual.SEDynmBldP0 = rand_range(4096, 65535);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret == CVI_SUCCESS) {
+		TEST_FAIL("test abnormal value should fail\n");
+		return CVI_FAILURE;
+	}
+	// restore default value
+	attr.stManual.SEDynmBldP0 = 192;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("restore default value failed\n");
+		return ret;
+	}
+	return CVI_SUCCESS;
+}
+
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_SEDynmBldP0_manual(void)
+{
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_SEDynmBldP0_manual);
+}
+
+static int test_FSHDR_FSHDRAttr_SEDynmBldP0_auto(VI_PIPE ViPipe)
+{
+	CVI_S32 ret = CVI_SUCCESS;
+	ISP_FSHDR_ATTR_S attr;
+
+	ret = CVI_ISP_GetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("CVI_ISP_GetFSHDRAttr failed\n");
+		return ret;
+	}
+	// check default value test
+	CVI_U16 default_val_0[ISP_AUTO_LV_NUM] = { 192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192 };
+	if (memcmp(default_val_0, attr.stAuto.SEDynmBldP0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM) != 0) {
+		TEST_FAIL("test default value failed\n");
+		return CVI_FAILURE;
+	}
+	// set minimum value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SEDynmBldP0[j] = 0;
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed at VD wait\n");
+		return ret;
+	}
+	// set maximum value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SEDynmBldP0[j] = 4095;
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed at VD wait\n");
+		return ret;
+	}
+	// set random value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SEDynmBldP0[j] = rand_range(0, 4095);
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed at VD wait\n");
+		return ret;
+	}
+	// set abnormal value test
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.SEDynmBldP0[j] = rand_range(4096, 65535);
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret == CVI_SUCCESS) {
+		TEST_FAIL("test abnormal value should fail\n");
+		return CVI_FAILURE;
+	}
+	// restore default value
+	CVI_U16 restore_val_0[ISP_AUTO_LV_NUM] = { 192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192 };
+	memcpy(attr.stAuto.SEDynmBldP0, restore_val_0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("restore default value failed\n");
+		return ret;
+	}
+	return CVI_SUCCESS;
+}
+
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_SEDynmBldP0_auto(void)
+{
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_SEDynmBldP0_auto);
 }
 
 static int test_FSHDR_FSHDRAttr_NDBldLumTh(VI_PIPE ViPipe)
@@ -1748,7 +2412,7 @@ static int test_FSHDR_FSHDRAttr_MCurveMode(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	attr.MCurveMode = MCURVE_MANUAL_SEMAX;
+	attr.MCurveMode = MCURVE_MODE_BUTT;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -1986,7 +2650,7 @@ static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_MCurveSmooth(v
 	reg_api_test_fn(test_FSHDR_FSHDRAttr_MCurveSmooth);
 }
 
-static int test_FSHDR_FSHDRAttr_MCurveDelta(VI_PIPE ViPipe)
+static int test_FSHDR_FSHDRAttr_MCurveDelta_manual(VI_PIPE ViPipe)
 {
 	CVI_S32 ret = CVI_SUCCESS;
 	ISP_FSHDR_ATTR_S attr;
@@ -1997,12 +2661,12 @@ static int test_FSHDR_FSHDRAttr_MCurveDelta(VI_PIPE ViPipe)
 		return ret;
 	}
 	// check default value test
-	if (attr.MCurveDelta != 1) {
-		TEST_FAIL("test default value: 1 != %d\n", (int)attr.MCurveDelta);
+	if (attr.stManual.MCurveDelta != 1) {
+		TEST_FAIL("test default value: 1 != %d\n", (int)attr.stManual.MCurveDelta);
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	attr.MCurveDelta = 0;
+	attr.stManual.MCurveDelta = 0;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -2014,7 +2678,7 @@ static int test_FSHDR_FSHDRAttr_MCurveDelta(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	attr.MCurveDelta = 8560;
+	attr.stManual.MCurveDelta = 8560;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -2026,7 +2690,7 @@ static int test_FSHDR_FSHDRAttr_MCurveDelta(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	attr.MCurveDelta = rand_range(0, 8560);
+	attr.stManual.MCurveDelta = rand_range(0, 8560);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -2038,14 +2702,14 @@ static int test_FSHDR_FSHDRAttr_MCurveDelta(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set abnormal value test
-	attr.MCurveDelta = rand_range(8561, 65535);
+	attr.stManual.MCurveDelta = rand_range(8561, 65535);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret == CVI_SUCCESS) {
 		TEST_FAIL("test abnormal value should fail\n");
 		return CVI_FAILURE;
 	}
 	// restore default value
-	attr.MCurveDelta = 1;
+	attr.stManual.MCurveDelta = 1;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("restore default value failed\n");
@@ -2054,12 +2718,12 @@ static int test_FSHDR_FSHDRAttr_MCurveDelta(VI_PIPE ViPipe)
 	return CVI_SUCCESS;
 }
 
-static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_MCurveDelta(void)
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_MCurveDelta_manual(void)
 {
-	reg_api_test_fn(test_FSHDR_FSHDRAttr_MCurveDelta);
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_MCurveDelta_manual);
 }
 
-static int test_FSHDR_FSHDRAttr_MCurveX1(VI_PIPE ViPipe)
+static int test_FSHDR_FSHDRAttr_MCurveDelta_auto(VI_PIPE ViPipe)
 {
 	CVI_S32 ret = CVI_SUCCESS;
 	ISP_FSHDR_ATTR_S attr;
@@ -2070,12 +2734,15 @@ static int test_FSHDR_FSHDRAttr_MCurveX1(VI_PIPE ViPipe)
 		return ret;
 	}
 	// check default value test
-	if (attr.MCurveX1 != 4088) {
-		TEST_FAIL("test default value: 4088 != %d\n", (int)attr.MCurveX1);
+	CVI_U16 default_val_0[ISP_AUTO_LV_NUM] = { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 };
+	if (memcmp(default_val_0, attr.stAuto.MCurveDelta, sizeof(CVI_U16) * ISP_AUTO_LV_NUM) != 0) {
+		TEST_FAIL("test default value failed\n");
 		return CVI_FAILURE;
 	}
 	// set minimum value
-	attr.MCurveX1 = 0;
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.MCurveDelta[j] = 0;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test minimum value failed\n");
@@ -2087,7 +2754,9 @@ static int test_FSHDR_FSHDRAttr_MCurveX1(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set maximum value
-	attr.MCurveX1 = 65535;
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.MCurveDelta[j] = 8560;
+	}
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test maximum value failed\n");
@@ -2099,7 +2768,85 @@ static int test_FSHDR_FSHDRAttr_MCurveX1(VI_PIPE ViPipe)
 		return ret;
 	}
 	// set random value
-	attr.MCurveX1 = rand_range(0, 65535);
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.MCurveDelta[j] = rand_range(0, 8560);
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed at VD wait\n");
+		return ret;
+	}
+	// set abnormal value test
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.MCurveDelta[j] = rand_range(8561, 65535);
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret == CVI_SUCCESS) {
+		TEST_FAIL("test abnormal value should fail\n");
+		return CVI_FAILURE;
+	}
+	// restore default value
+	CVI_U16 restore_val_0[ISP_AUTO_LV_NUM] = { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 };
+	memcpy(attr.stAuto.MCurveDelta, restore_val_0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("restore default value failed\n");
+		return ret;
+	}
+	return CVI_SUCCESS;
+}
+
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_MCurveDelta_auto(void)
+{
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_MCurveDelta_auto);
+}
+
+static int test_FSHDR_FSHDRAttr_MCurveX1_manual(VI_PIPE ViPipe)
+{
+	CVI_S32 ret = CVI_SUCCESS;
+	ISP_FSHDR_ATTR_S attr;
+
+	ret = CVI_ISP_GetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("CVI_ISP_GetFSHDRAttr failed\n");
+		return ret;
+	}
+	// check default value test
+	if (attr.stManual.MCurveX1 != 4088) {
+		TEST_FAIL("test default value: 4088 != %d\n", (int)attr.stManual.MCurveX1);
+		return CVI_FAILURE;
+	}
+	// set minimum value
+	attr.stManual.MCurveX1 = 0;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed at VD wait\n");
+		return ret;
+	}
+	// set maximum value
+	attr.stManual.MCurveX1 = 65535;
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed at VD wait\n");
+		return ret;
+	}
+	// set random value
+	attr.stManual.MCurveX1 = rand_range(0, 65535);
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("test random value failed\n");
@@ -2111,7 +2858,7 @@ static int test_FSHDR_FSHDRAttr_MCurveX1(VI_PIPE ViPipe)
 		return ret;
 	}
 	// restore default value
-	attr.MCurveX1 = 4088;
+	attr.stManual.MCurveX1 = 4088;
 	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("restore default value failed\n");
@@ -2120,9 +2867,83 @@ static int test_FSHDR_FSHDRAttr_MCurveX1(VI_PIPE ViPipe)
 	return CVI_SUCCESS;
 }
 
-static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_MCurveX1(void)
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_MCurveX1_manual(void)
 {
-	reg_api_test_fn(test_FSHDR_FSHDRAttr_MCurveX1);
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_MCurveX1_manual);
+}
+
+static int test_FSHDR_FSHDRAttr_MCurveX1_auto(VI_PIPE ViPipe)
+{
+	CVI_S32 ret = CVI_SUCCESS;
+	ISP_FSHDR_ATTR_S attr;
+
+	ret = CVI_ISP_GetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("CVI_ISP_GetFSHDRAttr failed\n");
+		return ret;
+	}
+	// check default value test
+	CVI_U16 default_val_0[ISP_AUTO_LV_NUM] = { 4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088 };
+	if (memcmp(default_val_0, attr.stAuto.MCurveX1, sizeof(CVI_U16) * ISP_AUTO_LV_NUM) != 0) {
+		TEST_FAIL("test default value failed\n");
+		return CVI_FAILURE;
+	}
+	// set minimum value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.MCurveX1[j] = 0;
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test minimum value failed at VD wait\n");
+		return ret;
+	}
+	// set maximum value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.MCurveX1[j] = 65535;
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test maximum value failed at VD wait\n");
+		return ret;
+	}
+	// set random value
+	for (int j = 0; j < ISP_AUTO_LV_NUM; ++j) {
+		attr.stAuto.MCurveX1[j] = rand_range(0, 65535);
+	}
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed\n");
+		return ret;
+	}
+	ret = CVI_ISP_GetVDTimeOut(ViPipe, ISP_VD_BE_END, 200);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("test random value failed at VD wait\n");
+		return ret;
+	}
+	// restore default value
+	CVI_U16 restore_val_0[ISP_AUTO_LV_NUM] = { 4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088,4088 };
+	memcpy(attr.stAuto.MCurveX1, restore_val_0, sizeof(CVI_U16) * ISP_AUTO_LV_NUM);
+	ret = CVI_ISP_SetFSHDRAttr(ViPipe, &attr);
+	if (ret != CVI_SUCCESS) {
+		TEST_FAIL("restore default value failed\n");
+		return ret;
+	}
+	return CVI_SUCCESS;
+}
+
+static void __attribute__((constructor)) reg_test_FSHDR_FSHDRAttr_MCurveX1_auto(void)
+{
+	reg_api_test_fn(test_FSHDR_FSHDRAttr_MCurveX1_auto);
 }
 
 static int test_FSHDR_FSHDRAttr_MCurveBldRatio(VI_PIPE ViPipe)

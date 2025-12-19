@@ -144,8 +144,8 @@ static int test_LDCI_LDCIAttr_UpdateInterval(VI_PIPE ViPipe)
 		return ret;
 	}
 	// check default value test
-	if (attr.UpdateInterval != 255) {
-		TEST_FAIL("test default value: 255 != %d\n", (int)attr.UpdateInterval);
+	if (attr.UpdateInterval != 1) {
+		TEST_FAIL("test default value: 1 != %d\n", (int)attr.UpdateInterval);
 		return CVI_FAILURE;
 	}
 	// set minimum value
@@ -185,7 +185,7 @@ static int test_LDCI_LDCIAttr_UpdateInterval(VI_PIPE ViPipe)
 		return ret;
 	}
 	// restore default value
-	attr.UpdateInterval = 255;
+	attr.UpdateInterval = 1;
 	ret = CVI_ISP_SetLDCIAttr(ViPipe, &attr);
 	if (ret != CVI_SUCCESS) {
 		TEST_FAIL("restore default value failed\n");
