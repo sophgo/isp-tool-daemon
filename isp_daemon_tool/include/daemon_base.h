@@ -35,8 +35,8 @@ typedef struct module_queue_t {
 
 	pthread_mutex_t mutex;
 	pthread_condattr_t condattr;
-	pthread_cond_t cond_full;
-	pthread_cond_t cond_empty;
+	pthread_cond_t cond_not_full;
+	pthread_cond_t cond_not_empty;
 } module_queue_t;
 
 int module_queue_init(module_queue_t *queue, uint32_t capacity);
@@ -60,10 +60,8 @@ typedef struct module_fun_t {
 typedef struct module_t {
 	const char *name;
 	int pipe_id;
-	int pipe_chn;
-	void *pipe_cfg;
-	void *private_cfg;
-	void *private_data;
+	void *module_cfg;
+	void *module_ctx;
 	uint8_t thread_run;
 	pthread_t thread_id;
 	module_queue_t queue;

@@ -24,7 +24,7 @@ getopts_get_optional_argument() {
 }
 
 sed -i 's/"replay-mode": true/"replay-mode": false/g' $CFG_JSON_FILE
-while getopts "hgmiru" OPTION; do
+while getopts "hgmirut" OPTION; do
     case $OPTION in
         i)
             getopts_get_optional_argument $@
@@ -66,12 +66,19 @@ while getopts "hgmiru" OPTION; do
             fi
             echo "startting app in uart mode additionally"
             ;;
+        t)
+            getopts_get_optional_argument $@
+            echo "start isp auto test case: $OPTARG"
+            export CVI_ISP_AUTO_TEST_CASE="$OPTARG"
+            export PQBIN_DIR="/mnt/sd/res_a2/pqbin"
+            ;;
         h)
             echo "Usage:"
             echo "   -i     set the IP address to network interface"
             echo "   -g     use gigabit ethernet"
             echo "   -h     help (this output)"
             echo "   -u     use uart connectting to pqtool"
+            echo "   -t N     start isp auto test case number N"
             exit 0
             ;;
     esac

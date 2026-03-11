@@ -1,7 +1,7 @@
 
 #include <sys/prctl.h>
 
-#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #define CLOG_TAG "video_src"
 
 #include <dlfcn.h>
@@ -92,15 +92,15 @@ static uint8_t g_video_src_init_cnt;
 
 static int init(struct module_t *thiz)
 {
-	daemon_pipe_cfg_t *p_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
+	daemon_pipe_cfg_t *p_cfg = (daemon_pipe_cfg_t *)thiz->module_cfg;
 
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	module_queue_init(&thiz->queue, VIDEO_SRC_QUEUE_SIZE);
 	if (g_video_src_init_cnt == 0) {
 		int vi_num = 1;
 
 		if (p_cfg->raw_replay_enable) {
-			vi_num = replay_sys_vi_int(p_cfg);
+			vi_num = replay_sys_vi_init(p_cfg);
 		} else {
 			vi_num = module_sys_vi_init(p_cfg);
 		}
@@ -126,10 +126,10 @@ static int init(struct module_t *thiz)
 
 static int deinit(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	g_video_src_init_cnt--;
 	if (g_video_src_init_cnt == 0) {
-		daemon_pipe_cfg_t *p_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
+		daemon_pipe_cfg_t *p_cfg = (daemon_pipe_cfg_t *)thiz->module_cfg;
 
 		if (p_cfg->raw_replay_enable) {
 			replay_sys_vi_deinit(p_cfg);
@@ -149,10 +149,10 @@ static int deinit(struct module_t *thiz)
 static int get_frame(module_t *thiz, VIDEO_FRAME_INFO_S *pframe)
 {
 	int ret = 0;
-	daemon_pipe_cfg_t *p_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
+	daemon_pipe_cfg_t *p_cfg = (daemon_pipe_cfg_t *)thiz->module_cfg;
 
 	if (p_cfg->raw_replay_enable) {
-		ret = CVI_VI_GetChnFrame(0, thiz->pipe_chn, pframe,
+		ret = CVI_VI_GetChnFrame(0, thiz->pipe_id, pframe,
 					 DAEMON_TIMEOUT_MS);
 	} else {
 		ret = CVI_VPSS_GetChnFrame(thiz->pipe_id, 0, pframe,
@@ -170,10 +170,10 @@ static int put_frame(module_t *thiz, VIDEO_FRAME_INFO_S *pframe)
 {
 	int ret = 0;
 
-	daemon_pipe_cfg_t *p_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
+	daemon_pipe_cfg_t *p_cfg = (daemon_pipe_cfg_t *)thiz->module_cfg;
 
 	if (p_cfg->raw_replay_enable) {
-		ret = CVI_VI_ReleaseChnFrame(0, thiz->pipe_chn, pframe);
+		ret = CVI_VI_ReleaseChnFrame(0, thiz->pipe_id, pframe);
 	} else {
 		ret = CVI_VPSS_ReleaseChnFrame(thiz->pipe_id, 0, pframe);
 	}
@@ -190,9 +190,7 @@ static void *worker(void *arg)
 	int ret = 0;
 	struct module_t *thiz = (struct module_t *)arg;
 
-	clog_i("run, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
-
+	clog_i("run, pipe_id: %d\n", thiz->pipe_id);
 	prctl(PR_SET_NAME, "video_src", 0, 0, 0);
 
 	while (thiz->thread_run) {
@@ -234,7 +232,7 @@ static void *worker(void *arg)
 
 static int start(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 1;
 	pthread_create(&thiz->thread_id, NULL, worker, thiz);
 	return 0;
@@ -242,7 +240,7 @@ static int start(struct module_t *thiz)
 
 static int stop(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 0;
 	pthread_join(thiz->thread_id, NULL);
 	return 0;
@@ -251,7 +249,6 @@ static int stop(struct module_t *thiz)
 static int get(struct module_t *thiz, void **data)
 {
 	int ret = 0;
-	//clog_i("get, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
 	ret = module_queue_pop(&thiz->queue, data, DAEMON_TIMEOUT_MS);
 	if (ret != 0) {
 		clog_e("module_queue_pop failed with %#x\n", ret);
@@ -262,7 +259,6 @@ static int get(struct module_t *thiz, void **data)
 
 static int put(struct module_t *thiz, void *data)
 {
-	//clog_i("put, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
 	put_frame(thiz, (VIDEO_FRAME_INFO_S *)data);
 	free(data);
 	return 0;

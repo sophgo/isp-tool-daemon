@@ -83,6 +83,7 @@ typedef struct video_pipe_cfg_t {
 	int enable_face_ae;
 	int enable_teaisp_pq;
 	int enable_teaisp_drc;
+	int enable_teaisp_vsr;
 	int enable_hdmi;
 	int enable_teaisp_bnr;
 	char bnr_model_list[MAX_PATH_LEN];
@@ -117,6 +118,7 @@ typedef struct daemon_pipe_cfg_t {
 	char teaisp_faceae_model_path[MAX_PATH_LEN];
 	char teaisp_pq_model_path[MAX_PATH_LEN];
 	char teaisp_drc_model_path[MAX_PATH_LEN];
+	char teaisp_vsr_model_path[MAX_PATH_LEN];
 	raw_replay_cfg_t raw_replay_cfg;
 	video_pipe_cfg_t video_pipe_cfg;
 } daemon_pipe_cfg_t;

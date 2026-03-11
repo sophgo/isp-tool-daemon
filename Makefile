@@ -47,7 +47,7 @@ MW_SAMPLE_CFLAGS += -MMD -MP
 MW_SAMPLE_CFLAGS += $(KBUILD_DEFINES)
 
 AI_SDK_PATH = $(OUTPUT_DIR)/tpu_$(SDK_VER)/cvitek_ai_sdk
-TPU_SDK_PATH = $(OUTPUT_DIR)/rootfs/mnt/system/usr/lib/libsophon-0.4.9/lib
+TPU_SDK_PATH = $(TOP_DIR)/libsophon/install/libsophon-0.4.9/lib
 
 AI_SDK_PATH_EXIST = $(shell if [ -d $(AI_SDK_PATH) ]; then echo "exist"; else echo "noexist"; fi)
 TPU_SDK_PATH_EXIST = $(shell if [ -d $(TPU_SDK_PATH) ]; then echo "exist"; else echo "noexist"; fi)
@@ -70,6 +70,7 @@ LIBS += -lsns_full
 
 LOCAL_CFLAGS = $(DEFS) $(INCS) -DSDK_VER=$(SDK_VER)
 LOCAL_CFLAGS += -MMD -MP
+LOCAL_CFLAGS += -DENABLE_TEAISP_PQ -DENABLE_FACE_AE
 LOCAL_LDFLAGS = $(LIBS) -lm -lpthread
 LOCAL_LDFLAGS += -L$(CVI_RTSP_PATH)/install/lib
 LOCAL_LDFLAGS += -L$(TPU_SDK_PATH)
@@ -106,6 +107,7 @@ package: $(TARGET)
 	@cp isp_daemon_tool/CviIspTool.sh install/
 	@cp isp_daemon_tool/daemon_cfg/* install/
 	@cp res/* install/ -rf
+	@cp isp_test/scripts/*.sh install/
 
 	@mkdir install/lib/ai
 ifeq "$(AI_SDK_PATH_EXIST)" "noexist"
@@ -126,6 +128,7 @@ endif
 	@tar -zcf $(OUT_TARBALL) install
 
 clean:
+	@cd isp_test; make clean
 	@rm -f $(COBJS) $(SAMPLE_OBJS) $(CDEPS) $(TARGET) $(SAMPLE_DEPS)
 	@rm -rf install $(TMP_FOLDER)
 	@rm -rf $(OUT_TARBALL)

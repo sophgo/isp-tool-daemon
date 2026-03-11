@@ -21,6 +21,7 @@
 	"teaisp-faceae-model": "./cvi_models/scrfd_500m_bnkps_432_768_int8_cv186x.bmodel",
 	"teaisp-pq-model": "./cvi_models/mqbench_qmodel_best_deploy_model_cv186x.bmodel",
 	"teaisp-drc-model": "./cvi_models/drc_1dlut_int8_822.bmodel",
+	"teaisp-vsr-model": "./cvi_models/vsr_lora_H_264_W_480.bmodel",
 	"replay-mode": false,
 	"replay-param": "./replay.json",
 	"sbm": 0,
@@ -36,13 +37,12 @@
 			"enable-faceae": false,
 			"enable-teaisp-pq": false,
 			"enable-teaisp-drc": false,
+			"enable-teaisp-vsr": false,
 			"enable-hdmi": false,
 			"enable-teaisp-bnr": false,
 			"teaisp_model_list": "./cvi_models/teaisp_bnr_model_list.txt",
 			"venc_json": "./vc_param.json",
 			"codec": "265",
-			"gop": 50,
-			"bitrate": 5000,
 			"compress-mode": "tile"
 		},
 		{
@@ -59,8 +59,6 @@
 			"teaisp_model_list": "./cvi_models/teaisp_bnr_model_list.txt",
 			"venc_json": "./vc_param.json",
 			"codec": "265",
-			"gop": 50,
-			"bitrate": 5000,
 			"compress-mode": "tile"
 		}
 	]

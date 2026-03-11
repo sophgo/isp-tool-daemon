@@ -2,6 +2,7 @@
 #include "daemon_base.h"
 #include "daemon_cfg.h"
 #include "cvi_json.h"
+#include "sample_comm.h"
 
 #define GET_VC_KEY_VAL(p_vc_cfg, sub_cfg, key, sub_key)\
 {\
@@ -74,6 +75,51 @@ static int get_json_object_from_file(const char *json_path, struct cvi_json_obje
 	return 0;
 }
 
+static int init_pipe_cfg_src_width_height_from_sns_cfg(int dev_num, daemon_pipe_cfg_t *p_cfg)
+{
+	int ret;
+	PIC_SIZE_E enPicSize;
+	SIZE_S stSize;
+	SAMPLE_INI_CFG_S stIniCfg;
+	SAMPLE_VI_CONFIG_S stViConfig;
+
+	memset(&stIniCfg, 0, sizeof(SAMPLE_INI_CFG_S));
+	memset(&stViConfig, 0, sizeof(SAMPLE_VI_CONFIG_S));
+
+	ret = SAMPLE_COMM_VI_ParseIni(&stIniCfg);
+	if (ret != CVI_SUCCESS) {
+		clog_e("SAMPLE_COMM_VI_ParseIni failed with %#x!\n", ret);
+		return ret;
+	}
+
+	ret = SAMPLE_COMM_VI_IniToViCfg(&stIniCfg, &stViConfig);
+	if (ret != CVI_SUCCESS) {
+		clog_e("SAMPLE_COMM_VI_IniToViCfg failed with %#x!\n", ret);
+		return ret;
+	}
+
+	for (int i = 0; i < stViConfig.s32WorkingViNum; i++) {
+		ret = SAMPLE_COMM_VI_GetSizeBySensor(stIniCfg.enSnsType[i], &enPicSize);
+		if (ret != CVI_SUCCESS) {
+			clog_e("SAMPLE_COMM_VI_GetSizeBySensor failed with %#x\n", ret);
+			return ret;
+		}
+
+		ret = SAMPLE_COMM_SYS_GetPicSize(enPicSize, &stSize);
+		if (ret != CVI_SUCCESS) {
+			clog_e("SAMPLE_COMM_SYS_GetPicSize failed with %#x\n", ret);
+			return ret;
+		}
+
+		if (i < dev_num) {
+			p_cfg[i].src_width = stSize.u32Width;
+			p_cfg[i].src_height = stSize.u32Height;
+		}
+	}
+
+	return 0;
+}
+
 int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 {
 	int dev_num = 0;
@@ -132,6 +178,11 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 
 	if (cvi_json_object_object_get_ex(json_obj, "teaisp-drc-model", &val_json_object)) {
 		snprintf(p_cfg->teaisp_drc_model_path, MAX_PATH_LEN, "%s",
+			cvi_json_object_get_string(val_json_object));
+	}
+
+	if (cvi_json_object_object_get_ex(json_obj, "teaisp-vsr-model", &val_json_object)) {
+		snprintf(p_cfg->teaisp_vsr_model_path, MAX_PATH_LEN, "%s",
 			cvi_json_object_get_string(val_json_object));
 	}
 
@@ -241,6 +292,16 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 				}
 			}
 
+			if (cvi_json_object_object_get_ex(array_ele, "enable-teaisp-vsr", &arr_val_json_object)) {
+				const char *tmp_str = cvi_json_object_get_string(arr_val_json_object);
+
+				if (strcmp(tmp_str, "true") == 0) {
+					p_cfg[i].video_pipe_cfg.enable_teaisp_vsr = 1;
+				} else {
+					p_cfg[i].video_pipe_cfg.enable_teaisp_vsr = 0;
+				}
+			}
+
 			if (cvi_json_object_object_get_ex(array_ele, "enable-hdmi", &arr_val_json_object)) {
 				const char *tmp_str = cvi_json_object_get_string(arr_val_json_object);
 
@@ -309,6 +370,8 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 
 	*p_pipe_cfg = p_cfg;
 
+	init_pipe_cfg_src_width_height_from_sns_cfg(dev_num, p_cfg);
+
 	printf("----------------------------------------------------------------------------\n");
 	return 0;
 }
@@ -332,10 +395,12 @@ static int print_daemon_pipe_cfg(daemon_pipe_cfg_t *p_cfg)
 		printf("\tteaisp-faceae-model: %s\n", p_cfg[i].teaisp_faceae_model_path);
 		printf("\tteaisp-pq-model: %s\n", p_cfg[i].teaisp_pq_model_path);
 		printf("\tteaisp-drc-model: %s\n", p_cfg[i].teaisp_drc_model_path);
+		printf("\tteaisp-vsr-model: %s\n", p_cfg[i].teaisp_vsr_model_path);
 		printf("\tchn: %d\n", p_cfg[i].video_pipe_cfg.chn);
 		printf("\tbuf-blk-cnt: %d\n", p_cfg[i].video_pipe_cfg.buf_blk_cnt);
 		printf("\tis_wdr_mode: %d\n", p_cfg[i].video_pipe_cfg.is_wdr_mode);
 		printf("\tenable-teaisp-drc: %d\n", p_cfg[i].video_pipe_cfg.enable_teaisp_drc);
+		printf("\tenable-teaisp-vsr: %d\n", p_cfg[i].video_pipe_cfg.enable_teaisp_vsr);
 		printf("\tenable-hmdi: %d\n", p_cfg[i].video_pipe_cfg.enable_hdmi);
 		printf("\tenable-teaisp-bnr: %d\n", p_cfg[i].video_pipe_cfg.enable_teaisp_bnr);
 		printf("\tvenc_json: %s\n", p_cfg[i].video_pipe_cfg.venc_json);

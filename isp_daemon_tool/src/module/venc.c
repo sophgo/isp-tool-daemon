@@ -1,7 +1,7 @@
 
 #include <sys/prctl.h>
 
-#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #define CLOG_TAG "venc"
 
 #include "daemon_base.h"
@@ -16,18 +16,16 @@
 static int init(struct module_t *thiz)
 {
 	int ret = 0;
+	int chn_id = thiz->pipe_id;
+	module_venc_cfg_t *venc_cfg = (module_venc_cfg_t *)thiz->module_cfg;
 
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
+	clog_i("chn_id: %d, width: %d, height: %d, codec: %s\n",
+			chn_id, venc_cfg->width, venc_cfg->height, venc_cfg->codec);
 	module_queue_init(&thiz->queue, VENC_QUEUE_SIZE);
 
-	daemon_pipe_cfg_t *pipe_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
-	int chn = thiz->pipe_chn;
-
-	pipe_cfg->video_pipe_cfg.chn = chn;
-	ret = module_venc_init(pipe_cfg);
+	ret = module_venc_init(chn_id, thiz->module_cfg);
 	if (ret != 0) {
-		clog_a("module_venc_init failed with %#x\n", ret);
+		clog_a("module_venc_init: %d failed with %#x\n", chn_id, ret);
 		return ret;
 	}
 
@@ -37,13 +35,24 @@ static int init(struct module_t *thiz)
 static int deinit(struct module_t *thiz)
 {
 	int ret = 0;
+	int chn_id = thiz->pipe_id;
+	module_venc_cfg_t *venc_cfg = (module_venc_cfg_t *)thiz->module_cfg;
 
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
-
-	ret = module_venc_deinit(thiz->pipe_cfg);
+	clog_i("chn_id: %d, width: %d, height: %d, codec: %s\n",
+			chn_id, venc_cfg->width, venc_cfg->height, venc_cfg->codec);
+	ret = module_venc_deinit(chn_id);
 	if (ret != CVI_SUCCESS) {
-		clog_e("module_venc_deinit failed with %#x\n", ret);
+		clog_e("module_venc_deinit: %d failed with %#x\n", chn_id, ret);
+	}
+
+	if (thiz->module_cfg != NULL) {
+		free(thiz->module_cfg);
+		thiz->module_cfg = NULL;
+	}
+
+	if (thiz->module_ctx != NULL) {
+		free(thiz->module_ctx);
+		thiz->module_ctx = NULL;
 	}
 
 	module_queue_deinit(&thiz->queue);
@@ -56,11 +65,9 @@ static void *worker(void *arg)
 	struct module_t *thiz = (struct module_t *)arg;
 	struct module_t *src_module =
 		&(GET_MODULE_PIPE_NODE_PTR(thiz)->prev->module);
-	int chn = thiz->pipe_chn;
+	int chn = thiz->pipe_id;
 
-	clog_i("run, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
-
+	clog_i("run, chn_id: %d\n", chn);
 	prctl(PR_SET_NAME, "venc", 0, 0, 0);
 
 	VENC_CHN_STATUS_S stStat;
@@ -156,8 +163,7 @@ static void *worker(void *arg)
 
 static int start(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
+	clog_i("chn_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 1;
 	pthread_create(&thiz->thread_id, NULL, worker, thiz);
 	return 0;
@@ -165,8 +171,7 @@ static int start(struct module_t *thiz)
 
 static int stop(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
+	clog_i("chn_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 0;
 	pthread_join(thiz->thread_id, NULL);
 	return 0;
@@ -175,7 +180,7 @@ static int stop(struct module_t *thiz)
 static int get(struct module_t *thiz, void **data)
 {
 	int ret = 0;
-	//clog_i("get, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+
 	ret = module_queue_pop(&thiz->queue, data, DAEMON_TIMEOUT_MS);
 	if (ret != 0) {
 		clog_e("module_queue_pop failed with %#x\n", ret);
@@ -186,8 +191,7 @@ static int get(struct module_t *thiz, void **data)
 
 static int put(struct module_t *thiz, void *data)
 {
-	//clog_i("put, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
-	CVI_VENC_ReleaseStream(thiz->pipe_chn, (VENC_STREAM_S *)data);
+	CVI_VENC_ReleaseStream(thiz->pipe_id, (VENC_STREAM_S *)data);
 	free(((VENC_STREAM_S *)data)->pstPack);
 	free(data);
 	return 0;
