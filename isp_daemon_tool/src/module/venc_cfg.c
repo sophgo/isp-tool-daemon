@@ -2,28 +2,23 @@
 #include "sample_comm.h"
 #include "daemon_base.h"
 #include "daemon_cfg.h"
+#include "daemon_module.h"
 
-static int init_chn_input_cfg(daemon_pipe_cfg_t *cfg, chnInputCfg *pIc)
+static int init_chn_input_cfg(module_venc_cfg_t *cfg, chnInputCfg *pIc)
 {
-	int chn = cfg->video_pipe_cfg.chn;
-	ISP_PUB_ATTR_S stPubAttr;
-
-	memset(&stPubAttr, 0, sizeof(ISP_PUB_ATTR_S));
-	CVI_ISP_GetPubAttr(chn, &stPubAttr);
-
-	if ((stPubAttr.stWndRect.u32Width % 32) != 0) {
+	if ((cfg->width % 32) != 0) {
 		clog_e("error, venc width: %d must be aligned to 32...\n",
-		       stPubAttr.stWndRect.u32Width);
+		       cfg->width);
 		return -1;
 	}
 
-	pIc->width = stPubAttr.stWndRect.u32Width;
-	pIc->height = stPubAttr.stWndRect.u32Height;
-	strncpy(pIc->codec, cfg->video_pipe_cfg.codec, sizeof(pIc->codec));
+	pIc->width = cfg->width;
+	pIc->height = cfg->height;
+	strncpy(pIc->codec, cfg->codec, sizeof(pIc->codec));
 
 	// coding param
 	vc_coding_param_t *p_coding_param =
-		&cfg->video_pipe_cfg.st_vc_cfg.st_coding_param;
+		&cfg->vc_cfg.st_coding_param;
 
 	pIc->framerate = p_coding_param->FrmLostOpen;
 	// p_coding_param->LostMode;
@@ -46,10 +41,10 @@ static int init_chn_input_cfg(daemon_pipe_cfg_t *cfg, chnInputCfg *pIc)
 		p_coding_param->TimingInfoPresentFlag;
 	pIc->fixedFrameRateFlag = p_coding_param->FixedFrameRateFlag;
 	pIc->numUnitsInTick = p_coding_param->NumUnitsInTick;
-	pIc->timeScale = (CVI_U32) stPubAttr.f32FrameRate;
+	pIc->timeScale = 25; // !!! hard code 25 fps
 
 	// gop mode
-	vc_gop_mode_t *p_gop_mode = &cfg->video_pipe_cfg.st_vc_cfg.st_gop_mode;
+	vc_gop_mode_t *p_gop_mode = &cfg->vc_cfg.st_gop_mode;
 
 	pIc->gopMode = p_gop_mode->GopMode;
 	pIc->s32IPQpDelta = p_gop_mode->IPQpDelta;
@@ -58,7 +53,7 @@ static int init_chn_input_cfg(daemon_pipe_cfg_t *cfg, chnInputCfg *pIc)
 	// p_gop_mode->ViQpDelta;
 
 	// rc attr
-	vc_rc_attr_t *p_rc_attr = &cfg->video_pipe_cfg.st_vc_cfg.st_rc_attr;
+	vc_rc_attr_t *p_rc_attr = &cfg->vc_cfg.st_rc_attr;
 
 	pIc->rcMode = p_rc_attr->RcMode;
 	pIc->gop = p_rc_attr->Gop;
@@ -72,7 +67,7 @@ static int init_chn_input_cfg(daemon_pipe_cfg_t *cfg, chnInputCfg *pIc)
 	pIc->pqp = p_rc_attr->PQP;
 
 	// rc param
-	vc_rc_param_t *p_rc_param = &cfg->video_pipe_cfg.st_vc_cfg.st_rc_param;
+	vc_rc_param_t *p_rc_param = &cfg->vc_cfg.st_rc_param;
 
 	pIc->u32RowQpDelta = p_rc_param->RowQpDelta;
 	pIc->firstFrmstartQp = p_rc_param->FirstFrameStartQp;
@@ -95,15 +90,13 @@ static int init_chn_input_cfg(daemon_pipe_cfg_t *cfg, chnInputCfg *pIc)
 	return 0;
 }
 
-int module_venc_init(void *pipe_cfg)
+int module_venc_init(int chn_id, void *cfg)
 {
 	int ret = 0;
-	daemon_pipe_cfg_t *cfg = (daemon_pipe_cfg_t *)pipe_cfg;
 	chnInputCfg *pIc = (chnInputCfg *)malloc(sizeof(chnInputCfg));
-	int chn = cfg->video_pipe_cfg.chn;
 
 	SAMPLE_COMM_VENC_InitChnInputCfg(pIc);
-	ret = init_chn_input_cfg(cfg, pIc);
+	ret = init_chn_input_cfg((module_venc_cfg_t *)cfg, pIc);
 	if (ret != 0) {
 		goto venc_init_fail;
 	}
@@ -126,8 +119,10 @@ int module_venc_init(void *pipe_cfg)
 		EnPayLoad = PT_JPEG;
 	} else if (!strcmp(pIc->codec, "264")) {
 		EnPayLoad = PT_H264;
+		pIc->u32Profile = CVI_H264_PROFILE_DEFAULT; // high profile for h264
 	} else if (!strcmp(pIc->codec, "265")) {
 		EnPayLoad = PT_H265;
+		pIc->u32Profile = 1; // hard code main profile for h265
 	} else {
 		clog_e("Unsupport Codec %s, only support mjp/jpg/h265/h264!\n",
 		       pIc->codec);
@@ -145,7 +140,7 @@ int module_venc_init(void *pipe_cfg)
 
 	SAMPLE_COMM_VENC_InitCommonInputCfg(&pCic);
 	SAMPLE_COMM_VENC_SetModParam(&pCic);
-	ret = SAMPLE_COMM_VENC_Start(pIc, chn, EnPayLoad, enSize, enRcMode,
+	ret = SAMPLE_COMM_VENC_Start(pIc, chn_id, EnPayLoad, enSize, enRcMode,
 				     u32Profile, CVI_FALSE, &gopAttr);
 	if (ret != CVI_SUCCESS) {
 		clog_e("SAMPLE_COMM_VENC_Start failed with %#x\n", ret);
@@ -158,13 +153,11 @@ venc_init_fail:
 	return ret == CVI_SUCCESS ? 0 : -1;
 }
 
-int module_venc_deinit(void *pipe_cfg)
+int module_venc_deinit(int chn_id)
 {
 	int ret = 0;
-	daemon_pipe_cfg_t *cfg = (daemon_pipe_cfg_t *)pipe_cfg;
-	int chn = cfg->video_pipe_cfg.chn;
 
-	ret = SAMPLE_COMM_VENC_Stop(chn);
+	ret = SAMPLE_COMM_VENC_Stop(chn_id);
 	if (ret != CVI_SUCCESS) {
 		clog_e("SAMPLE_COMM_VENC_Stop failed with %#x\n", ret);
 		return -1;

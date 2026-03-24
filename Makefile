@@ -1,4 +1,12 @@
 SHELL = /bin/bash
+
+# Control whether to build ctrl_tool (1=enable, 0=disable)
+ENABLE_CTRL_TOOL ?= 1
+# Control whether to build tools (1=enable, 0=disable)
+ENABLE_TOOLS ?= 1
+# Strip control: set ENABLE_STRIP=0 to disable stripping for debugging
+ENABLE_STRIP ?= 1
+
 ifeq ($(PARAM_FILE), )
 	PARAM_FILE:=$(TOP_DIR)/cvi_mpi/Makefile.param
 	include $(PARAM_FILE)
@@ -19,7 +27,6 @@ MW_SAMPLE_COMMON_PATH=$(TOP_DIR)/cvi_mpi/sample_app/common
 #include $(MW_PATH)/component/isp/common/Kbuild
 
 SDIR = $(PWD)/isp_daemon_tool/src
-SELF_TEST_SDIR = $(PWD)/self_test
 TMP_FOLDER = tmp
 ISP_DIR = $(TOP_DIR)/cvi_mpi/modules/isp
 ISP_COMMON_DIR = $(ISP_DIR)/common
@@ -43,9 +50,6 @@ COBJS = $(patsubst $(SDIR)/%.c, $(TMP_FOLDER)/%.o, $(wildcard $(SDIR)/*.c))
 CDEPS = $(patsubst $(SDIR)/%.c, $(TMP_FOLDER)/%.d, $(wildcard $(SDIR)/*.c))
 COBJS += $(patsubst $(SDIR)/module/%.c, $(TMP_FOLDER)/module/%.o, $(wildcard $(SDIR)/module/*.c))
 CDEPS += $(patsubst $(SDIR)/module/%.c, $(TMP_FOLDER)/module/%.d, $(wildcard $(SDIR)/module/*.c))
-
-SELF_TEST_OBJS = $(patsubst $(SELF_TEST_SDIR)/%.c, $(TMP_FOLDER)/%.o, $(wildcard $(SELF_TEST_SDIR)/*.c))
-SELF_TEST_DEPS = $(patsubst $(SELF_TEST_SDIR)/%.c, $(TMP_FOLDER)/%.d, $(wildcard $(SELF_TEST_SDIR)/*.c))
 
 # mw sample common
 SAMPLE_SRCS = $(wildcard $(MW_SAMPLE_COMMON_PATH)/*.c)
@@ -79,7 +83,6 @@ PREBUILT_OBJS :=
 
 TARGET = isp_tool_daemon
 CTRL_TARGET = isp_tool_daemon_ctrl
-SELF_TEST_TARGET = self_test.out
 OUT_TARBALL = isp_tool_daemon.tar.gz
 
 PKG_CONFIG_PATH = $(MW_PATH)/pkgconfig
@@ -116,8 +119,23 @@ LOCAL_LDFLAGS += -L$(CVI_RTSP_PATH)/install/lib
 LOCAL_LDFLAGS += -shared-libgcc
 CFLAGS += -DENABLE_TEAISP_PQ -DENABLE_FACE_AE
 
-.PHONY: clean all package test
-all: prepare ctrl_tool $(TARGET) $(SELF_TEST_TARGET)
+.PHONY: clean all package test tools
+ifeq ($(ENABLE_CTRL_TOOL), 1)
+ifeq ($(ENABLE_TOOLS), 1)
+all: prepare ctrl_tool $(TARGET) tools
+else
+all: prepare ctrl_tool $(TARGET)
+endif
+else
+ifeq ($(ENABLE_TOOLS), 1)
+all: prepare $(TARGET) tools
+else
+all: prepare $(TARGET)
+endif
+endif
+
+tools:
+	@cd tools && $(MAKE) all
 
 ctrl_tool:
 	@cd isp_daemon_ctrl_tool;make;cd ..
@@ -142,20 +160,14 @@ $(TMP_FOLDER)/%.o: $(CTRL_SRC_DIR)/%.c | prepare
 	$(CC) $(CFLAGS) $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) -c $< -o $@
 	@echo [$(notdir $(CXX))] $(notdir $@)
 
-$(TMP_FOLDER)/%.o: $(SELF_TEST_SDIR)/%.c | prepare
-	$(CC) $(CFLAGS) $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) -c $< -o $@
-	@echo [$(notdir $(CXX))] $(notdir $@)
-
-$(SELF_TEST_TARGET): $(SELF_TEST_OBJS) $(SAMPLE_OBJS) | prepare
-	$(CC) -o $@ $^ $(PREBUILT_OBJS) $(ELFFLAGS) $(LOCAL_LDFLAGS)
-	@echo -e $(BLUE)[LINK]$(END)[$(notdir $(CXX))] $(notdir $@)
-
-package: $(TARGET) ctrl_tool $(SELF_TEST_TARGET)
+package: all
 	@rm -rf install/*
 	@mkdir -p install/lib
+	@mkdir -p install/tools
 	@cp $(TARGET) install/
-	@cp $(SELF_TEST_TARGET) install/
+ifeq ($(ENABLE_CTRL_TOOL), 1)
 	@cp isp_daemon_ctrl_tool/$(CTRL_TARGET) install/
+endif
 	@cp isp_daemon_tool/CviIspTool.sh install/
 	@cp isp_daemon_tool/daemon_cfg/* install/
 	@cp res/* install/ -rf
@@ -185,14 +197,29 @@ endif
 	@cp -Lrf $(BM_LIB)/libbmlib.so* install/lib
 	@cp -Lrf $(BM_LIB)/libbmrt.so* install/lib
 	@cp -Lrf $(TPU_KERNEL_LIB)/libtpu_kernel_module.so install/lib
+ifeq ($(ENABLE_TOOLS), 1)
+	@if [ -d tools/install ]; then cp -rf tools/install/* install/tools/; fi
+	@if [ -f tools/run_test_tool.sh ]; then cp tools/run_test_tool.sh install/ && chmod +x install/run_test_tool.sh; fi
+endif
 
+ifeq ($(ENABLE_STRIP), 1)
+	@echo "Stripping all binaries and libraries..."
+	@find install -type f \( -name "*.so*" -o -perm -111 \) -exec sh -c 'file "{}" | grep -q ELF && $(STRIP) "{}" 2>/dev/null || true' \;
+else
+	@echo "Skipping strip (ENABLE_STRIP=0, debug symbols preserved)"
+endif
 	@tar -zcf $(OUT_TARBALL) install
 	@echo "package: tar $(OUT_TARBALL) successful!"
 
 clean:
 	@cd isp_test;make clean
+ifeq ($(ENABLE_CTRL_TOOL), 1)
 	@cd isp_daemon_ctrl_tool;make clean;cd ..
-	@rm -f $(COBJS) $(SAMPLE_OBJS) $(CDEPS) $(TARGET) $(SELF_TEST_TARGET) $(SAMPLE_DEPS)
+endif
+ifeq ($(ENABLE_TOOLS), 1)
+	@cd tools && $(MAKE) clean
+endif
+	@rm -f $(COBJS) $(SAMPLE_OBJS) $(CDEPS) $(TARGET) $(SAMPLE_DEPS)
 	@rm -rf install $(TMP_FOLDER)
 	@rm -rf $(OUT_TARBALL)
 

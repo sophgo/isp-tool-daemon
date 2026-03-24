@@ -22,6 +22,7 @@ while getopts "hrt:" OPTION; do
         t)
             echo "start isp auto test case: $OPTARG"
             export CVI_ISP_AUTO_TEST_CASE="$OPTARG"
+            export PQBIN_DIR="/mnt/sd/res_mars3/pqbin"
             ;;
         h)
             echo "Usage:"

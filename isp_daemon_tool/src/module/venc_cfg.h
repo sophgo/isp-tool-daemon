@@ -2,7 +2,14 @@
 #ifndef __VENC_CFG_H__
 #define __VENC_CFG_H__
 
-int module_venc_init(void *pipe_cfg);
-int module_venc_deinit(void *pipe_cfg);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+int module_venc_init(int chn_id, void *cfg);
+int module_venc_deinit(int chn_id);
+
+#ifdef __cplusplus
+}
+#endif
 #endif // __VENC_CFG_H__

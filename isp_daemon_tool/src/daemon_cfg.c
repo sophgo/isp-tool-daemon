@@ -2,6 +2,7 @@
 #include "daemon_base.h"
 #include "daemon_cfg.h"
 #include "cvi_json.h"
+#include "cvi_comm_video.h"
 
 #define GET_VC_KEY_VAL(p_vc_cfg, sub_cfg, key, sub_key)\
 {\
@@ -33,6 +34,8 @@ static int init_vc_from_json(const char *json_path, vc_cfg_t *p_vc_cfg);
 static int print_vc_key_val(vc_cfg_t *p_vc_cfg);
 static int init_raw_replay_param_from_json(const char *json_path, raw_replay_cfg_t *p_cfg);
 static void print_raw_replay_param(raw_replay_cfg_t *p_cfg);
+static int init_stitch_param_from_json(const char *json_path, daemon_pipe_cfg_t *p_cfg, int dev_num);
+static void print_stitch_param(ISP_STITCH_ATTR_S *p_attr, int chn);
 
 static int get_json_object_from_file(const char *json_path, struct cvi_json_object **json_obj)
 {
@@ -72,6 +75,21 @@ static int get_json_object_from_file(const char *json_path, struct cvi_json_obje
 	free(buffer);
 
 	return 0;
+}
+
+static COMPRESS_MODE_E get_compress_mode(const char *mode)
+{
+	if (strcmp(mode, "none") == 0) {
+		return COMPRESS_MODE_NONE;
+	} else if (strcmp(mode, "tile") == 0) {
+		return COMPRESS_MODE_TILE;
+	} else if (strcmp(mode, "line") == 0) {
+		return COMPRESS_MODE_LINE;
+	} else if (strcmp(mode, "frame") == 0) {
+		return COMPRESS_MODE_FRAME;
+	} else {
+		return COMPRESS_MODE_NONE;
+	}
 }
 
 int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
@@ -154,6 +172,16 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 		}
 	}
 
+	if (cvi_json_object_object_get_ex(json_obj, "enable_dump_boot_video", &val_json_object)) {
+		const char *tmp_str = cvi_json_object_get_string(val_json_object);
+
+		if (strcmp(tmp_str, "true") == 0) {
+			p_cfg->enable_dump_boot_video = 1;
+		} else {
+			p_cfg->enable_dump_boot_video = 0;
+		}
+	}
+
 	if (cvi_json_object_object_get_ex(json_obj, "replay-mode", &val_json_object)) {
 		const char *tmp_str = cvi_json_object_get_string(val_json_object);
 
@@ -178,6 +206,29 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 		}
 	}
 
+	// parse enable-stitch and stitch-param
+	if (cvi_json_object_object_get_ex(json_obj, "enable-stitch", &val_json_object)) {
+		const char *tmp_str = cvi_json_object_get_string(val_json_object);
+
+		if (strcmp(tmp_str, "true") == 0) {
+			p_cfg->enable_stitch = 1;
+		} else {
+			p_cfg->enable_stitch = 0;
+		}
+	}
+
+	if (p_cfg->enable_stitch) {
+		if (cvi_json_object_object_get_ex(json_obj, "stitch-param", &val_json_object)) {
+			const char *tmp_str = cvi_json_object_get_string(val_json_object);
+
+			if (init_stitch_param_from_json(tmp_str, p_cfg, dev_num) != 0) {
+				clog_e("init stitch param fail!\n");
+				free(p_cfg);
+				return -1;
+			}
+		}
+	}
+
 	// video src info
 	if (cvi_json_object_object_get_ex(json_obj, "video-src-info", &val_json_object)) {
 		int ch_num = cvi_json_object_array_length(val_json_object);
@@ -191,13 +242,23 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 		struct cvi_json_object *array_ele = NULL;
 		struct cvi_json_object *arr_val_json_object = NULL;
 
-		for (int i = 0; i < dev_num; ++i) {
-
+		for (int i = 1; i < dev_num; ++i) {
 			p_cfg[i].dev_num = p_cfg[0].dev_num;
 			p_cfg[i].rtsp_port = p_cfg[0].rtsp_port;
 			p_cfg[i].rtsp_max_buf_size = p_cfg[0].rtsp_max_buf_size;
 			p_cfg[i].rtsp_server_select = p_cfg[0].rtsp_server_select;
+			p_cfg[i].vi_vpss_mode = p_cfg[0].vi_vpss_mode;
+			p_cfg[i].raw_replay_enable = p_cfg[0].raw_replay_enable;
+			p_cfg[i].is_fastboot_mode = p_cfg[0].is_fastboot_mode;
+			p_cfg[i].enable_dump_boot_video = p_cfg[0].enable_dump_boot_video;
+			p_cfg[i].max_use_tpu_num = p_cfg[0].max_use_tpu_num;
+			memcpy(p_cfg[i].teaisp_faceae_model_path, p_cfg[0].teaisp_faceae_model_path, MAX_PATH_LEN);
+			memcpy(p_cfg[i].teaisp_pq_model_path, p_cfg[0].teaisp_pq_model_path, MAX_PATH_LEN);
+			memcpy(p_cfg[i].cvi_bin_path, p_cfg[0].cvi_bin_path, MAX_PATH_LEN);
+			memcpy(p_cfg[i].sns_cfg_ini, p_cfg[0].sns_cfg_ini, MAX_PATH_LEN);
+		}
 
+		for (int i = 0; i < dev_num; ++i) {
 			array_ele = cvi_json_object_array_get_idx(val_json_object, i);
 			p_cfg[i].video_pipe_cfg.chn = i;
 
@@ -285,7 +346,7 @@ int daemon_pipe_cfg_init(const char *json_path, daemon_pipe_cfg_t **p_pipe_cfg)
 			if (cvi_json_object_object_get_ex(array_ele, "compress-mode", &arr_val_json_object)) {
 				const char *tmp_str = cvi_json_object_get_string(arr_val_json_object);
 
-				snprintf(p_cfg[i].video_pipe_cfg.compress_mode, MAX_COMPRESS_MODE_LEN, "%s", tmp_str);
+				p_cfg[i].video_pipe_cfg.compress_mode = get_compress_mode(tmp_str);
 			}
 
 			if (cvi_json_object_object_get_ex(array_ele, "enable-patgen", &arr_val_json_object)) {
@@ -337,13 +398,14 @@ static int print_daemon_pipe_cfg(daemon_pipe_cfg_t *p_cfg)
 		printf("\tteaisp-pq-model: %s\n", p_cfg[i].teaisp_pq_model_path);
 		printf("\treplay-mode: %d\n", p_cfg[i].raw_replay_enable);
 		printf("\tis_fastboot_mode: %d\n", p_cfg[i].is_fastboot_mode);
+		printf("\tenable_dump_boot_video: %d\n", p_cfg[i].enable_dump_boot_video);
 		printf("\tchn: %d\n", p_cfg[i].video_pipe_cfg.chn);
 		printf("\tbuf-blk-cnt: %d\n", p_cfg[i].video_pipe_cfg.buf_blk_cnt);
 		printf("\tis_wdr_mode: %d\n", p_cfg[i].video_pipe_cfg.is_wdr_mode);
 		printf("\tenable-teaisp-bnr: %d\n", p_cfg[i].video_pipe_cfg.enable_teaisp_bnr);
 		printf("\tvenc_json: %s\n", p_cfg[i].video_pipe_cfg.venc_json);
 		printf("\tcodec: %s\n", p_cfg[i].video_pipe_cfg.codec);
-		printf("\tcompress-mode: %s\n", p_cfg[i].video_pipe_cfg.compress_mode);
+		printf("\tcompress-mode: %d\n", p_cfg[i].video_pipe_cfg.compress_mode);
 		printf("\tenable-patgen: %d\n", p_cfg[i].video_pipe_cfg.enable_patgen);
 		printf("\tmax-use-tpu-num: %d\n", p_cfg[i].max_use_tpu_num);
 		printf("\ttpu-device-id: %d\n", p_cfg[i].video_pipe_cfg.tpu_device_id);
@@ -544,7 +606,7 @@ static int init_raw_replay_param_from_json(const char *json_path, raw_replay_cfg
 	if (cvi_json_object_object_get_ex(json_obj, "CompressMode", &json_val)) {
 		const char *tmp_str = cvi_json_object_get_string(json_val);
 
-		snprintf(p_cfg->compress_mode, MAX_COMPRESS_MODE_LEN, "%s", tmp_str);
+		p_cfg->compress_mode = get_compress_mode(tmp_str);
 	}
 
 	if (cvi_json_object_object_get_ex(json_obj, "OfflineRawDir", &json_val)) {
@@ -552,7 +614,6 @@ static int init_raw_replay_param_from_json(const char *json_path, raw_replay_cfg
 
 		snprintf(p_cfg->offline_raw_dir, MAX_PATH_LEN, "%s", tmp_str);
 	}
-
 
 	// free
 	cvi_json_object_put(json_obj);
@@ -571,6 +632,122 @@ static void print_raw_replay_param(raw_replay_cfg_t *p_cfg)
 	printf("\tFrameRate: %d\n", p_cfg->frame_rate);
 	printf("\tWDRMode: %d\n", p_cfg->wdr_mode);
 	printf("\tBayerFormat: %d\n", p_cfg->bayer_format);
-	printf("\tCompressMode: %s\n", p_cfg->compress_mode);
+	printf("\tCompressMode: %d\n", p_cfg->compress_mode);
 	printf("\tOfflineRawDir: %s\n", p_cfg->offline_raw_dir);
+}
+
+static int init_stitch_param_from_json(const char *json_path, daemon_pipe_cfg_t *p_cfg, int dev_num)
+{
+	struct cvi_json_object *json_obj = NULL;
+
+	if (get_json_object_from_file(json_path, &json_obj) != 0) {
+		clog_e("parse stitch json: %s fail!\n", json_path);
+		return -1;
+	}
+
+	struct cvi_json_object *stitch_attr_array = NULL;
+
+	if (!cvi_json_object_object_get_ex(json_obj, "isp_stitch_attr", &stitch_attr_array)) {
+		clog_e("get isp_stitch_attr from json fail!\n");
+		cvi_json_object_put(json_obj);
+		return -1;
+	}
+
+	int arr_len = cvi_json_object_array_length(stitch_attr_array);
+
+	if (arr_len > dev_num) {
+		clog_w("stitch attr array length %d is greater than dev_num %d, only parse first %d items\n",
+			arr_len, dev_num, dev_num);
+		arr_len = dev_num;
+	}
+
+	for (int i = 0; i < arr_len; ++i) {
+		struct cvi_json_object *item_obj = cvi_json_object_array_get_idx(stitch_attr_array, i);
+		struct cvi_json_object *json_val = NULL;
+		ISP_STITCH_ATTR_S *p_stitch = &p_cfg[i].video_pipe_cfg.stitch_attr;
+
+		if (cvi_json_object_object_get_ex(item_obj, "enable", &json_val)) {
+			const char *tmp_str = cvi_json_object_get_string(json_val);
+
+			if (strcmp(tmp_str, "true") == 0) {
+				p_stitch->enable = 1;
+			} else {
+				p_stitch->enable = 0;
+			}
+		}
+
+		if (cvi_json_object_object_get_ex(item_obj, "bMainPipe", &json_val)) {
+			const char *tmp_str = cvi_json_object_get_string(json_val);
+
+			if (strcmp(tmp_str, "true") == 0) {
+				p_stitch->bMainPipe = 1;
+			} else {
+				p_stitch->bMainPipe = 0;
+			}
+		}
+
+		if (cvi_json_object_object_get_ex(item_obj, "bCalibEnable", &json_val)) {
+			const char *tmp_str = cvi_json_object_get_string(json_val);
+
+			if (strcmp(tmp_str, "true") == 0) {
+				p_stitch->bCalibEnable = 1;
+			} else {
+				p_stitch->bCalibEnable = 0;
+			}
+		}
+
+		if (cvi_json_object_object_get_ex(item_obj, "bCombineSts", &json_val)) {
+			const char *tmp_str = cvi_json_object_get_string(json_val);
+
+			if (strcmp(tmp_str, "true") == 0) {
+				p_stitch->bCombineSts = 1;
+			} else {
+				p_stitch->bCombineSts = 0;
+			}
+		}
+
+		if (cvi_json_object_object_get_ex(item_obj, "u8CombChn", &json_val)) {
+			p_stitch->u8CombChn = cvi_json_object_get_int(json_val);
+		}
+
+		if (cvi_json_object_object_get_ex(item_obj, "u8CombChnSum", &json_val)) {
+			p_stitch->u8CombChnSum = cvi_json_object_get_int(json_val);
+		}
+
+		if (cvi_json_object_object_get_ex(item_obj, "u8Group", &json_val)) {
+			p_stitch->u8Group = cvi_json_object_get_int(json_val);
+		}
+
+		if (cvi_json_object_object_get_ex(item_obj, "u32CalibLumaRatio", &json_val)) {
+			p_stitch->u32CalibLumaRatio = cvi_json_object_get_int(json_val);
+		}
+
+		if (cvi_json_object_object_get_ex(item_obj, "u32CalibRGainRatio", &json_val)) {
+			p_stitch->u32CalibRGainRatio = cvi_json_object_get_int(json_val);
+		}
+
+		if (cvi_json_object_object_get_ex(item_obj, "u32CalibBGainRatio", &json_val)) {
+			p_stitch->u32CalibBGainRatio = cvi_json_object_get_int(json_val);
+		}
+
+		print_stitch_param(p_stitch, i);
+	}
+
+	cvi_json_object_put(json_obj);
+	return 0;
+}
+
+static void print_stitch_param(ISP_STITCH_ATTR_S *p_attr, int chn)
+{
+	printf("--------------------------------Stitch Param Chn %d--------------------------------\n", chn);
+	printf("\tenable: %d\n", p_attr->enable);
+	printf("\tbMainPipe: %d\n", p_attr->bMainPipe);
+	printf("\tbCalibEnable: %d\n", p_attr->bCalibEnable);
+	printf("\tbCombineSts: %d\n", p_attr->bCombineSts);
+	printf("\tu8CombChn: %d\n", p_attr->u8CombChn);
+	printf("\tu8CombChnSum: %d\n", p_attr->u8CombChnSum);
+	printf("\tu8Group: %d\n", p_attr->u8Group);
+	printf("\tu32CalibLumaRatio: %u\n", p_attr->u32CalibLumaRatio);
+	printf("\tu32CalibRGainRatio: %u\n", p_attr->u32CalibRGainRatio);
+	printf("\tu32CalibBGainRatio: %u\n", p_attr->u32CalibBGainRatio);
 }

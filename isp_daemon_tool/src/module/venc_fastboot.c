@@ -20,14 +20,12 @@ static int init(struct module_t *thiz)
 {
 	int ret = CVI_SUCCESS;
 
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	module_queue_init(&thiz->queue, VENC_QUEUE_SIZE);
 
-	daemon_pipe_cfg_t *pipe_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
-	int dev_num = pipe_cfg->dev_num;
-
-	CVI_SYS_Init();
+	module_venc_fastboot_cfg_t *cfg =
+		(module_venc_fastboot_cfg_t *)thiz->module_cfg;
+	int dev_num = cfg->dev_num;
 
 	for (int i = 0; i < dev_num; ++i) {
 		ret = CVI_ISP_MemInit(i);
@@ -44,12 +42,18 @@ static int deinit(struct module_t *thiz)
 {
 	int ret = 0;
 
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
-
-	CVI_SYS_Exit();
-
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	module_queue_deinit(&thiz->queue);
+
+	if (thiz->module_cfg) {
+		free(thiz->module_cfg);
+		thiz->module_cfg = NULL;
+	}
+
+	if (thiz->module_ctx) {
+		free(thiz->module_ctx);
+		thiz->module_ctx = NULL;
+	}
 
 	return ret;
 }
@@ -58,14 +62,13 @@ static void *worker(void *arg)
 {
 	int ret = 0;
 	struct module_t *thiz = (struct module_t *)arg;
-	int chn = thiz->pipe_chn;
+	int chn = thiz->pipe_id;
 
-	clog_i("run, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
-
+	clog_i("run, pipe_id: %d\n", thiz->pipe_id);
 	prctl(PR_SET_NAME, "venc", 0, 0, 0);
 
-	daemon_pipe_cfg_t *pipe_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
+	module_venc_fastboot_cfg_t *cfg =
+		(module_venc_fastboot_cfg_t *)thiz->module_cfg;
 	VENC_CHN_STATUS_S stStat;
 	VENC_RECV_PIC_PARAM_S stRecvParam = {0};
 
@@ -118,7 +121,7 @@ static void *worker(void *arg)
 
 #ifdef ENABLE_VENC_DUMP_DEBUG
 		if (access("/tmp/venc_dump", F_OK) == 0) {
-			if (fp == NULL && strcmp(pipe_cfg->video_pipe_cfg.codec,
+			if (fp == NULL && strcmp(cfg->codec,
 						 "264") == 0) {
 				char dump_file_name[32] = { 0 };
 
@@ -173,8 +176,7 @@ static void *worker(void *arg)
 
 static int start(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 1;
 	pthread_create(&thiz->thread_id, NULL, worker, thiz);
 	return 0;
@@ -182,8 +184,7 @@ static int start(struct module_t *thiz)
 
 static int stop(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 0;
 	pthread_join(thiz->thread_id, NULL);
 	return 0;
@@ -192,7 +193,6 @@ static int stop(struct module_t *thiz)
 static int get(struct module_t *thiz, void **data)
 {
 	int ret = 0;
-	//clog_i("get, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
 	ret = module_queue_pop(&thiz->queue, data, DAEMON_TIMEOUT_MS);
 	if (ret != 0) {
 		clog_e("module_queue_pop failed with %#x\n", ret);
@@ -203,8 +203,7 @@ static int get(struct module_t *thiz, void **data)
 
 static int put(struct module_t *thiz, void *data)
 {
-	//clog_i("put, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
-	CVI_VENC_ReleaseStream(thiz->pipe_chn, (VENC_STREAM_S *)data);
+	CVI_VENC_ReleaseStream(thiz->pipe_id, (VENC_STREAM_S *)data);
 	free(((VENC_STREAM_S *)data)->pstPack);
 	free(data);
 	return 0;

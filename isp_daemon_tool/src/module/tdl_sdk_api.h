@@ -7,6 +7,10 @@
 #include <c_apis/tdl_sdk.h>
 #include <c_apis/tdl_utils.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define topK 5
 #define TDL_SUPPORTED_MODEL_FACE TDL_MODEL_SCRFD_DET_FACE
 #define TDL_SUPPORTED_MODEL_CLASSIFICATION TDL_MODEL_CLS_ISP_SCENE
@@ -62,4 +66,7 @@ int unload_tdl_sdk_lib(void);
 
 tdl_sdk_api_t *get_tdl_sdk_api(void);
 
+#ifdef __cplusplus
+}
+#endif
 #endif // __TDL_SDK_API_H_

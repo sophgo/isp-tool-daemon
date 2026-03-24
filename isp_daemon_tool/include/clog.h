@@ -42,57 +42,62 @@ typedef struct {
 #endif
 
 #if CLOG_OUTPUT_LVL >= CLOG_LVL_ASSERT
-	#define clog_assert(tag, ...) \
-			clog_output(CLOG_LVL_ASSERT, tag, __func__, __LINE__, __VA_ARGS__)
+	#define clog_assert(tag_level, tag, ...) \
+			clog_output(tag_level, CLOG_LVL_ASSERT, tag, __func__, __LINE__, __VA_ARGS__)
 #else
-	#define clog_assert(tag, ...)
+	#define clog_assert(tag_level, tag, ...)
 #endif
 
 #if CLOG_OUTPUT_LVL >= CLOG_LVL_ERROR
-	#define clog_error(tag, ...) \
-			clog_output(CLOG_LVL_ERROR, tag, __func__, __LINE__, __VA_ARGS__)
+	#define clog_error(tag_level, tag, ...) \
+			clog_output(tag_level, CLOG_LVL_ERROR, tag, __func__, __LINE__, __VA_ARGS__)
 #else
-	#define clog_error(tag, ...)
+	#define clog_error(tag_level, tag, ...)
 #endif
 
 #if CLOG_OUTPUT_LVL >= CLOG_LVL_WARN
-	#define clog_warn(tag, ...) \
-			clog_output(CLOG_LVL_WARN, tag, __func__, __LINE__, __VA_ARGS__)
+	#define clog_warn(tag_level, tag, ...) \
+			clog_output(tag_level, CLOG_LVL_WARN, tag, __func__, __LINE__, __VA_ARGS__)
 #else
-	#define clog_warn(tag, ...)
+	#define clog_warn(tag_level, tag, ...)
 #endif
 
 #if CLOG_OUTPUT_LVL >= CLOG_LVL_INFO
-	#define clog_info(tag, ...) \
-			clog_output(CLOG_LVL_INFO, tag, __func__, __LINE__, __VA_ARGS__)
+	#define clog_info(tag_level, tag, ...) \
+			clog_output(tag_level, CLOG_LVL_INFO, tag, __func__, __LINE__, __VA_ARGS__)
 #else
-	#define clog_info(tag, ...)
+	#define clog_info(tag_level, tag, ...)
 #endif
 
 #if CLOG_OUTPUT_LVL >= CLOG_LVL_DEBUG
-	#define clog_debug(tag, ...) \
-			clog_output(CLOG_LVL_DEBUG, tag, __func__, __LINE__, __VA_ARGS__)
+	#define clog_debug(tag_level, tag, ...) \
+			clog_output(tag_level, CLOG_LVL_DEBUG, tag, __func__, __LINE__, __VA_ARGS__)
 #else
-	#define clog_debug(tag, ...)
+	#define clog_debug(tag_level, tag, ...)
 #endif
 
 #if CLOG_OUTPUT_LVL >= CLOG_LVL_VERBOSE
-	#define clog_verbose(tag, ...) \
-			clog_output(CLOG_LVL_VERBOSE, tag, __func__, __LINE__, __VA_ARGS__)
+	#define clog_verbose(tag_level, tag, ...) \
+			clog_output(tag_level, CLOG_LVL_VERBOSE, tag, __func__, __LINE__, __VA_ARGS__)
 #else
-	#define clog_verbose(tag, ...)
+	#define clog_verbose(tag_level, tag, ...)
 #endif
 
 #ifndef CLOG_TAG
 #define CLOG_TAG "isp"
 #endif
 
-#define clog_a(...)     clog_assert(CLOG_TAG, __VA_ARGS__)
-#define clog_e(...)     clog_error(CLOG_TAG, __VA_ARGS__)
-#define clog_w(...)     clog_warn(CLOG_TAG, __VA_ARGS__)
-#define clog_i(...)     clog_info(CLOG_TAG, __VA_ARGS__)
-#define clog_d(...)     clog_debug(CLOG_TAG, __VA_ARGS__)
-#define clog_v(...)     clog_verbose(CLOG_TAG, __VA_ARGS__)
+#ifndef CLOG_TAG_LEVEL
+#define CLOG_TAG_LEVEL CLOG_LVL_DEBUG
+#endif
+
+#define clog_a(...)     clog_assert(CLOG_TAG_LEVEL, CLOG_TAG, __VA_ARGS__)
+#define clog_e(...)     clog_error(CLOG_TAG_LEVEL, CLOG_TAG, __VA_ARGS__)
+#define clog_w(...)     clog_warn(CLOG_TAG_LEVEL, CLOG_TAG, __VA_ARGS__)
+#define clog_i(...)     clog_info(CLOG_TAG_LEVEL, CLOG_TAG, __VA_ARGS__)
+#define clog_d(...)     clog_debug(CLOG_TAG_LEVEL, CLOG_TAG, __VA_ARGS__)
+#define clog_v(...)     clog_verbose(CLOG_TAG_LEVEL, CLOG_TAG, __VA_ARGS__)
+#define clog_raw(raw_level, ...)   clog_output_raw(CLOG_TAG_LEVEL, raw_level, __VA_ARGS__)
 
 #define CLOG_ASSERT(EXPR)                        \
 	{if (!(EXPR)) {                              \
@@ -101,9 +106,9 @@ typedef struct {
 
 int clog_init(const clog_config_t *config);
 int clog_deinit(void);
-void clog_output(uint8_t level, const char *tag, const char *func,
+void clog_output(uint8_t tag_level, uint8_t level, const char *tag, const char *func,
 	const long line, const char *format, ...);
-void clog_output_raw(const char *format, ...);
+void clog_output_raw(uint8_t tag_level, uint8_t level, const char *format, ...);
 
 #ifdef __cplusplus
 }

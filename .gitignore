@@ -9,3 +9,7 @@ tmp
 isp_test/**/*.o
 isp_test/**/*.a
 isp_test/**/*.so
+self_test.out
+bmodel_test
+pqbin_export_tool
+template

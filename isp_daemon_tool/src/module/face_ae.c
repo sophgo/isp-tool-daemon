@@ -23,10 +23,10 @@ static int init(struct module_t *thiz)
 {
 	int ret = 0;
 
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	module_queue_init(&thiz->queue, FACE_AE_QUEUE_SIZE);
 
-	daemon_pipe_cfg_t *pipe_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
+	module_face_ae_cfg_t *cfg = (module_face_ae_cfg_t *)thiz->module_cfg;
 
 	load_tdl_sdk_lib();
 
@@ -36,10 +36,10 @@ static int init(struct module_t *thiz)
 		clog_e("malloc face_ae_ctx_t failed\n");
 		return -1;
 	}
-	thiz->private_data = ctx;
+	thiz->module_ctx = ctx;
 	ctx->api = get_tdl_sdk_api();
 
-	ctx->handle = ctx->api->create_handle(pipe_cfg->video_pipe_cfg.tpu_device_id);
+	ctx->handle = ctx->api->create_handle(0);
 	if (ctx->handle == NULL) {
 		clog_e("Create face_ae handle failed!\n");
 		return -1;
@@ -47,11 +47,11 @@ static int init(struct module_t *thiz)
 
 	ret = ctx->api->open_model(ctx->handle,
 				   TDL_SUPPORTED_MODEL_FACE,
-				   pipe_cfg->teaisp_faceae_model_path,
+				   cfg->model_path,
 				   NULL);
 	if (ret != 0) {
 		clog_e("open_model failed, ret: %d, model: %s\n", ret,
-		       pipe_cfg->teaisp_faceae_model_path);
+		       cfg->model_path);
 		return -1;
 	}
 
@@ -60,15 +60,21 @@ static int init(struct module_t *thiz)
 
 static int deinit(struct module_t *thiz)
 {
-	face_ae_ctx_t *ctx = (face_ae_ctx_t *)thiz->private_data;
+	face_ae_ctx_t *ctx = (face_ae_ctx_t *)thiz->module_ctx;
 
 	ctx->api->close_model(ctx->handle, TDL_SUPPORTED_MODEL_FACE);
 	ctx->api->destroy_handle(ctx->handle);
 
 	unload_tdl_sdk_lib();
 	module_queue_deinit(&thiz->queue);
-	free(thiz->private_data);
-	thiz->private_data = NULL;
+	if (thiz->module_cfg) {
+		free(thiz->module_cfg);
+		thiz->module_cfg = NULL;
+	}
+	if (thiz->module_ctx) {
+		free(thiz->module_ctx);
+		thiz->module_ctx = NULL;
+	}
 	return 0;
 }
 
@@ -125,12 +131,10 @@ static void *worker(void *arg)
 	struct module_t *src_module =
 		&(GET_MODULE_PIPE_NODE_PTR(thiz)->prev->module);
 
-	clog_i("run, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
-
+	clog_i("run, pipe_id: %d\n", thiz->pipe_id);
 	prctl(PR_SET_NAME, "face_ae", 0, 0, 0);
 
-	face_ae_ctx_t *ctx = (face_ae_ctx_t *)thiz->private_data;
+	face_ae_ctx_t *ctx = (face_ae_ctx_t *)thiz->module_ctx;
 
 	VIDEO_FRAME_INFO_S *src_frame = NULL;
 
@@ -197,7 +201,7 @@ static void *worker(void *arg)
 
 static int start(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 1;
 	pthread_create(&thiz->thread_id, NULL, worker, thiz);
 	return 0;
@@ -205,7 +209,7 @@ static int start(struct module_t *thiz)
 
 static int stop(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 0;
 	pthread_join(thiz->thread_id, NULL);
 	return 0;

@@ -6,6 +6,7 @@
 #include <string.h>
 #include <signal.h>
 
+#include "cvi_sys.h"
 #include "cvi_ispd2.h"
 #include "raw_dump.h"
 #include "raw_dump_internal.h"
@@ -69,6 +70,12 @@ int main(int argc, char **argv)
 
 	register_signal_handler();
 
+	ret = CVI_SYS_Init();
+	if (ret != CVI_SUCCESS) {
+		clog_e("CVI_SYS_Init failed!\n");
+		return ret;
+	}
+
 	if (daemon_pipe_cfg_init(DAEMON_PIPE_CFG_JSON_PATH, &p_pipe_cfg) < 0) {
 		clog_e("parse pipe json: %s cfg error!\n",
 		       DAEMON_PIPE_CFG_JSON_PATH);
@@ -94,11 +101,12 @@ int main(int argc, char **argv)
 #endif
 
 	const char *auto_test_case = getenv("CVI_ISP_AUTO_TEST_CASE");
+	int ret_auto_test = 0;
 
 	if (auto_test_case != NULL && auto_test_case[0] != '\0') {
 		int case_num = atoi(auto_test_case);
 
-		run_isp_auto_test_case(case_num, p_pipe_cfg->dev_num);
+		ret_auto_test = run_isp_auto_test_case(case_num, p_pipe_cfg->dev_num);
 		g_main_loop_run = 0; // exit after auto test
 	}
 
@@ -123,7 +131,12 @@ ERROR:
 	isp_daemon2_uninit();
 	daemon_pipe_cfg_deinit(&p_pipe_cfg);
 
-	return ret;
+	ret = CVI_SYS_Exit();
+	if (ret != CVI_SUCCESS) {
+		clog_e("CVI_SYS_Exit failed!\n");
+	}
+
+	return (ret | ret_auto_test);
 }
 
 #ifdef ENABLE_AUTO_RAW_DUMP

@@ -13,7 +13,7 @@
 #include "cvi_region.h"
 #include "osd_font_mod.h"
 
-#define CVI_MEDIA_MAX_INFO_OSD_LEN (100)
+#define CVI_MEDIA_MAX_INFO_OSD_LEN (80) // minimum chn width (1920) / font width (24)
 #define OSD_INFO_START_X (0)
 #define OSD_INFO_START_Y (0)
 #define OSD_INFO_FONT_WIDTH (24)
@@ -40,7 +40,7 @@ static int init(struct module_t *thiz)
 {
 	int ret = 0;
 
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 
 	osd_ctx_t *ctx = (osd_ctx_t *)calloc(1, sizeof(osd_ctx_t));
 
@@ -49,7 +49,7 @@ static int init(struct module_t *thiz)
 		return -1;
 	}
 
-	thiz->private_data = ctx;
+	thiz->module_ctx = ctx;
 
 	ctx->font_width = OSD_INFO_FONT_WIDTH;
 	ctx->font_height = OSD_INFO_FONT_HEIGHT;
@@ -105,7 +105,7 @@ static int deinit(struct module_t *thiz)
 {
 	int ret = 0;
 
-	osd_ctx_t *ctx = (osd_ctx_t *)thiz->private_data;
+	osd_ctx_t *ctx = (osd_ctx_t *)thiz->module_ctx;
 
 	for (int i = 0; i < OSD_NUM; i++) {
 		ret = CVI_RGN_DetachFromChn(ctx->rgn_hdl[i], &ctx->chn);
@@ -121,9 +121,15 @@ static int deinit(struct module_t *thiz)
 		}
 	}
 
-	free(ctx);
-	thiz->private_data = NULL;
+	if (thiz->module_cfg) {
+		free(thiz->module_cfg);
+		thiz->module_cfg = NULL;
+	}
 
+	if (thiz->module_ctx) {
+		free(thiz->module_ctx);
+		thiz->module_ctx = NULL;
+	}
 	return 0;
 }
 
@@ -325,12 +331,11 @@ static void osd_get_isp_info(VI_PIPE viPipe, char *str, uint32_t strLen,
 	if (line == 0) {
 		snprintf(
 			str, strLen,
-			"#AE ExpT:%u SExpT:%u LExpT:%u AG:%u DG:%u IG:%u Exp:%u ExpIsMax:%d AveLum:%d",
+			"ExpT:%u(%u) ISO:%u(%u) Lv:%.1f AG:%u DG:%u IG:%u Lum:%d(%d)",
 			expInfo.u32ExpTime, expInfo.u32ShortExpTime,
-			expInfo.u32LongExpTime, expInfo.u32AGain,
-			expInfo.u32DGain, expInfo.u32ISPDGain,
-			expInfo.u32Exposure, expInfo.bExposureIsMAX,
-			expInfo.u8AveLum);
+			expInfo.u32ISO, expInfo.u32ISOSF, expInfo.fLightValue,
+			expInfo.u32AGain, expInfo.u32DGain, expInfo.u32ISPDGain,
+			expInfo.u8AveLum, expInfo.s16HistError);
 	} else if (line == 1) {
 		struct tm *ptime;
 		struct timeval tv;
@@ -338,14 +343,14 @@ static void osd_get_isp_info(VI_PIPE viPipe, char *str, uint32_t strLen,
 
 		gettimeofday(&tv, NULL);
 		ptime = localtime(&tv.tv_sec);
-		strftime(str_time, sizeof(str_time), "%Y-%m-%d %I:%M:%S",
+		strftime(str_time, sizeof(str_time), "%m-%d %I:%M:%S",
 			 ptime);
 
 		snprintf(
 			str, strLen,
-			"%s:%03u PIrisFno:%d Fps:%u ISO:%u #AWB RG:%d BG:%d CT:%d",
+			"%s:%03u Fps:%u ExpIsMax:%d #AWB RG:%d BG:%d CT:%d",
 			str_time, (uint32_t)(tv.tv_usec / 1000),
-			expInfo.u32PirisFNO, expInfo.u32Fps, expInfo.u32ISO,
+			expInfo.u32Fps, expInfo.bExposureIsMAX,
 			wbInfo.u16Rgain, wbInfo.u16Bgain, wbInfo.u16ColorTemp);
 	}
 }
@@ -354,12 +359,10 @@ static void *worker(void *arg)
 {
 	int ret = 0;
 	struct module_t *thiz = (struct module_t *)arg;
-	osd_ctx_t *ctx = (osd_ctx_t *)thiz->private_data;
+	osd_ctx_t *ctx = (osd_ctx_t *)thiz->module_ctx;
 	char isp_info_str[CVI_MEDIA_MAX_INFO_OSD_LEN] = { 0 };
 
-	clog_i("run, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
-
+	clog_i("run, pipe_id: %d\n", thiz->pipe_id);
 	prctl(PR_SET_NAME, "osd", 0, 0, 0);
 
 	while (thiz->thread_run) {
@@ -382,7 +385,7 @@ static void *worker(void *arg)
 
 static int start(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 1;
 	pthread_create(&thiz->thread_id, NULL, worker, thiz);
 	return 0;
@@ -390,7 +393,7 @@ static int start(struct module_t *thiz)
 
 static int stop(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 0;
 	pthread_join(thiz->thread_id, NULL);
 	return 0;

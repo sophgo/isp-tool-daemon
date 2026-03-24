@@ -7,10 +7,10 @@ extern "C" {
 #endif
 
 #include "cvi_json.h"
+#include "cvi_comm_3a.h"
 
 #define MAX_PATH_LEN 128
 #define MAX_CODEC_LEN 16
-#define MAX_COMPRESS_MODE_LEN 16
 
 typedef struct vc_coding_param_t {
 	int FrmLostOpen;
@@ -92,9 +92,10 @@ typedef struct video_pipe_cfg_t {
 	char bnr_model_list[MAX_PATH_LEN];
 	char venc_json[MAX_PATH_LEN];
 	char codec[MAX_CODEC_LEN];
-	char compress_mode[MAX_COMPRESS_MODE_LEN];
+	int compress_mode;
 	int enable_patgen;
 	vc_cfg_t st_vc_cfg;
+	ISP_STITCH_ATTR_S stitch_attr;
 } video_pipe_cfg_t;
 
 typedef struct raw_replay_cfg_t {
@@ -106,21 +107,21 @@ typedef struct raw_replay_cfg_t {
 	int frame_rate;
 	int wdr_mode;
 	int bayer_format;
-	char compress_mode[MAX_COMPRESS_MODE_LEN];
+	int compress_mode;
 	char offline_raw_dir[MAX_PATH_LEN];
 } raw_replay_cfg_t;
 
 typedef struct daemon_pipe_cfg_t {
 	int dev_num;
-	int src_width;
-	int src_height;
 	int rtsp_port;
 	unsigned long long rtsp_max_buf_size;
 	int rtsp_server_select;
 	int vi_vpss_mode;
 	int raw_replay_enable;
 	int is_fastboot_mode;
+	int enable_dump_boot_video;
 	int max_use_tpu_num;
+	int enable_stitch;
 	char teaisp_faceae_model_path[MAX_PATH_LEN];
 	char teaisp_pq_model_path[MAX_PATH_LEN];
 	char cvi_bin_path[MAX_PATH_LEN];
