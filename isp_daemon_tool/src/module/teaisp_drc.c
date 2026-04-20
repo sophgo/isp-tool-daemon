@@ -1,7 +1,7 @@
 #include <math.h>
 #include <sys/prctl.h>
 
-#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #define CLOG_TAG "aidrc"
 
 #include "daemon_base.h"
@@ -387,10 +387,11 @@ static int init(struct module_t *thiz)
 {
 	int ret = 0;
 
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	module_queue_init(&thiz->queue, TEAISP_DRC_QUEUE_SIZE);
 
-	daemon_pipe_cfg_t *pipe_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
+	module_teaisp_drc_cfg_t *drc_cfg =
+		(module_teaisp_drc_cfg_t *)thiz->module_cfg;
 
 	if (init_cnt == 0 && bm_handle == NULL) {
 		ret = bm_dev_request(&bm_handle, 0);
@@ -409,14 +410,14 @@ static int init(struct module_t *thiz)
 		return -1;
 	}
 
-	thiz->private_data = ctx;
+	thiz->module_ctx = ctx;
 	pdrc_ctx[thiz->pipe_id] = ctx;
 
 	CVI_TEAISP_DRC_RegParamUpdateCallback(thiz->pipe_id,
 					      teaisp_drc_param_update_callback);
 
-	if (teaisp_drc_load_model(ctx, pipe_cfg->teaisp_drc_model_path) < 0) {
-		clog_e("teaisp_drc_load_model failed\n");
+	if (teaisp_drc_load_model(ctx, drc_cfg->model_path) < 0) {
+		clog_e("teaisp_drc_load_model: %s failed\n", drc_cfg->model_path);
 		return -1;
 	}
 
@@ -425,11 +426,9 @@ static int init(struct module_t *thiz)
 
 static int deinit(struct module_t *thiz)
 {
-	teaisp_drc_ctx_t *ctx = (teaisp_drc_ctx_t *)thiz->private_data;
+	teaisp_drc_ctx_t *ctx = (teaisp_drc_ctx_t *)thiz->module_ctx;
 
 	teaisp_drc_unload_model(ctx);
-	free(ctx);
-	thiz->private_data = NULL;
 	pdrc_ctx[thiz->pipe_id] = NULL;
 
 	init_cnt--;
@@ -437,6 +436,15 @@ static int deinit(struct module_t *thiz)
 	if (init_cnt == 0) {
 		bm_dev_free(bm_handle);
 		bm_handle = NULL;
+	}
+
+	if (thiz->module_cfg) {
+		free(thiz->module_cfg);
+		thiz->module_cfg = NULL;
+	}
+	if (thiz->module_ctx) {
+		free(thiz->module_ctx);
+		thiz->module_ctx = NULL;
 	}
 
 	return 0;
@@ -452,11 +460,9 @@ static void *worker(void *arg)
 
 	int is_first_frame = 1;
 	float drc_param[TEAISP_DRC_PARAM_LENGHT];
-	teaisp_drc_ctx_t *ctx = (teaisp_drc_ctx_t *)thiz->private_data;
+	teaisp_drc_ctx_t *ctx = (teaisp_drc_ctx_t *)thiz->module_ctx;
 
-	clog_i("run, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
-
+	clog_i("run, pipe_id: %d\n", thiz->pipe_id);
 	prctl(PR_SET_NAME, "teaisp_drc", 0, 0, 0);
 
 	VIDEO_FRAME_INFO_S *src_frame = NULL;
@@ -616,7 +622,7 @@ static void *worker(void *arg)
 
 static int start(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 1;
 	pthread_create(&thiz->thread_id, NULL, worker, thiz);
 	return 0;
@@ -624,7 +630,7 @@ static int start(struct module_t *thiz)
 
 static int stop(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 0;
 	pthread_join(thiz->thread_id, NULL);
 	return 0;

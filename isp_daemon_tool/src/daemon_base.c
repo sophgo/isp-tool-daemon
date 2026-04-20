@@ -22,8 +22,8 @@ int module_queue_init(module_queue_t *queue, uint32_t capacity)
 	pthread_mutex_init(&queue->mutex, NULL);
 	pthread_condattr_init(&queue->condattr);
 	pthread_condattr_setclock(&queue->condattr, CLOCK_MONOTONIC);
-	pthread_cond_init(&queue->cond_full, &queue->condattr);
-	pthread_cond_init(&queue->cond_empty, &queue->condattr);
+	pthread_cond_init(&queue->cond_not_full, &queue->condattr);
+	pthread_cond_init(&queue->cond_not_empty, &queue->condattr);
 
 	return 0;
 }
@@ -39,8 +39,8 @@ int module_queue_deinit(module_queue_t *queue)
 	queue->data = NULL;
 
 	pthread_mutex_destroy(&queue->mutex);
-	pthread_cond_destroy(&queue->cond_full);
-	pthread_cond_destroy(&queue->cond_empty);
+	pthread_cond_destroy(&queue->cond_not_full);
+	pthread_cond_destroy(&queue->cond_not_empty);
 	pthread_condattr_destroy(&queue->condattr);
 
 	return 0;
@@ -56,7 +56,7 @@ int module_queue_push(module_queue_t *queue, void *data, int timeout_ms)
 	pthread_mutex_lock(&queue->mutex);
 	while (queue->size == queue->capacity) {
 		if (timeout_ms <= 0) {
-			pthread_cond_wait(&queue->cond_full, &queue->mutex);
+			pthread_cond_wait(&queue->cond_not_full, &queue->mutex);
 		} else {
 			struct timespec ts;
 
@@ -65,9 +65,9 @@ int module_queue_push(module_queue_t *queue, void *data, int timeout_ms)
 				ts.tv_nsec + (timeout_ms % 1000) * 1000000;
 			ts.tv_nsec = nsec % 1000000000;
 			ts.tv_sec += timeout_ms / 1000 + nsec / 1000000000;
-			if (pthread_cond_timedwait(&queue->cond_full,
+			if (pthread_cond_timedwait(&queue->cond_not_full,
 						   &queue->mutex, &ts) != 0) {
-				clog_e("timeout\n");
+				//clog_e("timeout\n");
 				pthread_mutex_unlock(&queue->mutex);
 				return -1;
 			}
@@ -78,7 +78,7 @@ int module_queue_push(module_queue_t *queue, void *data, int timeout_ms)
 	queue->tail = (queue->tail + 1) % queue->capacity;
 	queue->size++;
 
-	pthread_cond_signal(&queue->cond_empty);
+	pthread_cond_signal(&queue->cond_not_empty);
 	pthread_mutex_unlock(&queue->mutex);
 
 	return 0;
@@ -94,7 +94,7 @@ int module_queue_pop(module_queue_t *queue, void **data, int timeout_ms)
 	pthread_mutex_lock(&queue->mutex);
 	while (queue->size == 0) {
 		if (timeout_ms <= 0) {
-			pthread_cond_wait(&queue->cond_empty, &queue->mutex);
+			pthread_cond_wait(&queue->cond_not_empty, &queue->mutex);
 		} else {
 			struct timespec ts;
 
@@ -103,9 +103,9 @@ int module_queue_pop(module_queue_t *queue, void **data, int timeout_ms)
 				ts.tv_nsec + (timeout_ms % 1000) * 1000000;
 			ts.tv_nsec = nsec % 1000000000;
 			ts.tv_sec += timeout_ms / 1000 + nsec / 1000000000;
-			if (pthread_cond_timedwait(&queue->cond_empty,
+			if (pthread_cond_timedwait(&queue->cond_not_empty,
 						   &queue->mutex, &ts) != 0) {
-				clog_e("timeout\n");
+				//clog_e("timeout\n");
 				pthread_mutex_unlock(&queue->mutex);
 				return -1;
 			}
@@ -116,7 +116,7 @@ int module_queue_pop(module_queue_t *queue, void **data, int timeout_ms)
 	queue->head = (queue->head + 1) % queue->capacity;
 	queue->size--;
 
-	pthread_cond_signal(&queue->cond_full);
+	pthread_cond_signal(&queue->cond_not_full);
 	pthread_mutex_unlock(&queue->mutex);
 
 	return 0;

@@ -1,7 +1,7 @@
 
 #include <sys/prctl.h>
 
-#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #define CLOG_TAG "rtsp"
 
 #include "daemon_base.h"
@@ -30,26 +30,25 @@ static void rtsp_disconnect(const char *ip, void *arg)
 
 static int init(struct module_t *thiz)
 {
-	daemon_pipe_cfg_t *pipe_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
+	module_rtsp_cfg_t *cfg = (module_rtsp_cfg_t *)thiz->module_cfg;
 
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
+	clog_i("chn_id: %d\n", thiz->pipe_id);
 
 	if (rtsp_server_cnt == 0) {
 		CVI_RTSP_CONFIG config;
 
 		memset(&config, 0, sizeof(CVI_RTSP_CONFIG));
 
-		config.packetLen = pipe_cfg->video_pipe_cfg.bitrate;
-		config.port = pipe_cfg->rtsp_port;
-		config.tcpBufSize = pipe_cfg->rtsp_max_buf_size;
+		config.packetLen = cfg->bitrate;
+		config.port = cfg->rtsp_port;
+		config.tcpBufSize = cfg->max_buf_size;
 
 		if (CVI_RTSP_Create(&prtsp_server_ctx, &config) < 0) {
 			clog_e("create rtsp server fail...\n");
 			return -1;
 		}
 
-		CVI_RTSP_SetOutPckBuf_MaxSize(pipe_cfg->rtsp_max_buf_size);
+		CVI_RTSP_SetOutPckBuf_MaxSize(cfg->max_buf_size);
 
 		CVI_RTSP_STATE_LISTENER listener;
 
@@ -72,8 +71,7 @@ static int init(struct module_t *thiz)
 
 static int deinit(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
+	clog_i("chn_id: %d\n", thiz->pipe_id);
 
 	rtsp_server_cnt--;
 	if (rtsp_server_cnt == 0) {
@@ -104,12 +102,10 @@ static void *worker(void *arg)
 	struct module_t *thiz = (struct module_t *)arg;
 	struct module_t *src_module =
 		&(GET_MODULE_PIPE_NODE_PTR(thiz)->prev->module);
-	daemon_pipe_cfg_t *pipe_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
-	int chn = thiz->pipe_chn;
+	module_rtsp_cfg_t *cfg = (module_rtsp_cfg_t *)thiz->module_cfg;
+	int chn = thiz->pipe_id;
 
-	clog_i("run, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
-
+	clog_i("run, chn_id: %d\n", chn);
 	prctl(PR_SET_NAME, "rtsp", 0, 0, 0);
 
 	CVI_RTSP_SESSION *session;
@@ -118,21 +114,21 @@ static void *worker(void *arg)
 	int session_play_enable = 0;
 	int find_key_frame = 0;
 
-	if (strcmp(pipe_cfg->video_pipe_cfg.codec, "264") == 0) {
+	if (strcmp(cfg->codec, "264") == 0) {
 		codec = RTSP_VIDEO_H264;
-	} else if (strcmp(pipe_cfg->video_pipe_cfg.codec, "265") == 0) {
+	} else if (strcmp(cfg->codec, "265") == 0) {
 		codec = RTSP_VIDEO_H265;
-	} else if (strcmp(pipe_cfg->video_pipe_cfg.codec, "mjpeg") == 0) {
+	} else if (strcmp(cfg->codec, "mjpeg") == 0) {
 		codec = RTSP_VIDEO_JPEG;
 	} else {
 		clog_e("codec: %s not support!\n",
-		       pipe_cfg->video_pipe_cfg.codec);
+		       cfg->codec);
 		return NULL;
 	}
 
 	memset(&attr, 0, sizeof(CVI_RTSP_SESSION_ATTR));
 	attr.video.codec = codec;
-	attr.video.bitrate = pipe_cfg->video_pipe_cfg.bitrate * 2; // !!!
+	attr.video.bitrate = cfg->bitrate * 2; // !!!
 	attr.video.play = rtsp_play;
 	attr.video.playArg = &session_play_enable;
 	attr.video.teardown = rtsp_teardown;
@@ -225,8 +221,7 @@ static void *worker(void *arg)
 
 static int start(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
+	clog_i("chn_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 1;
 	pthread_create(&thiz->thread_id, NULL, worker, thiz);
 	return 0;
@@ -234,8 +229,7 @@ static int start(struct module_t *thiz)
 
 static int stop(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
+	clog_i("chn_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 0;
 	pthread_join(thiz->thread_id, NULL);
 	return 0;

@@ -1,103 +1,169 @@
 
 #include <sys/prctl.h>
 
-#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #define CLOG_TAG "vpss"
 
 #include "daemon_base.h"
 #include "daemon_cfg.h"
 #include "daemon_module.h"
+#include "cvi_buffer.h"
+#include "cvi_vb.h"
 
 #define VPSS_QUEUE_SIZE (1)
+
+typedef struct {
+	VB_POOL chn_vb_pool[VPSS_MAX_CHN_NUM];
+} vpss_ctx_t;
 
 static int init(struct module_t *thiz)
 {
 	int ret = 0;
+	module_vpss_cfg_t *vpss_cfg = (module_vpss_cfg_t *)thiz->module_cfg;
 
-	thiz->pipe_id = CVI_VPSS_GetAvailableGrp();
-	if (thiz->pipe_id < 0) {
-		clog_e("CVI_VPSS_GetAvailableGrp failed with %#x\n",
-		       thiz->pipe_id);
-		return thiz->pipe_id;
+	if (vpss_cfg->grp_id >= 0) {
+		clog_i("use assigned vpss grp id: %d\n", vpss_cfg->grp_id);
+	} else {
+		vpss_cfg->grp_id = CVI_VPSS_GetAvailableGrp();
+		if (vpss_cfg->grp_id < 0) {
+			clog_e("CVI_VPSS_GetAvailableGrp failed with %#x\n",
+			       vpss_cfg->grp_id);
+			return vpss_cfg->grp_id;
+		}
+		clog_i("auto assign vpss grp id: %d\n", vpss_cfg->grp_id);
 	}
 
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
 	module_queue_init(&thiz->queue, VPSS_QUEUE_SIZE);
 
-	daemon_pipe_cfg_t *pipe_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
-	module_vpss_cfg_t *vpss_cfg = (module_vpss_cfg_t *)thiz->private_cfg;
+	vpss_ctx_t *ctx = (vpss_ctx_t *)calloc(1, sizeof(vpss_ctx_t));
 
-	if (vpss_cfg->st_vpss_grp_attr.u32MaxW == 0 ||
-	    vpss_cfg->st_vpss_grp_attr.u32MaxH == 0) {
-		vpss_cfg->st_vpss_grp_attr.u32MaxW = pipe_cfg->src_width;
-		vpss_cfg->st_vpss_grp_attr.u32MaxH = pipe_cfg->src_height;
+	if (ctx == NULL) {
+		clog_e("calloc failed\n");
+		return -1;
 	}
 
-	ret = CVI_VPSS_CreateGrp(thiz->pipe_id, &vpss_cfg->st_vpss_grp_attr);
+	thiz->module_ctx = ctx;
+
+	clog_i("vpss grp %d attr: maxw=%u, maxh=%u, pixfmt=%d\n",
+		vpss_cfg->grp_id,
+		vpss_cfg->st_vpss_grp_attr.u32MaxW,
+		vpss_cfg->st_vpss_grp_attr.u32MaxH,
+		vpss_cfg->st_vpss_grp_attr.enPixelFormat);
+
+	ret = CVI_VPSS_CreateGrp(vpss_cfg->grp_id, &vpss_cfg->st_vpss_grp_attr);
 	if (ret != CVI_SUCCESS) {
-		clog_e("CVI_VPSS_CreateGrp failed with %#x\n", ret);
+		clog_e("CVI_VPSS_CreateGrp: %d failed with %#x\n", vpss_cfg->grp_id, ret);
 		return ret;
 	}
 
-	if (vpss_cfg->st_vpss_chn_attr.u32Width == 0 ||
-	    vpss_cfg->st_vpss_chn_attr.u32Height == 0) {
-		vpss_cfg->st_vpss_chn_attr.u32Width = pipe_cfg->src_width;
-		vpss_cfg->st_vpss_chn_attr.u32Height = pipe_cfg->src_height;
+	if (vpss_cfg->chn_num == 0 || vpss_cfg->chn_num > VPSS_MAX_CHN_NUM) {
+		clog_e("vpss chn num invalid: %d\n", vpss_cfg->chn_num);
+		return -1;
 	}
 
-	ret = CVI_VPSS_SetChnAttr(thiz->pipe_id, thiz->pipe_chn,
-				  &vpss_cfg->st_vpss_chn_attr);
+	for (int vpss_chn = 0; vpss_chn < vpss_cfg->chn_num; vpss_chn++) {
+
+		VB_POOL_CONFIG_S vb_pool_cfg;
+
+		memset(&vb_pool_cfg, 0, sizeof(VB_POOL_CONFIG_S));
+		vb_pool_cfg.u32BlkSize = COMMON_GetPicBufferSize(
+			vpss_cfg->st_vpss_chn_attr[vpss_chn].u32Width,
+			vpss_cfg->st_vpss_chn_attr[vpss_chn].u32Height,
+			vpss_cfg->st_vpss_chn_attr[vpss_chn].enPixelFormat,
+			DATA_BITWIDTH_8,
+			COMPRESS_MODE_NONE,
+			DEFAULT_ALIGN);
+		vb_pool_cfg.u32BlkCnt = vpss_cfg->chn_vb_cnt[vpss_chn];
+		vb_pool_cfg.enRemapMode = VB_REMAP_MODE_CACHED;
+		clog_i("vpss grp %d chn %d vb_pool blksize=%u, cnt=%u\n",
+			vpss_cfg->grp_id, vpss_chn, vb_pool_cfg.u32BlkSize, vb_pool_cfg.u32BlkCnt);
+		ctx->chn_vb_pool[vpss_chn] = CVI_VB_CreatePool(&vb_pool_cfg);
+		if (ctx->chn_vb_pool[vpss_chn] == VB_INVALID_POOLID) {
+			clog_e("CVI_VB_CreatePool failed for chn %d\n", vpss_chn);
+		}
+
+		ret = CVI_VPSS_SetChnAttr(vpss_cfg->grp_id, vpss_chn,
+					  &vpss_cfg->st_vpss_chn_attr[vpss_chn]);
+		if (ret != CVI_SUCCESS) {
+			clog_e("CVI_VPSS_SetChnAttr: %d failed with %#x\n", vpss_chn, ret);
+			return ret;
+		}
+
+		ret = CVI_VPSS_AttachVbPool(vpss_cfg->grp_id, vpss_chn,
+						      ctx->chn_vb_pool[vpss_chn]);
+		if (ret != CVI_SUCCESS) {
+			clog_e("CVI_VPSS_AttachVbPool: %d failed with %#x\n", vpss_chn, ret);
+			return ret;
+		}
+
+		ret = CVI_VPSS_EnableChn(vpss_cfg->grp_id, vpss_chn);
+		if (ret != CVI_SUCCESS) {
+			clog_e("CVI_VPSS_EnableChn: %d failed with %#x\n", vpss_chn, ret);
+			return ret;
+		}
+	}
+
+	ret = CVI_VPSS_StartGrp(vpss_cfg->grp_id);
 	if (ret != CVI_SUCCESS) {
-		clog_e("CVI_VPSS_SetChnAttr failed with %#x\n", ret);
+		clog_e("CVI_VPSS_StartGrp: %d failed with %#x\n", vpss_cfg->grp_id, ret);
 		return ret;
 	}
 
-	ret = CVI_VPSS_EnableChn(thiz->pipe_id, thiz->pipe_chn);
-	if (ret != CVI_SUCCESS) {
-		clog_e("CVI_VPSS_EnableChn failed with %#x\n", ret);
-		return ret;
+	for (int vpss_chn = 0; vpss_chn < vpss_cfg->chn_num; vpss_chn++) {
+		ret = CVI_VPSS_SetGrpParamfromBin(vpss_cfg->grp_id, vpss_chn);
+		if (ret != CVI_SUCCESS) {
+			clog_e("CVI_VPSS_SetGrpParamfromBin: %d failed with %#x\n", vpss_chn, ret);
+			return ret;
+		}
 	}
-
-	ret = CVI_VPSS_StartGrp(thiz->pipe_id);
-	if (ret != CVI_SUCCESS) {
-		clog_e("CVI_VPSS_StartGrp failed with %#x\n", ret);
-		return ret;
-	}
-
-	ret = CVI_VPSS_SetGrpParamfromBin(thiz->pipe_id, thiz->pipe_chn);
-	if (ret != CVI_SUCCESS) {
-		clog_e("CVI_VPSS_SetGrpParamfromBin failed with %#x\n", ret);
-		return ret;
-	}
-
 	return ret;
 }
 
 static int deinit(struct module_t *thiz)
 {
 	int ret = 0;
+	vpss_ctx_t *ctx = (vpss_ctx_t *)thiz->module_ctx;
+	module_vpss_cfg_t *vpss_cfg = (module_vpss_cfg_t *)thiz->module_cfg;
 
-	ret = CVI_VPSS_DisableChn(thiz->pipe_id, thiz->pipe_chn);
+	for (int vpss_chn = 0; vpss_chn < vpss_cfg->chn_num; vpss_chn++) {
+		ret = CVI_VPSS_DetachVbPool(vpss_cfg->grp_id, vpss_chn);
+		if (ret != CVI_SUCCESS) {
+			clog_e("CVI_VPSS_DetachVbPool: %d failed with %#x\n", vpss_chn, ret);
+			return ret;
+		}
+
+		ret = CVI_VPSS_DisableChn(vpss_cfg->grp_id, vpss_chn);
+		if (ret != CVI_SUCCESS) {
+			clog_e("CVI_VPSS_DisableChn: %d failed with %#x\n", vpss_chn, ret);
+			return ret;
+		}
+
+		if (ctx->chn_vb_pool[vpss_chn] != VB_INVALID_POOLID) {
+			CVI_VB_DestroyPool(ctx->chn_vb_pool[vpss_chn]);
+			ctx->chn_vb_pool[vpss_chn] = VB_INVALID_POOLID;
+		}
+	}
+
+	ret = CVI_VPSS_StopGrp(vpss_cfg->grp_id);
 	if (ret != CVI_SUCCESS) {
-		clog_e("CVI_VPSS_DisableChn failed with %#x\n", ret);
+		clog_e("CVI_VPSS_StopGrp: %d failed with %#x\n", vpss_cfg->grp_id, ret);
 		return ret;
 	}
 
-	ret = CVI_VPSS_StopGrp(thiz->pipe_id);
+	ret = CVI_VPSS_DestroyGrp(vpss_cfg->grp_id);
 	if (ret != CVI_SUCCESS) {
-		clog_e("CVI_VPSS_StopGrp failed with %#x\n", ret);
+		clog_e("CVI_VPSS_DestroyGrp: %d failed with %#x\n", vpss_cfg->grp_id, ret);
 		return ret;
 	}
 
-	ret = CVI_VPSS_DestroyGrp(thiz->pipe_id);
-	if (ret != CVI_SUCCESS) {
-		clog_e("CVI_VPSS_DestroyGrp failed with %#x\n", ret);
-		return ret;
+	if (thiz->module_cfg != NULL) {
+		free(thiz->module_cfg);
+		thiz->module_cfg = NULL;
 	}
 
-	if (thiz->private_cfg != NULL) {
-		free(thiz->private_cfg);
-		thiz->private_cfg = NULL;
+	if (thiz->module_ctx != NULL) {
+		free(thiz->module_ctx);
+		thiz->module_ctx = NULL;
 	}
 
 	module_queue_deinit(&thiz->queue);
@@ -110,10 +176,9 @@ static void *worker(void *arg)
 	struct module_t *thiz = (struct module_t *)arg;
 	struct module_t *src_module =
 		&(GET_MODULE_PIPE_NODE_PTR(thiz)->prev->module);
+	module_vpss_cfg_t *vpss_cfg = (module_vpss_cfg_t *)thiz->module_cfg;
 
-	clog_i("run, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
-
+	clog_i("run vpss grp_id: %d\n", vpss_cfg->grp_id);
 	prctl(PR_SET_NAME, "vpss", 0, 0, 0);
 
 	VIDEO_FRAME_INFO_S *src_frame = NULL;
@@ -131,11 +196,23 @@ static void *worker(void *arg)
 			continue;
 		}
 
-		ret = CVI_VPSS_SendFrame(thiz->pipe_id, src_frame,
+		ret = CVI_VPSS_SendFrame(vpss_cfg->grp_id, src_frame,
 					 DAEMON_TIMEOUT_MS);
 		if (ret != CVI_SUCCESS) {
 			clog_e("vpss grp %d, send frame fail...\n",
-			       thiz->pipe_id);
+			       vpss_cfg->grp_id);
+			continue;
+		}
+
+		if (vpss_cfg->enable_bypass_src_frame) {
+			ret = module_queue_push(&thiz->queue, src_frame,
+						DAEMON_TIMEOUT_MS);
+			if (ret != 0) {
+				clog_e("module_queue_push failed with %#x\n", ret);
+				src_module->fun.put(src_module, src_frame);
+				continue;
+			}
+			src_frame = NULL;
 			continue;
 		}
 
@@ -146,11 +223,11 @@ static void *worker(void *arg)
 			continue;
 		}
 
-		ret = CVI_VPSS_GetChnFrame(thiz->pipe_id, thiz->pipe_chn,
+		ret = CVI_VPSS_GetChnFrame(vpss_cfg->grp_id, vpss_cfg->chn_id,
 					   dst_frame, DAEMON_TIMEOUT_MS);
 		if (ret != CVI_SUCCESS) {
 			clog_e("vpss grp %d, chn %d, get frame fail...\n",
-			       thiz->pipe_id, thiz->pipe_chn);
+			       vpss_cfg->grp_id, vpss_cfg->chn_id);
 			continue;
 		}
 
@@ -158,7 +235,7 @@ static void *worker(void *arg)
 					DAEMON_TIMEOUT_MS);
 		if (ret != 0) {
 			clog_e("module_queue_push failed with %#x\n", ret);
-			CVI_VPSS_ReleaseChnFrame(thiz->pipe_id, thiz->pipe_chn,
+			CVI_VPSS_ReleaseChnFrame(vpss_cfg->grp_id, vpss_cfg->chn_id,
 						 dst_frame);
 			continue;
 		}
@@ -169,7 +246,11 @@ static void *worker(void *arg)
 
 		module_queue_pop(&thiz->queue, (void **)&dst_frame,
 				 DAEMON_TIMEOUT_MS);
-		CVI_VPSS_ReleaseChnFrame(thiz->pipe_id, thiz->pipe_chn,
+		if (vpss_cfg->enable_bypass_src_frame) {
+			src_module->fun.put(src_module, dst_frame);
+			continue;
+		}
+		CVI_VPSS_ReleaseChnFrame(vpss_cfg->grp_id, vpss_cfg->chn_id,
 					 dst_frame);
 		free(dst_frame);
 	}
@@ -179,7 +260,9 @@ static void *worker(void *arg)
 
 static int start(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	module_vpss_cfg_t *vpss_cfg = (module_vpss_cfg_t *)thiz->module_cfg;
+
+	clog_i("vpss grp_id: %d\n", vpss_cfg->grp_id);
 	thiz->thread_run = 1;
 	pthread_create(&thiz->thread_id, NULL, worker, thiz);
 	return 0;
@@ -187,7 +270,9 @@ static int start(struct module_t *thiz)
 
 static int stop(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	module_vpss_cfg_t *vpss_cfg = (module_vpss_cfg_t *)thiz->module_cfg;
+
+	clog_i("vpss grp_id: %d\n", vpss_cfg->grp_id);
 	thiz->thread_run = 0;
 	pthread_join(thiz->thread_id, NULL);
 	return 0;
@@ -208,8 +293,15 @@ static int get(struct module_t *thiz, void **data)
 static int put(struct module_t *thiz, void *data)
 {
 	int ret = 0;
+	struct module_t *src_module =
+		&(GET_MODULE_PIPE_NODE_PTR(thiz)->prev->module);
+	module_vpss_cfg_t *vpss_cfg = (module_vpss_cfg_t *)thiz->module_cfg;
 
-	ret = CVI_VPSS_ReleaseChnFrame(thiz->pipe_id, thiz->pipe_chn,
+	if (vpss_cfg->enable_bypass_src_frame) {
+		return src_module->fun.put(src_module, data);
+	}
+
+	ret = CVI_VPSS_ReleaseChnFrame(vpss_cfg->grp_id, vpss_cfg->chn_id,
 				       (VIDEO_FRAME_INFO_S *)data);
 	if (ret != CVI_SUCCESS) {
 		clog_e("CVI_VPSS_ReleaseChnFrame failed with %#x\n", ret);

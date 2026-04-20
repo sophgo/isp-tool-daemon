@@ -3,7 +3,7 @@
 #include <sys/prctl.h>
 #include "cvi_sys.h"
 
-#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #define CLOG_TAG "teaisp_pq"
 
 #include "daemon_base.h"
@@ -28,9 +28,10 @@ static int init(struct module_t *thiz)
 {
 	int ret = 0;
 
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 
-	daemon_pipe_cfg_t *pipe_cfg = (daemon_pipe_cfg_t *)thiz->pipe_cfg;
+	module_teaisp_pq_cfg_t *cfg =
+		(module_teaisp_pq_cfg_t *)thiz->module_cfg;
 
 	load_tdl_sdk_lib();
 
@@ -41,10 +42,10 @@ static int init(struct module_t *thiz)
 		clog_e("malloc teaisp_pq_ctx_t failed\n");
 		return -1;
 	}
-	thiz->private_data = ctx;
+	thiz->module_ctx = ctx;
 	ctx->api = get_tdl_sdk_api();
 
-	ctx->handle = ctx->api->create_handle(pipe_cfg->video_pipe_cfg.tpu_device_id);
+	ctx->handle = ctx->api->create_handle(0);
 	if (ctx->handle == NULL) {
 		clog_e("Create teaisppq handle failed!\n");
 		return -1;
@@ -52,11 +53,11 @@ static int init(struct module_t *thiz)
 
 	ret = ctx->api->open_model(ctx->handle,
 		TDL_SUPPORTED_MODEL_CLASSIFICATION,
-		pipe_cfg->teaisp_pq_model_path,
+		cfg->model_path,
 		NULL);
 	if (ret != 0) {
 		clog_e("open_model failed, ret: %d, model: %s\n", ret,
-		       pipe_cfg->teaisp_pq_model_path);
+		       cfg->model_path);
 		return -1;
 	}
 
@@ -65,13 +66,19 @@ static int init(struct module_t *thiz)
 
 static int deinit(struct module_t *thiz)
 {
-	teaisp_pq_ctx_t *ctx = (teaisp_pq_ctx_t *)thiz->private_data;
+	teaisp_pq_ctx_t *ctx = (teaisp_pq_ctx_t *)thiz->module_ctx;
 
 	ctx->api->close_model(ctx->handle, TDL_SUPPORTED_MODEL_CLASSIFICATION);
 	ctx->api->destroy_handle(ctx->handle);
 	unload_tdl_sdk_lib();
-	free(thiz->private_data);
-	thiz->private_data = NULL;
+	if (thiz->module_cfg) {
+		free(thiz->module_cfg);
+		thiz->module_cfg = NULL;
+	}
+	if (thiz->module_ctx) {
+		free(thiz->module_ctx);
+		thiz->module_ctx = NULL;
+	}
 	return 0;
 }
 
@@ -252,11 +259,9 @@ static void *worker(void *arg)
 	int ret = 0;
 	int run_interval_frame = 0;
 	struct module_t *thiz = (struct module_t *)arg;
-	teaisp_pq_ctx_t *ctx = (teaisp_pq_ctx_t *)thiz->private_data;
+	teaisp_pq_ctx_t *ctx = (teaisp_pq_ctx_t *)thiz->module_ctx;
 
-	clog_i("run, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
-
+	clog_i("run, pipe_id: %d\n", thiz->pipe_id);
 	prctl(PR_SET_NAME, "teaisp_pq", 0, 0, 0);
 
 	TDLIspMeta isp_meta;
@@ -338,7 +343,7 @@ static void *worker(void *arg)
 
 static int start(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 1;
 	pthread_create(&thiz->thread_id, NULL, worker, thiz);
 	return 0;
@@ -346,7 +351,7 @@ static int start(struct module_t *thiz)
 
 static int stop(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 0;
 	pthread_join(thiz->thread_id, NULL);
 	return 0;
@@ -363,7 +368,7 @@ static int get(struct module_t *thiz, void **data)
 		return ret;
 	}
 
-	teaisp_pq_ctx_t *ctx = (teaisp_pq_ctx_t *)thiz->private_data;
+	teaisp_pq_ctx_t *ctx = (teaisp_pq_ctx_t *)thiz->module_ctx;
 
 	teaisppq_put_text(thiz->pipe_id, ctx, (VIDEO_FRAME_INFO_S *)*data);
 	return 0;

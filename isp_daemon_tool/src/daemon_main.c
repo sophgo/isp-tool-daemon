@@ -12,15 +12,16 @@
 #include "daemon_base.h"
 #include "daemon_cfg.h"
 #include "daemon_pipe.h"
+#include "daemon_auto_test.h"
 #include "daemon_uart_cfg.h"
-int g_main_loog_run = 1;
+int g_main_loop_run = 1;
 
 static void signal_handler(int signo)
 {
 	switch (signo) {
 	case SIGINT:
 	case SIGTERM:
-		g_main_loog_run = 0;
+		g_main_loop_run = 0;
 		break;
 	default:
 		break;
@@ -74,7 +75,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	g_main_loog_run = 1;
+	g_main_loop_run = 1;
 
 	isp_daemon2_init(JSONRPC_PORT);
 	cvi_raw_dump_init();
@@ -94,7 +95,17 @@ int main(int argc, char **argv)
 	}
 #endif
 
-	while (g_main_loog_run) {
+	const char *auto_test_case = getenv("CVI_ISP_AUTO_TEST_CASE");
+	int ret_auto_test = 0;
+
+	if (auto_test_case != NULL && auto_test_case[0] != '\0') {
+		int case_num = atoi(auto_test_case);
+
+		ret_auto_test = run_isp_auto_test_case(case_num, p_pipe_cfg->dev_num);
+		g_main_loop_run = 0; // exit after auto test
+	}
+
+	while (g_main_loop_run) {
 		sleep(1);
 
 #ifdef ENABLE_AUTO_RAW_DUMP
@@ -127,7 +138,7 @@ int main(int argc, char **argv)
 	cvi_raw_dump_uninit();
 	daemon_pipe_cfg_deinit(&p_pipe_cfg);
 
-	return 0;
+	return (0 | ret_auto_test);
 }
 
 #ifdef ENABLE_AUTO_RAW_DUMP

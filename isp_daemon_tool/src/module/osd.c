@@ -1,7 +1,7 @@
 
 #include <sys/prctl.h>
 
-#define CLOG_OUPUT_LVL CLOG_LVL_DEBUG
+#define CLOG_OUTPUT_LVL CLOG_LVL_DEBUG
 #define CLOG_TAG "osd"
 
 #include "daemon_base.h"
@@ -40,7 +40,7 @@ static int init(struct module_t *thiz)
 {
 	int ret = 0;
 
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 
 	osd_ctx_t *ctx = (osd_ctx_t *)calloc(1, sizeof(osd_ctx_t));
 
@@ -49,7 +49,7 @@ static int init(struct module_t *thiz)
 		return -1;
 	}
 
-	thiz->private_data = ctx;
+	thiz->module_ctx = ctx;
 
 	ctx->font_width = OSD_INFO_FONT_WIDTH;
 	ctx->font_height = OSD_INFO_FONT_HEIGHT;
@@ -105,7 +105,7 @@ static int deinit(struct module_t *thiz)
 {
 	int ret = 0;
 
-	osd_ctx_t *ctx = (osd_ctx_t *)thiz->private_data;
+	osd_ctx_t *ctx = (osd_ctx_t *)thiz->module_ctx;
 
 	for (int i = 0; i < OSD_NUM; i++) {
 		ret = CVI_RGN_DetachFromChn(ctx->rgn_hdl[i], &ctx->chn);
@@ -122,7 +122,7 @@ static int deinit(struct module_t *thiz)
 	}
 
 	free(ctx);
-	thiz->private_data = NULL;
+	thiz->module_ctx = NULL;
 
 	return 0;
 }
@@ -354,12 +354,10 @@ static void *worker(void *arg)
 {
 	int ret = 0;
 	struct module_t *thiz = (struct module_t *)arg;
-	osd_ctx_t *ctx = (osd_ctx_t *)thiz->private_data;
+	osd_ctx_t *ctx = (osd_ctx_t *)thiz->module_ctx;
 	char isp_info_str[CVI_MEDIA_MAX_INFO_OSD_LEN] = { 0 };
 
-	clog_i("run, pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id,
-	       thiz->pipe_chn);
-
+	clog_i("run, pipe_id: %d\n", thiz->pipe_id);
 	prctl(PR_SET_NAME, "osd", 0, 0, 0);
 
 	while (thiz->thread_run) {
@@ -382,7 +380,7 @@ static void *worker(void *arg)
 
 static int start(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 1;
 	pthread_create(&thiz->thread_id, NULL, worker, thiz);
 	return 0;
@@ -390,7 +388,7 @@ static int start(struct module_t *thiz)
 
 static int stop(struct module_t *thiz)
 {
-	clog_i("pipe_id: %d, pipe_chn: %d\n", thiz->pipe_id, thiz->pipe_chn);
+	clog_i("pipe_id: %d\n", thiz->pipe_id);
 	thiz->thread_run = 0;
 	pthread_join(thiz->thread_id, NULL);
 	return 0;

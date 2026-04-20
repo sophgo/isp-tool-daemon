@@ -5,6 +5,7 @@
 #include "video_src_cfg.h"
 #include "cvi_ae_comm.h"
 #include "cvi_awb_comm.h"
+#include "cvi_af_comm.h"
 
 static SAMPLE_VI_CONFIG_S g_stViConfig;
 static SAMPLE_INI_CFG_S g_stIniCfg;
@@ -459,11 +460,6 @@ int module_sys_vi_init(void *pipe_cfg)
 				"SAMPLE_COMM_SYS_GetPicSize failed with %#x\n",
 				s32Ret);
 			return s32Ret;
-		}
-
-		if (i < cfg->dev_num) {
-			cfg[i].src_width = stSize.u32Width;
-			cfg[i].src_height = stSize.u32Height;
 		}
 
 		s32Ret = SAMPLE_COMM_VI_GetDevAttrBySns(stIniCfg.enSnsType[i],
@@ -1041,7 +1037,7 @@ static int replay_sys_init(raw_replay_cfg_t *cfg, int vb_blk_cnt)
 	return s32Ret;
 }
 
-int replay_sys_vi_int(daemon_pipe_cfg_t *pipe_cfg)
+int replay_sys_vi_init(daemon_pipe_cfg_t *pipe_cfg)
 {
 	raw_replay_cfg_t *replay_cfg = &pipe_cfg->raw_replay_cfg;
 	VI_PIPE ViPipe = 0;
