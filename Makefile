@@ -96,14 +96,13 @@ LIBS += $(MW_LIBS) -latomic -ldl
 LIBS += -lcvi_bin -lini
 LIBS += -Wl,-Bstatic -lcvi_ispd2 -Wl,-Bdynamic
 LIBS += -lraw_dump
+LIBS += -lteaisp
 LIBS += -lsensor
 LIBS += -L$(BM_LIB) -lbmrt -lbmlib
 
 ifeq ($(OS_TYPE), DUAL_OS)
 else
-LIBS += -lisp_algo
 LIBS += -lsns_full
-LIBS += -lteaisp
 endif
 
 LOCAL_CFLAGS = $(DEFS) $(INCS) -DSDK_VER=$(SDK_VER)

@@ -22,19 +22,12 @@
 
 #include "isp_cfg.h"
 
-#ifndef CONFIG_DUAL_OS
-#define ENABLE_TEAISP_BNR (1)
-#endif
-
-#ifdef ENABLE_TEAISP_BNR
 #include <dlfcn.h>
 #define TEAISP_SO_LIB "libteaisp.so"
 static int teaisp_so_ref_cnt;
 static void *teaisp_so_dl;
 typedef CVI_S32 (*TEAISP_FUN)(VI_PIPE ViPipe, CVI_S32 param);
 static TEAISP_FUN teaisp_init;
-static TEAISP_FUN teaisp_bnr_set_driver_init;
-static TEAISP_FUN teaisp_bnr_set_driver_deinit;
 
 static int load_bnr_model(VI_PIPE ViPipe, char *model_path)
 {
@@ -79,8 +72,10 @@ static int load_bnr_model(VI_PIPE ViPipe, char *model_path)
 	return 0;
 }
 
-static int init_teaisp_bnr(int pipe)
+static int init_teaisp_bnr(int pipe, TEAISP_DRIVER_CFG_S *cfg)
 {
+	int ret = CVI_SUCCESS;
+
 	if (teaisp_so_dl == NULL) {
 
 		clog_d("Loading TEAISP SO lib: %s\n", TEAISP_SO_LIB);
@@ -99,31 +94,25 @@ static int init_teaisp_bnr(int pipe)
 			clog_e("dlsym CVI_TEAISP_Init fail: %s\n", dlerror());
 			return -1;
 		}
-		teaisp_bnr_set_driver_init = (TEAISP_FUN)dlsym(teaisp_so_dl, "CVI_TEAISP_BNR_Set_Driver_Init");
-		if (!teaisp_bnr_set_driver_init) {
-			clog_e("dlsym CVI_TEAISP_BNR_Set_Driver_Init fail: %s\n", dlerror());
-			return -1;
-		}
-		teaisp_bnr_set_driver_deinit = (TEAISP_FUN)dlsym(teaisp_so_dl, "CVI_TEAISP_BNR_Set_Driver_Deinit");
-		if (!teaisp_bnr_set_driver_deinit) {
-			clog_e("dlsym CVI_TEAISP_BNR_Set_Driver_Deinit fail: %s\n", dlerror());
-			return -1;
-		}
 	}
 
 	teaisp_so_ref_cnt++;
 
 	teaisp_init(pipe, 1);
-	return teaisp_bnr_set_driver_init(pipe, 0);
+
+	ret = CVI_TEAISP_BNR_Set_Driver_Init(pipe, cfg);
+	if (ret != CVI_SUCCESS) {
+		clog_e("CVI_TEAISP_BNR_Set_Driver_Init failed\n");
+		return -1;
+	}
+
+	return 0;
 }
 
 static int deinit_teaisp_bnr(int pipe)
 {
-	if (!teaisp_bnr_set_driver_deinit) {
-		return -1;
-	}
-	if (teaisp_bnr_set_driver_deinit(pipe, 0) != 0) {
-		clog_e("teaisp_bnr_set_driver_deinit failed\n");
+	if (CVI_TEAISP_BNR_Set_Driver_Deinit(pipe) != 0) {
+		clog_e("CVI_TEAISP_BNR_Set_Driver_Deinit failed\n");
 		return -1;
 	}
 	teaisp_so_ref_cnt--;
@@ -136,7 +125,6 @@ static int deinit_teaisp_bnr(int pipe)
 	}
 	return 0;
 }
-#endif
 
 static int init_vi_vpss_mode(uint8_t pipe_id, module_video_src_cfg_t *cfg)
 {
@@ -326,7 +314,8 @@ static int init_vi_pipe(uint8_t pipe_id, module_video_src_cfg_t *cfg, SENSOR_CFG
 	stPipeAttr.stFrameRate.s32DstFrameRate = -1;
 	stPipeAttr.bNrEn = CVI_TRUE;
 	stPipeAttr.bYuvBypassPath = stSnsCfg->bBypassIsp[pipe_id];
-	stPipeAttr.enCompressMode = cfg->compress_mode;
+	stPipeAttr.enCompressMode = cfg->enable_teaisp_bnr ?
+		COMPRESS_MODE_NONE : cfg->compress_mode;
 
 	s32Ret = CVI_VI_CreatePipe(pipe_id, &stPipeAttr);
 	if (s32Ret != CVI_SUCCESS) {
@@ -355,7 +344,8 @@ static int init_vi_chn(uint8_t pipe_id, module_video_src_cfg_t *cfg, SENSOR_CFG_
 	stChnAttr.stSize.u32Height = stSnsCfg->u32ImageHeight[pipe_id];
 	stChnAttr.enDynamicRange = DYNAMIC_RANGE_SDR8;
 	stChnAttr.enVideoFormat  = VIDEO_FORMAT_LINEAR;
-	stChnAttr.enCompressMode = cfg->compress_mode;
+	stChnAttr.enCompressMode = cfg->enable_teaisp_bnr ?
+		COMPRESS_MODE_NONE : cfg->compress_mode;
 	stChnAttr.enPixelFormat = stSnsCfg->bBypassIsp[pipe_id] ?
 		PIXEL_FORMAT_YUYV : VI_PIXEL_FORMAT;
 	stChnAttr.u32Depth = 0;
@@ -389,13 +379,19 @@ int module_video_src_init(uint8_t pipe_id, void *video_src_cfg)
 	SENSOR_CFG_S *sensor_cfg = get_sensor_cfg(NULL);
 	module_video_src_cfg_t *cfg = (module_video_src_cfg_t *)video_src_cfg;
 
-#ifdef ENABLE_TEAISP_BNR
 	if (cfg->enable_teaisp_bnr) {
-		if (init_teaisp_bnr(pipe_id) != 0) {
+		TEAISP_DRIVER_CFG_S teaisp_cfg;
+
+		memset(&teaisp_cfg, 0, sizeof(TEAISP_DRIVER_CFG_S));
+		if (cfg->enable_raw_replay) {
+			teaisp_cfg.enFeProcessType = TEAISP_FE_PROCESS_OFF;
+		} else {
+			teaisp_cfg.enFeProcessType = TEAISP_FE_PROCESS_BF16;
+		}
+		if (init_teaisp_bnr(pipe_id, &teaisp_cfg) != 0) {
 			clog_a("init_teaisp_bnr failed\n");
 		}
 	}
-#endif
 
 	s32Ret = init_vi_vpss_mode(pipe_id, cfg);
 	if (s32Ret != CVI_SUCCESS) {
@@ -408,6 +404,11 @@ int module_video_src_init(uint8_t pipe_id, void *video_src_cfg)
 			clog_e("module_video_src_replay_init failed with %#x!\n", s32Ret);
 		} else {
 			clog_i("start replay mode success!\n");
+		}
+		if (cfg->enable_teaisp_bnr) {
+			if (load_bnr_model(pipe_id, cfg->bnr_model_list) != 0) {
+				clog_a("load_bnr_model failed\n");
+			}
 		}
 		return s32Ret;
 	}
@@ -445,13 +446,11 @@ int module_video_src_init(uint8_t pipe_id, void *video_src_cfg)
 		return s32Ret;
 	}
 
-#ifdef ENABLE_TEAISP_BNR
 	if (cfg->enable_teaisp_bnr) {
 		if (load_bnr_model(pipe_id, cfg->bnr_model_list) != 0) {
 			clog_a("load_bnr_model failed\n");
 		}
 	}
-#endif
 
 	return s32Ret;
 }
@@ -495,13 +494,11 @@ int module_video_src_deinit(uint8_t pipe_id, void *video_src_cfg)
 	//	clog_e("CVI_VI_UnRegPmCallBack failed with %#x!\n", s32Ret);
 	//}
 
-#ifdef ENABLE_TEAISP_BNR
 	if (cfg->enable_teaisp_bnr) {
 		if (deinit_teaisp_bnr(pipe_id) != 0) {
 			clog_a("deinit_teaisp_bnr failed\n");
 		}
 	}
-#endif
 
 	return s32Ret;
 }

@@ -85,6 +85,7 @@ static void update_face_ae(TDLFace *face, CVI_U32 width, CVI_U32 height,
 
 	memset(&stFaceInfo, 0, sizeof(ISP_SMART_INFO_S));
 	stFaceInfo.stROI[0].bEnable = 1;
+	stFaceInfo.stROI[0].bAvailable = 1;
 	if (face->size > 0) {
 		float max_area = 0.0;
 		size_t max_idx = 0;
