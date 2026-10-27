@@ -4,13 +4,21 @@ ifeq ($(PARAM_FILE), )
 	include $(PARAM_FILE)
 endif
 
-CHIP_ARCH_L ?= $(shell echo $(CHIP_ARCH) | tr A-Z a-z)
+CHIP_ARCH_L := $(shell echo $(CHIP_ARCH) | tr A-Z a-z)
 
 include Makefile.releaseList
 
 MW_SAMPLE_COMMON_PATH=$(TOP_DIR)/middleware/$(MW_VER)/sample/common
 include $(BUILD_PATH)/.config
 include $(MW_SAMPLE_COMMON_PATH)/../Kbuild
+
+ifeq ($(CONFIG_CHIP_ARCH_88a2),y)
+ISP_MW_CHIP := cv186x
+else ifeq ($(CHIP_ARCH_L),$(filter $(CHIP_ARCH_L),sophon))
+ISP_MW_CHIP := cv186x
+else
+ISP_MW_CHIP := $(CHIP_ARCH_L)
+endif
 
 SDIR = $(PWD)/isp_daemon_tool/src
 TMP_FOLDER = tmp
@@ -25,8 +33,8 @@ INCS += -I$(ISP_COMMON_DIR)/clog
 INCS += -I$(ISP_COMMON_DIR)/raw_dump/inc
 INCS += -I$(ISP_COMMON_DIR)/raw_dump/src
 INCS += -I$(ISP_COMMON_DIR)/raw_replay_offline
-INCS += -I$(ISP_DIR)/$(CHIP_ARCH_L)/isp-daemon2/inc
-INCS += -I$(ISP_DIR)/$(CHIP_ARCH_L)/isp-daemon2/prebuilt/include/cvi_json-c
+INCS += -I$(ISP_DIR)/$(ISP_MW_CHIP)/isp-daemon2/inc
+INCS += -I$(ISP_DIR)/$(ISP_MW_CHIP)/isp-daemon2/prebuilt/include/cvi_json-c
 INCS += -I$(TOP_DIR)/libsophon/bmlib/include
 INCS += -I$(TOP_DIR)/libsophon/tpu-runtime/include
 INCS += -I$(TOP_DIR)/tdl_sdk/include
@@ -74,7 +82,7 @@ LOCAL_CFLAGS += -DENABLE_TEAISP_PQ -DENABLE_FACE_AE
 LOCAL_LDFLAGS = $(LIBS) -lm -lpthread
 LOCAL_LDFLAGS += -L$(CVI_RTSP_PATH)/install/lib
 LOCAL_LDFLAGS += -L$(TPU_SDK_PATH)
-LOCAL_LDFLAGS += -L$(ISP_DIR)/$(CHIP_ARCH_L)/isp-daemon2/prebuilt/$(SDK_VER)
+LOCAL_LDFLAGS += -L$(ISP_DIR)/$(ISP_MW_CHIP)/isp-daemon2/prebuilt/$(SDK_VER)
 
 .PHONY: clean all package test
 all: prepare $(TARGET)
