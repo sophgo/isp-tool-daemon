@@ -1,0 +1,306 @@
+{
+	"JSONRPC": {
+		"METHOD": [
+			{
+				"STRUCT": "ISP_TOP_ATTR_S",
+				"GET": "CVI_GetTopInfo",
+				"SET": "CVI_SetTopInfo"
+			},
+			{
+				"STRUCT": "ISP_CTRL_PARAM_S",
+				"GET": "CVI_ISP_GetCtrlParam",
+				"SET": "CVI_ISP_SetCtrlParam"
+			},
+			{
+				"STRUCT": "ISPD2_LOG_LEVEL_S",
+				"GET": "CVI_GetLogLevelInfo",
+				"SET": "CVI_SetLogLevelInfo"
+			},
+			{
+				"STRUCT": "ISP_ModuleEn_ATTR_S",
+				"GET": "CVI_ISP_GetModuleEnAttr",
+				"SET": "CVI_ISP_SetModuleEnAttr"
+			},
+			{
+				"STRUCT": "ISP_BLACK_LEVEL_ATTR_S",
+				"GET": "CVI_ISP_GetBlackLevelAttr",
+				"SET": "CVI_ISP_SetBlackLevelAttr"
+			},
+			{
+				"STRUCT": "ISP_LOCAL_BLACK_LEVEL_ATTR_S",
+				"GET": "CVI_ISP_GetLocalBlackLevelAttr",
+				"SET": "CVI_ISP_SetLocalBlackLevelAttr"
+			},
+			{
+				"STRUCT": "ISP_RADIAL_SHADING_ATTR_S",
+				"GET": "CVI_ISP_GetRadialShadingAttr",
+				"SET": "CVI_ISP_SetRadialShadingAttr"
+			},
+			{
+				"STRUCT": "ISP_RADIAL_SHADING_GAIN_LUT_ATTR_S",
+				"GET": "CVI_ISP_GetRadialShadingGainLutAttr",
+				"SET": "CVI_ISP_SetRadialShadingGainLutAttr"
+			},
+			{
+				"STRUCT": "ISP_DP_DYNAMIC_ATTR_S",
+				"GET": "CVI_ISP_GetDPDynamicAttr",
+				"SET": "CVI_ISP_SetDPDynamicAttr"
+			},
+			{
+				"STRUCT": "ISP_CROSSTALK_ATTR_S",
+				"GET": "CVI_ISP_GetCrosstalkAttr",
+				"SET": "CVI_ISP_SetCrosstalkAttr"
+			},
+			{
+				"STRUCT": "ISP_DEMOSAIC_ATTR_S",
+				"GET": "CVI_ISP_GetDemosaicAttr",
+				"SET": "CVI_ISP_SetDemosaicAttr"
+			},
+			{
+				"STRUCT": "ISP_MESH_SHADING_ATTR_S",
+				"GET": "CVI_ISP_GetMeshShadingAttr",
+				"SET": "CVI_ISP_SetMeshShadingAttr"
+			},
+			{
+				"STRUCT": "ISP_MESH_SHADING_GAIN_LUT_ATTR_S",
+				"GET": "CVI_ISP_GetMeshShadingGainLutAttr",
+				"SET": "CVI_ISP_SetMeshShadingGainLutAttr"
+			},
+			{
+				"STRUCT": "ISP_SATURATION_ATTR_S",
+				"GET": "CVI_ISP_GetSaturationAttr",
+				"SET": "CVI_ISP_SetSaturationAttr"
+			},
+			{
+				"STRUCT": "ISP_CCM_ATTR_S",
+				"GET": "CVI_ISP_GetCCMAttr",
+				"SET": "CVI_ISP_SetCCMAttr"
+			},
+			{
+				"STRUCT": "ISP_CCM_SATURATION_ATTR_S",
+				"GET": "CVI_ISP_GetCCMSaturationAttr",
+				"SET": "CVI_ISP_SetCCMSaturationAttr"
+			},
+			{
+				"STRUCT": "ISP_COLOR_TONE_ATTR_S",
+				"GET": "CVI_ISP_GetColorToneAttr",
+				"SET": "CVI_ISP_SetColorToneAttr"
+			},
+			{
+				"STRUCT": "ISP_WDR_EXPOSURE_ATTR_S",
+				"GET": "CVI_ISP_GetWDRExposureAttr",
+				"SET": "CVI_ISP_SetWDRExposureAttr"
+			},
+			{
+				"STRUCT": "ISP_DRC_ATTR_S",
+				"GET": "CVI_ISP_GetDRCAttr",
+				"SET": "CVI_ISP_SetDRCAttr"
+			},
+			{
+				"STRUCT": "ISP_GAMMA_ATTR_S",
+				"GET": "CVI_ISP_GetGammaAttr",
+				"SET": "CVI_ISP_SetGammaAttr"
+			},
+			{
+				"STRUCT": "ISP_CSC_ATTR_S",
+				"GET": "CVI_ISP_GetCSCAttr",
+				"SET": "CVI_ISP_SetCSCAttr"
+			},
+			{
+				"STRUCT": "ISP_DCI_ATTR_S",
+				"GET": "CVI_ISP_GetDCIAttr",
+				"SET": "CVI_ISP_SetDCIAttr"
+			},
+			{
+				"STRUCT": "ISP_DCI_AUTO_GAMMA_ATTR_S",
+				"GET": "CVI_ISP_GetDciAutoGammaAttr",
+				"SET": "CVI_ISP_SetDciAutoGammaAttr"
+			},
+			{
+				"STRUCT": "ISP_LDCI_ATTR_S",
+				"GET": "CVI_ISP_GetLDCIAttr",
+				"SET": "CVI_ISP_SetLDCIAttr"
+			},
+			{
+				"STRUCT": "ISP_PRESHARPEN_ATTR_S",
+				"GET": "CVI_ISP_GetPreSharpenAttr",
+				"SET": "CVI_ISP_SetPreSharpenAttr"
+			},
+			{
+				"STRUCT": "ISP_PRESHARPEN_REFINE_ATTR_S",
+				"GET": "CVI_ISP_GetPreSharpenRefineAttr",
+				"SET": "CVI_ISP_SetPreSharpenRefineAttr"
+			},
+			{
+				"STRUCT": "ISP_PRESHARPEN_EDGE_EXT_ATTR_S",
+				"GET": "CVI_ISP_GetPreSharpenEdgeExtAttr",
+				"SET": "CVI_ISP_SetPreSharpenEdgeExtAttr"
+			},
+			{
+				"STRUCT": "ISP_TNR_ATTR_S",
+				"GET": "CVI_ISP_GetTNRAttr",
+				"SET": "CVI_ISP_SetTNRAttr"
+			},
+			{
+				"STRUCT": "ISP_TNR_MD_ATTR_S",
+				"GET": "CVI_ISP_GetTNRMdAttr",
+				"SET": "CVI_ISP_SetTNRMdAttr"
+			},
+			{
+				"STRUCT": "ISP_TNR_NR_ATTR_S",
+				"GET": "CVI_ISP_GetTNRNrAttr",
+				"SET": "CVI_ISP_SetTNRNrAttr"
+			},
+			{
+				"STRUCT": "ISP_CNR_ATTR_S",
+				"GET": "CVI_ISP_GetCNRAttr",
+				"SET": "CVI_ISP_SetCNRAttr"
+			},
+			{
+				"STRUCT": "ISP_CNR_FILTER_ATTR_S",
+				"GET": "CVI_ISP_GetCNRFilterAttr",
+				"SET": "CVI_ISP_SetCNRFilterAttr"
+			},
+			{
+				"STRUCT": "ISP_SHARPEN_ATTR_S",
+				"GET": "CVI_ISP_GetSharpenAttr",
+				"SET": "CVI_ISP_SetSharpenAttr"
+			},
+			{
+				"STRUCT": "ISP_CA_ATTR_S",
+				"GET": "CVI_ISP_GetCAAttr",
+				"SET": "CVI_ISP_SetCAAttr"
+			},
+			{
+				"STRUCT": "ISP_CA2_ATTR_S",
+				"GET": "CVI_ISP_GetCA2Attr",
+				"SET": "CVI_ISP_SetCA2Attr"
+			},
+			{
+				"STRUCT": "ISP_PUB_ATTR_S",
+				"GET": "CVI_ISP_GetPubAttr",
+				"SET": "CVI_ISP_SetPubAttr"
+			},
+			{
+				"STRUCT": "ISP_CMOS_NOISE_CALIBRATION_S",
+				"GET": "CVI_ISP_GetNoiseProfileAttr",
+				"SET": "CVI_ISP_SetNoiseProfileAttr"
+			},
+			{
+				"STRUCT": "ISP_MONO_ATTR_S",
+				"GET": "CVI_ISP_GetMonoAttr",
+				"SET": "CVI_ISP_SetMonoAttr"
+			},
+			{
+				"STRUCT": "ISP_EXPOSURE_ATTR_S",
+				"GET": "CVI_ISP_GetExposureAttr",
+				"SET": "CVI_ISP_SetExposureAttr"
+			},
+			{
+				"STRUCT": "ISP_AE_ROUTE_S",
+				"GET": "CVI_ISP_GetAERouteAttr",
+				"SET": "CVI_ISP_SetAERouteAttr"
+			},
+			{
+				"STRUCT": "ISP_AE_ROUTE_EX_S",
+				"GET": "CVI_ISP_GetAERouteAttrEx",
+				"SET": "CVI_ISP_SetAERouteAttrEx"
+			},
+			{
+				"STRUCT": "ISP_AE_ROUTE_S",
+				"GET": "CVI_ISP_GetAERouteSFAttr",
+				"SET": "CVI_ISP_SetAERouteSFAttr"
+			},
+			{
+				"STRUCT": "ISP_AE_ROUTE_EX_S",
+				"GET": "CVI_ISP_GetAERouteSFAttrEx",
+				"SET": "CVI_ISP_SetAERouteSFAttrEx"
+			},
+			{
+				"STRUCT": "ISP_SMART_EXPOSURE_ATTR_S",
+				"GET": "CVI_ISP_GetSmartExposureAttr",
+				"SET": "CVI_ISP_SetSmartExposureAttr"
+			},
+			{
+				"STRUCT": "ISP_IRIS_ATTR_S",
+				"GET": "CVI_ISP_GetIrisAttr",
+				"SET": "CVI_ISP_SetIrisAttr"
+			},
+			{
+				"STRUCT": "ISP_DCIRIS_ATTR_S",
+				"GET": "CVI_ISP_GetDcirisAttr",
+				"SET": "CVI_ISP_SetDcirisAttr"
+			},
+			{
+				"STRUCT": "ISP_WB_ATTR_S",
+				"GET": "CVI_ISP_GetWBAttr",
+				"SET": "CVI_ISP_SetWBAttr"
+			},
+			{
+				"STRUCT": "ISP_AWB_ATTR_EX_S",
+				"GET": "CVI_ISP_GetAWBAttrEx",
+				"SET": "CVI_ISP_SetAWBAttrEx"
+			},
+			{
+				"STRUCT": "ISP_AWB_Calibration_Gain_S",
+				"GET": "CVI_ISP_GetWBCalibration",
+				"SET": "CVI_ISP_SetWBCalibration"
+			},
+			{
+				"STRUCT": "ISP_STATISTICS_CFG_S",
+				"GET": "CVI_ISP_GetStatisticsConfig",
+				"SET": "CVI_ISP_SetStatisticsConfig"
+			},
+			{
+				"STRUCT": "ISP_EXP_INFO_S",
+				"GET": "CVI_ISP_QueryExposureInfo",
+				"SET": ""
+			},
+			{
+				"STRUCT": "ISP_WB_INFO_S",
+				"GET": "CVI_ISP_QueryWBInfo",
+				"SET": ""
+			},
+			{
+				"STRUCT": "ISP_FOCUS_ATTR_S",
+				"GET": "CVI_ISP_GetAFAttr",
+				"SET": "CVI_ISP_SetAFAttr"
+			},
+			{
+				"STRUCT": "VI_LDC_ATTR_S",
+				"GET": "CVI_VI_GetChnLDCAttr",
+				"SET": "CVI_VI_SetChnLDCAttr"
+			},
+			{
+				"STRUCT": "VPSS_LDC_ATTR_S",
+				"GET": "CVI_VPSS_GetChnLDCAttr",
+				"SET": "CVI_VPSS_SetChnLDCAttr"
+			},
+			{
+				"STRUCT": "ISP_BNR_ATTR_S",
+				"GET": "CVI_ISP_GetBNRAttr",
+				"SET": "CVI_ISP_SetBNRAttr"
+			},
+			{
+				"STRUCT": "ISP_BNR_FILTER_ATTR_S",
+				"GET": "CVI_ISP_GetBNRFilterAttr",
+				"SET": "CVI_ISP_SetBNRFilterAttr"
+			},
+			{
+				"STRUCT": "ISP_YCONTRAST_ATTR_S",
+				"GET": "CVI_ISP_GetYContrastAttr",
+				"SET": "CVI_ISP_SetYContrastAttr"
+			},
+			{
+				"STRUCT": "ISP_CCTRL_ATTR_S",
+				"GET": "CVI_ISP_GetCCtrlAttr",
+				"SET": "CVI_ISP_SetCCtrlAttr"
+			},
+			{
+				"STRUCT": "ISP_CADJ_ATTR_S",
+				"GET": "CVI_ISP_GetCAdjAttr",
+				"SET": "CVI_ISP_SetCAdjAttr"
+			}
+		]
+	}
+}

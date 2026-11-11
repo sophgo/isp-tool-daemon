@@ -1,0 +1,16 @@
+# Build artifacts
+tmp/
+install/
+*.o
+*.d
+*.a
+*.so
+compile_commands.json
+.clangd/
+
+# Tool binaries
+pqbin_export_tool
+awb_simulation_tool
+file_transport_daemon/file_transport_daemon
+ispd2_client/ispd2_client
+mini_vi_ut/isp_ut
